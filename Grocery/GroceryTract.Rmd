@@ -29,9 +29,14 @@ setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/Groce
 
 ```{r}
 
-#load shapefiles
-##download.file("https://raw.githubusercontent.com/lecy/geojson/master/syr_parcels.geojson", "syr_parcels.geojson" )
-syr_parcels <- readOGR(dsn = "syr_parcels.geojson")
+#Download Onondaga Data
+download.file("ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_36067_tract10.zip", "onondaga_census_tracts.zip" )
+unzip( "onondaga_census_tracts.zip" )
+file.remove( "onondaga_census_tracts.zip" )
+
+#Load Onondaga Data in Environment
+ono_tracts <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
+syr <- ono_tracts[as.numeric(as.character(ono_tracts$NAME10)) < 62, ]
 
 #load grocery shapefiles
 ##download.file("http://communitygeography.org/wp-content/uploads/2015/08/Supermarkets.shp_.zip", "Supermarkets.zip" )
@@ -45,13 +50,7 @@ grocery_coordinates <- suppressMessages(geocode( grocery$Address, messaging=F ))
 grocery <- cbind(grocery, grocery_coordinates)
 grocery_SP <- SpatialPoints(grocery_coordinates, proj4string=CRS("+proj=longlat +datum=WGS84") )
 
-#half-mile buffer
-grocery_buff_halfmile <- gBuffer( grocery_SP, width=.005, byid=T )
-grocery_buff_halfmile <- gUnaryUnion( grocery_buff_halfmile, id = NULL )
-
-#one-mile buffer
-grocery_buff_onemile <- gBuffer( grocery_SP, width=.01, byid=T )
-grocery_buff_onemile <- gUnaryUnion( grocery_buff_onemile, id = NULL )
+##FAKE LINE
 
 
 #plot
