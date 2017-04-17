@@ -1,0 +1,586 @@
+,Test_Type,Test.Year,Accountability.School,Test_Code,mean
+1,NYS,2000,NA,ELA,672.4794255
+2,NYS,2000,NA,MATH,656.6089965
+3,NYS,2005,Bellevue Elementary School,ELA,638.5483871
+4,NYS,2005,Bellevue Elementary School,MATH,645
+5,NYS,2005,Clary Middle School,ELA,681.661597
+6,NYS,2005,Clary Middle School,MATH,685.6395349
+7,NYS,2005,Delaware Academy,ELA,647.9787234
+8,NYS,2005,Delaware Academy,MATH,657.691358
+9,NYS,2005,Dr. King Elementary School,ELA,629.6
+10,NYS,2005,Dr. King Elementary School,MATH,626.5555556
+11,NYS,2005,Dr. Weeks Elementary School,ELA,667.908046
+12,NYS,2005,Dr. Weeks Elementary School,MATH,685.7222222
+13,NYS,2005,Edward Smith Elementary School,ELA,656.3033708
+14,NYS,2005,Edward Smith Elementary School,MATH,654.3707865
+15,NYS,2005,Elmcrest Children's Center School,ELA,676.3157895
+16,NYS,2005,Elmcrest Children's Center School,MATH,672.5217391
+17,NYS,2005,Franklin Elementary School,ELA,642.3564356
+18,NYS,2005,Franklin Elementary School,MATH,639.1171171
+19,NYS,2005,Frazer Elementary School,ELA,661.2115385
+20,NYS,2005,Frazer Elementary School,MATH,667.0149254
+21,NYS,2005,Frazer Middle School,ELA,676.9312977
+22,NYS,2005,Frazer Middle School,MATH,694.796875
+23,NYS,2005,Grant Middle School,ELA,682.8684211
+24,NYS,2005,Grant Middle School,MATH,698.123348
+25,NYS,2005,Hughes Elementary School,ELA,631.2068966
+26,NYS,2005,Hughes Elementary School,MATH,639.7
+27,NYS,2005,Huntington Elementary School,ELA,642.5376344
+28,NYS,2005,Huntington Elementary School,MATH,644.3370787
+29,NYS,2005,Huntington Middle School,ELA,686.5882353
+30,NYS,2005,Huntington Middle School,MATH,707.5846154
+31,NYS,2005,Hurlbut W. Smith Elementary School,ELA,645.3770492
+32,NYS,2005,Hurlbut W. Smith Elementary School,MATH,656.8111111
+33,NYS,2005,Lemoyne Elementary School,ELA,635.1509434
+34,NYS,2005,Lemoyne Elementary School,MATH,643.8653846
+35,NYS,2005,Levy Middle School - CLOSED,MATH,710
+36,NYS,2005,Lincoln Middle School,ELA,680.6881188
+37,NYS,2005,Lincoln Middle School,MATH,693.55
+38,NYS,2005,McCarthy at Beard School,ELA,657.2982456
+39,NYS,2005,McCarthy at Beard School,MATH,665.106383
+40,NYS,2005,McKinley - Brighton Elementary School,ELA,642.1428571
+41,NYS,2005,McKinley - Brighton Elementary School,MATH,643.6901408
+42,NYS,2005,Meachem Elementary School,ELA,657.3731343
+43,NYS,2005,Meachem Elementary School,MATH,669.6666667
+44,NYS,2005,Porter Elementary School,ELA,645.5692308
+45,NYS,2005,Porter Elementary School,MATH,655.859375
+46,NYS,2005,Roberts Elementary School,ELA,631.9324324
+47,NYS,2005,Roberts Elementary School,MATH,643.5135135
+48,NYS,2005,Roberts Middle School,ELA,689.1111111
+49,NYS,2005,Roberts Middle School,MATH,710.9294118
+50,NYS,2005,Salem Hyde Elementary School,ELA,648.125
+51,NYS,2005,Salem Hyde Elementary School,MATH,655.8571429
+52,NYS,2005,Seymour Dual Language Academy,ELA,628.3243243
+53,NYS,2005,Seymour Dual Language Academy,MATH,639.6724138
+54,NYS,2005,Van Duyn Elementary School,ELA,656.1458333
+55,NYS,2005,Van Duyn Elementary School,MATH,663.84
+56,NYS,2005,Webster Elementary School,ELA,656.4285714
+57,NYS,2005,Webster Elementary School,MATH,665.7380952
+58,NYS,2005,NA,ELA,643.7777778
+59,NYS,2005,NA,MATH,643.3
+60,NYS,2010,24,ELA,21
+61,NYS,2010,24,MATH,21
+62,NYS,2010,34,ELA,40
+63,NYS,2010,34,MATH,69
+64,NYS,2010,34,SCI,70
+65,NYS,2010,40,ELA,9
+66,NYS,2010,40,MATH,6
+67,NYS,2010,40,SCI,22
+68,NYS,2010,9,MATH,24.5
+69,NYS,2010,9,SCI,77
+70,NYS,2010,9,SS,35
+71,NYS,2010,Bellevue Elementary School,ELA,655.2834225
+72,NYS,2010,Bellevue Elementary School,MATH,665.8502674
+73,NYS,2010,Bellevue Elementary School,SCI,78.88235294
+74,NYS,2010,Bellevue Elementary School,SS,64.03636364
+75,NYS,2010,Bellevue Middle School Academy at Shea- CLOSED,ELA,623
+76,NYS,2010,Bellevue Middle School Academy at Shea- CLOSED,MATH,645.3333333
+77,NYS,2010,Bellevue Middle School Academy at Shea- CLOSED,SCI,62
+78,NYS,2010,Bellevue Middle School Academy at Shea- CLOSED,SS,49
+79,NYS,2010,Blodgett Middle School - CLOSED,ELA,673.5
+80,NYS,2010,Blodgett Middle School - CLOSED,MATH,671
+81,NYS,2010,Clary Middle School,ELA,655.4649123
+82,NYS,2010,Clary Middle School,MATH,659.1246377
+83,NYS,2010,Clary Middle School,SCI,64.02654867
+84,NYS,2010,Clary Middle School,SS,59.31304348
+85,NYS,2010,Danforth Middle School,ELA,641.7528345
+86,NYS,2010,Danforth Middle School,MATH,640.5626374
+87,NYS,2010,Danforth Middle School,SCI,54.64
+88,NYS,2010,Danforth Middle School,SS,50.16129032
+89,NYS,2010,Delaware Academy,ELA,635.6976744
+90,NYS,2010,Delaware Academy,MATH,645.4423963
+91,NYS,2010,Delaware Academy,SCI,66.13333333
+92,NYS,2010,Delaware Academy,SS,55.19736842
+93,NYS,2010,Dr. King Elementary School,ELA,649.008547
+94,NYS,2010,Dr. King Elementary School,MATH,658.7574468
+95,NYS,2010,Dr. King Elementary School,SCI,65.06849315
+96,NYS,2010,Dr. King Elementary School,SS,67.19178082
+97,NYS,2010,Dr. Weeks Elementary School,ELA,649.7707182
+98,NYS,2010,Dr. Weeks Elementary School,MATH,661.6174142
+99,NYS,2010,Dr. Weeks Elementary School,SCI,73.56451613
+100,NYS,2010,Dr. Weeks Elementary School,SS,64.95934959
+101,NYS,2010,Edward Smith Elementary School,ELA,663.5971731
+102,NYS,2010,Edward Smith Elementary School,MATH,670.0706714
+103,NYS,2010,Edward Smith Elementary School,SCI,72.61818182
+104,NYS,2010,Edward Smith Elementary School,SS,74.98611111
+105,NYS,2010,Edward Smith Middle,ELA,658.5172414
+106,NYS,2010,Edward Smith Middle,MATH,666.7777778
+107,NYS,2010,Edward Smith Middle,SCI,71.20895522
+108,NYS,2010,Edward Smith Middle,SS,67.60294118
+109,NYS,2010,Elmcrest Children's Center School,ELA,643.2682927
+110,NYS,2010,Elmcrest Children's Center School,MATH,645.0487805
+111,NYS,2010,Elmcrest Children's Center School,SCI,67.86666667
+112,NYS,2010,Elmcrest Children's Center School,SS,64.21428571
+113,NYS,2010,Elmwood Elementary School - CLOSED,ELA,631
+114,NYS,2010,Elmwood Elementary School - CLOSED,MATH,651
+115,NYS,2010,Elmwood Elementary School - CLOSED,SCI,73
+116,NYS,2010,Expeditionary Learning Middle School,ELA,647.5272727
+117,NYS,2010,Expeditionary Learning Middle School,MATH,644.2522523
+118,NYS,2010,Expeditionary Learning Middle School,SCI,62.82352941
+119,NYS,2010,Expeditionary Learning Middle School,SS,57.25714286
+120,NYS,2010,Franklin Elementary School,ELA,646.7704403
+121,NYS,2010,Franklin Elementary School,MATH,651.7300613
+122,NYS,2010,Franklin Elementary School,SCI,66.20754717
+123,NYS,2010,Franklin Elementary School,SS,64.05882353
+124,NYS,2010,Frazer Elementary School,ELA,650.6919643
+125,NYS,2010,Frazer Elementary School,MATH,666.350211
+126,NYS,2010,Frazer Elementary School,SCI,67.4556962
+127,NYS,2010,Frazer Elementary School,SS,66.04054054
+128,NYS,2010,Frazer Middle School,ELA,644.9779874
+129,NYS,2010,Frazer Middle School,MATH,649.1707317
+130,NYS,2010,Frazer Middle School,SCI,62.90677966
+131,NYS,2010,Frazer Middle School,SS,57.27868852
+132,NYS,2010,Grant Middle School,ELA,646.2436548
+133,NYS,2010,Grant Middle School,MATH,638.7068146
+134,NYS,2010,Grant Middle School,SCI,57.84821429
+135,NYS,2010,Grant Middle School,SS,53.20353982
+136,NYS,2010,Hughes Elementary School,ELA,644.9017094
+137,NYS,2010,Hughes Elementary School,MATH,659.0714286
+138,NYS,2010,Hughes Elementary School,SCI,71.83050847
+139,NYS,2010,Hughes Elementary School,SS,62.8852459
+140,NYS,2010,Huntington Elementary School,ELA,654
+141,NYS,2010,Huntington Elementary School,MATH,670.0557769
+142,NYS,2010,Huntington Elementary School,SCI,73.49367089
+143,NYS,2010,Huntington Elementary School,SS,65.72839506
+144,NYS,2010,Huntington Middle School,ELA,650.5384615
+145,NYS,2010,Huntington Middle School,MATH,656.5691318
+146,NYS,2010,Huntington Middle School,SCI,59.90625
+147,NYS,2010,Huntington Middle School,SS,56.29
+148,NYS,2010,Hurlbut W. Smith Elementary School,ELA,651.9195804
+149,NYS,2010,Hurlbut W. Smith Elementary School,MATH,664.8378378
+150,NYS,2010,Hurlbut W. Smith Elementary School,SCI,69.54081633
+151,NYS,2010,Hurlbut W. Smith Elementary School,SS,63.48484848
+152,NYS,2010,Hurlbut W. Smith Middle School,ELA,648.1535714
+153,NYS,2010,Hurlbut W. Smith Middle School,MATH,652.3645833
+154,NYS,2010,Hurlbut W. Smith Middle School,SCI,61.32631579
+155,NYS,2010,Hurlbut W. Smith Middle School,SS,60.54736842
+156,NYS,2010,Lemoyne Elementary School,ELA,656.7017544
+157,NYS,2010,Lemoyne Elementary School,MATH,670.3072626
+158,NYS,2010,Lemoyne Elementary School,SCI,76.06779661
+159,NYS,2010,Lemoyne Elementary School,SS,69.03703704
+160,NYS,2010,Levy Elementary School,ELA,583
+161,NYS,2010,Levy Elementary School,SCI,73
+162,NYS,2010,Levy Middle School - CLOSED,ELA,654.5
+163,NYS,2010,Levy Middle School - CLOSED,MATH,618.75
+164,NYS,2010,Levy Middle School - CLOSED,SCI,40
+165,NYS,2010,Levy Middle School - CLOSED,SS,17
+166,NYS,2010,Lincoln Middle School,ELA,647.6531646
+167,NYS,2010,Lincoln Middle School,MATH,654.7525253
+168,NYS,2010,Lincoln Middle School,SCI,64.85810811
+169,NYS,2010,Lincoln Middle School,SS,59.08609272
+170,NYS,2010,McKinley - Brighton Elementary School,ELA,658.104712
+171,NYS,2010,McKinley - Brighton Elementary School,MATH,669.984375
+172,NYS,2010,McKinley - Brighton Elementary School,SCI,86.63235294
+173,NYS,2010,McKinley - Brighton Elementary School,SS,66.23529412
+174,NYS,2010,Meachem Elementary School,ELA,656.8601036
+175,NYS,2010,Meachem Elementary School,MATH,673.1589744
+176,NYS,2010,Meachem Elementary School,SCI,79.52702703
+177,NYS,2010,Meachem Elementary School,SS,67.59677419
+178,NYS,2010,Porter Elementary School,ELA,650.4
+179,NYS,2010,Porter Elementary School,MATH,663.8446602
+180,NYS,2010,Porter Elementary School,SCI,75.82716049
+181,NYS,2010,Porter Elementary School,SS,68.56944444
+182,NYS,2010,Roberts Elementary School,ELA,665.2645503
+183,NYS,2010,Roberts Elementary School,MATH,678.4973545
+184,NYS,2010,Roberts Elementary School,SCI,80.86440678
+185,NYS,2010,Roberts Elementary School,SS,72.2238806
+186,NYS,2010,Roberts Middle School,ELA,661.367713
+187,NYS,2010,Roberts Middle School,MATH,659.5650224
+188,NYS,2010,Roberts Middle School,SCI,66.94285714
+189,NYS,2010,Roberts Middle School,SS,66.69014085
+190,NYS,2010,Salem Hyde Elementary School,ELA,658.637931
+191,NYS,2010,Salem Hyde Elementary School,MATH,674.3347639
+192,NYS,2010,Salem Hyde Elementary School,SCI,79.61403509
+193,NYS,2010,Salem Hyde Elementary School,SS,73.66101695
+194,NYS,2010,Seymour Dual Language Academy,ELA,644.091954
+195,NYS,2010,Seymour Dual Language Academy,MATH,654.3457447
+196,NYS,2010,Seymour Dual Language Academy,SCI,62.78461538
+197,NYS,2010,Seymour Dual Language Academy,SS,59.68518519
+198,NYS,2010,Van Duyn Elementary School,ELA,646.0989583
+199,NYS,2010,Van Duyn Elementary School,MATH,657.4404145
+200,NYS,2010,Van Duyn Elementary School,SCI,67.14516129
+201,NYS,2010,Van Duyn Elementary School,SS,70.05357143
+202,NYS,2010,Webster Elementary School,ELA,661.0578512
+203,NYS,2010,Webster Elementary School,MATH,678.1474104
+204,NYS,2010,Webster Elementary School,SCI,73.91139241
+205,NYS,2010,Webster Elementary School,SS,71.41975309
+206,NYS,2010,Westside Academy @ Blodgett Elementary- CLOSED,ELA,643.5
+207,NYS,2010,Westside Academy @ Blodgett Elementary- CLOSED,MATH,551.5
+208,NYS,2010,NA,ELA,648.7619048
+209,NYS,2010,NA,MATH,650.1976744
+210,NYS,2010,NA,SCI,64.7037037
+211,NYS,2010,NA,SS,60.75
+212,NYS,2015,28,ELA,37.5
+213,NYS,2015,28,MATH,51.5
+214,NYS,2015,28,SCI,68.5
+215,NYS,2015,363,ELA,28
+216,NYS,2015,363,MATH,12
+217,NYS,2015,363,SCI,52
+218,NYS,2015,Bellevue Elementary School,ELA,257.0656566
+219,NYS,2015,Bellevue Elementary School,MATH,271.6476684
+220,NYS,2015,Bellevue Elementary School,SCI,67.58208955
+221,NYS,2015,Clary Middle School,ELA,264.6878307
+222,NYS,2015,Clary Middle School,MATH,253.1875
+223,NYS,2015,Clary Middle School,SCI,53.56637168
+224,NYS,2015,Danforth Middle School,ELA,247.179661
+225,NYS,2015,Danforth Middle School,MATH,248.8885017
+226,NYS,2015,Danforth Middle School,SCI,39.69662921
+227,NYS,2015,Delaware Academy,ELA,246.9368421
+228,NYS,2015,Delaware Academy,MATH,249.1164021
+229,NYS,2015,Delaware Academy,SCI,51.20408163
+230,NYS,2015,Dr. King Elementary School,ELA,251.6743295
+231,NYS,2015,Dr. King Elementary School,MATH,257.9457364
+232,NYS,2015,Dr. King Elementary School,SCI,65.44578313
+233,NYS,2015,Dr. Weeks Elementary School,ELA,246.5503356
+234,NYS,2015,Dr. Weeks Elementary School,MATH,252.9440789
+235,NYS,2015,Dr. Weeks Elementary School,SCI,53.89772727
+236,NYS,2015,Edward Smith Elementary School,ELA,282.0958904
+237,NYS,2015,Edward Smith Elementary School,MATH,281.3037383
+238,NYS,2015,Edward Smith Elementary School,SCI,59.4556962
+239,NYS,2015,Edward Smith Middle,ELA,277.4867725
+240,NYS,2015,Edward Smith Middle,MATH,268.7307692
+241,NYS,2015,Edward Smith Middle,SCI,56.07246377
+242,NYS,2015,Elmcrest Children's Center School,ELA,246.0322581
+243,NYS,2015,Elmcrest Children's Center School,MATH,241.71875
+244,NYS,2015,Elmcrest Children's Center School,SCI,54.2
+245,NYS,2015,Expeditionary Learning Middle School,ELA,286.2654867
+246,NYS,2015,Expeditionary Learning Middle School,MATH,281.3714286
+247,NYS,2015,Expeditionary Learning Middle School,SCI,68.41025641
+248,NYS,2015,Franklin Elementary School,ELA,262.0902256
+249,NYS,2015,Franklin Elementary School,MATH,269.75
+250,NYS,2015,Franklin Elementary School,SCI,64.87234043
+251,NYS,2015,Frazer Elementary School,ELA,253.5533981
+252,NYS,2015,Frazer Elementary School,MATH,263.8371041
+253,NYS,2015,Frazer Elementary School,SCI,62.47435897
+254,NYS,2015,Frazer Middle School,ELA,250.6282051
+255,NYS,2015,Frazer Middle School,MATH,255.8157895
+256,NYS,2015,Frazer Middle School,SCI,55.46323529
+257,NYS,2015,Grant Middle School,ELA,260.6701389
+258,NYS,2015,Grant Middle School,MATH,263.1292776
+259,NYS,2015,Grant Middle School,SCI,49.77272727
+260,NYS,2015,Hughes Elementary School,ELA,260.5072464
+261,NYS,2015,Hughes Elementary School,MATH,264.9770992
+262,NYS,2015,Hughes Elementary School,SCI,73.46153846
+263,NYS,2015,Huntington Elementary School,ELA,268.6420233
+264,NYS,2015,Huntington Elementary School,MATH,276.3654618
+265,NYS,2015,Huntington Elementary School,SCI,63.28125
+266,NYS,2015,Huntington Middle School,ELA,273.5375494
+267,NYS,2015,Huntington Middle School,MATH,267.6306818
+268,NYS,2015,Huntington Middle School,SCI,54.52173913
+269,NYS,2015,Hurlbut W. Smith Elementary School,ELA,267.6740088
+270,NYS,2015,Hurlbut W. Smith Elementary School,MATH,281.0044444
+271,NYS,2015,Hurlbut W. Smith Elementary School,SCI,79.76829268
+272,NYS,2015,Hurlbut W. Smith Middle School,ELA,267.8604651
+273,NYS,2015,Hurlbut W. Smith Middle School,MATH,263.4640523
+274,NYS,2015,Hurlbut W. Smith Middle School,SCI,56.37007874
+275,NYS,2015,Lemoyne Elementary School,ELA,262.3719807
+276,NYS,2015,Lemoyne Elementary School,MATH,276.1617647
+277,NYS,2015,Lemoyne Elementary School,SCI,69.76056338
+278,NYS,2015,Lincoln Middle School,ELA,250.3029613
+279,NYS,2015,Lincoln Middle School,MATH,249.1530343
+280,NYS,2015,Lincoln Middle School,SCI,48.44936709
+281,NYS,2015,McKinley - Brighton Elementary School,ELA,247.4454148
+282,NYS,2015,McKinley - Brighton Elementary School,MATH,252.8421053
+283,NYS,2015,McKinley - Brighton Elementary School,SCI,64.72093023
+284,NYS,2015,Meachem Elementary School,ELA,263.7526882
+285,NYS,2015,Meachem Elementary School,MATH,268.28
+286,NYS,2015,Meachem Elementary School,SCI,74.76666667
+287,NYS,2015,Porter Elementary School,ELA,252.2840909
+288,NYS,2015,Porter Elementary School,MATH,263
+289,NYS,2015,Porter Elementary School,SCI,66.28333333
+290,NYS,2015,Roberts Elementary School,ELA,279.5288889
+291,NYS,2015,Roberts Elementary School,MATH,282.1395349
+292,NYS,2015,Roberts Elementary School,SCI,74.75
+293,NYS,2015,Roberts Middle School,ELA,279.9158416
+294,NYS,2015,Roberts Middle School,MATH,272.60625
+295,NYS,2015,Roberts Middle School,SCI,62.7037037
+296,NYS,2015,Salem Hyde Elementary School,ELA,285.3363229
+297,NYS,2015,Salem Hyde Elementary School,MATH,291.7756098
+298,NYS,2015,Salem Hyde Elementary School,SCI,84.14285714
+299,NYS,2015,Seymour Dual Language Academy,ELA,251.8932039
+300,NYS,2015,Seymour Dual Language Academy,MATH,254.1682692
+301,NYS,2015,Seymour Dual Language Academy,SCI,53.29508197
+302,NYS,2015,Van Duyn Elementary School,ELA,259.4393939
+303,NYS,2015,Van Duyn Elementary School,MATH,264.15625
+304,NYS,2015,Van Duyn Elementary School,SCI,61.95744681
+305,NYS,2015,Webster Elementary School,ELA,274.18
+306,NYS,2015,Webster Elementary School,MATH,276.34375
+307,NYS,2015,Webster Elementary School,SCI,63.84615385
+308,NYS,2015,Westside Academy at Blodgett,ELA,243.5469613
+309,NYS,2015,Westside Academy at Blodgett,MATH,244.0597403
+310,NYS,2015,Westside Academy at Blodgett,SCI,38.62135922
+311,NYS,2015,NA,MATH,254
+312,Regents,2000,NA,COMP_ENG,61.23093842
+313,Regents,2000,NA,FRENCH,77.5326087
+314,Regents,2000,NA,GLOBAL,60.37111517
+315,Regents,2000,NA,SC_CHEM,59.7954071
+316,Regents,2000,NA,SC_EARTH,59.65205092
+317,Regents,2000,NA,SC_LIVENR,60.65077139
+318,Regents,2000,NA,SC_PHYS,60.56074766
+319,Regents,2000,NA,SPANISH,68.60362694
+320,Regents,2000,NA,US_HIST,63.56425949
+321,Regents,2005,Clary Middle School,SPANISH,59.33333333
+322,Regents,2005,Corcoran High School,COMP_ENG,68.50852273
+323,Regents,2005,Corcoran High School,FRENCH,80.5
+324,Regents,2005,Corcoran High School,GLOBAL,53.4895288
+325,Regents,2005,Corcoran High School,MATH_A,58.62112933
+326,Regents,2005,Corcoran High School,MATH_B,44.51470588
+327,Regents,2005,Corcoran High School,SC_CHEM,52.06349206
+328,Regents,2005,Corcoran High School,SC_EARTH,37.75966851
+329,Regents,2005,Corcoran High School,SC_LIVENR,50.18274112
+330,Regents,2005,Corcoran High School,SC_PHYS,53.9375
+331,Regents,2005,Corcoran High School,SPANISH,77.21311475
+332,Regents,2005,Corcoran High School,US_HIST,59.603125
+333,Regents,2005,Elmcrest Children's Center School,COMP_ENG,61
+334,Regents,2005,Elmcrest Children's Center School,GLOBAL,50.07692308
+335,Regents,2005,Elmcrest Children's Center School,MATH_A,67.6875
+336,Regents,2005,Elmcrest Children's Center School,MATH_B,46
+337,Regents,2005,Elmcrest Children's Center School,SC_EARTH,74
+338,Regents,2005,Elmcrest Children's Center School,US_HIST,78
+339,Regents,2005,Fowler High School,COMP_ENG,63.48660714
+340,Regents,2005,Fowler High School,FRENCH,68
+341,Regents,2005,Fowler High School,GLOBAL,47.95844875
+342,Regents,2005,Fowler High School,MATH_A,61.03092784
+343,Regents,2005,Fowler High School,MATH_B,51.09433962
+344,Regents,2005,Fowler High School,SC_CHEM,52.6
+345,Regents,2005,Fowler High School,SC_EARTH,50.03225806
+346,Regents,2005,Fowler High School,SC_LIVENR,45.2115869
+347,Regents,2005,Fowler High School,SC_PHYS,66.91666667
+348,Regents,2005,Fowler High School,SPANISH,68.42857143
+349,Regents,2005,Fowler High School,US_HIST,50.5858209
+350,Regents,2005,GED 16-17,SC_LIVENR,0
+351,Regents,2005,GED 18+,MATH_A,69
+352,Regents,2005,Henninger High School,COMP_ENG,74.43769968
+353,Regents,2005,Henninger High School,FRENCH,73.07142857
+354,Regents,2005,Henninger High School,GLOBAL,54.4800995
+355,Regents,2005,Henninger High School,MATH_A,66.14325843
+356,Regents,2005,Henninger High School,MATH_B,49.14193548
+357,Regents,2005,Henninger High School,SC_CHEM,65.28358209
+358,Regents,2005,Henninger High School,SC_EARTH,44.45398773
+359,Regents,2005,Henninger High School,SC_LIVENR,39.55923345
+360,Regents,2005,Henninger High School,SC_PHYS,46.04651163
+361,Regents,2005,Henninger High School,SPANISH,67.84466019
+362,Regents,2005,Henninger High School,US_HIST,62.68786127
+363,Regents,2005,Nottingham High School,COMP_ENG,74.06363636
+364,Regents,2005,Nottingham High School,FRENCH,89.40909091
+365,Regents,2005,Nottingham High School,GLOBAL,60.14391144
+366,Regents,2005,Nottingham High School,MATH_A,65.88850174
+367,Regents,2005,Nottingham High School,MATH_B,56.8313253
+368,Regents,2005,Nottingham High School,SC_CHEM,61.64130435
+369,Regents,2005,Nottingham High School,SC_EARTH,51.6547619
+370,Regents,2005,Nottingham High School,SC_LIVENR,47.26277372
+371,Regents,2005,Nottingham High School,SC_PHYS,66.35294118
+372,Regents,2005,Nottingham High School,SPANISH,77.49450549
+373,Regents,2005,Nottingham High School,US_HIST,64.93055556
+374,Regents,2010,Clary Middle School,ALGEBRA,70.4
+375,Regents,2010,Corcoran High School,ALGEBRA,54.44651163
+376,Regents,2010,Corcoran High School,ALGEBRA2/TRIG,39.52336449
+377,Regents,2010,Corcoran High School,COMP_ENG,73.22520107
+378,Regents,2010,Corcoran High School,GEOM,50.68907563
+379,Regents,2010,Corcoran High School,GLOBAL,54.28174603
+380,Regents,2010,Corcoran High School,MATH_B,46.725
+381,Regents,2010,Corcoran High School,SC_CHEM,62.53658537
+382,Regents,2010,Corcoran High School,SC_EARTH,54.41584158
+383,Regents,2010,Corcoran High School,SC_LIVENR,61.82107356
+384,Regents,2010,Corcoran High School,SC_PHYS,59.08
+385,Regents,2010,Corcoran High School,SPANISH,74.05202312
+386,Regents,2010,Corcoran High School,US_HIST,73.1679198
+387,Regents,2010,Danforth Middle School,ALGEBRA,57.13793103
+388,Regents,2010,Danforth Middle School,SC_EARTH,59.66666667
+389,Regents,2010,Edward Smith Middle,ALGEBRA,83.91666667
+390,Regents,2010,Edward Smith Middle,SC_LIVENR,86.52631579
+391,Regents,2010,Elmcrest Children's Center School,ALGEBRA,51.725
+392,Regents,2010,Elmcrest Children's Center School,COMP_ENG,53.42857143
+393,Regents,2010,Elmcrest Children's Center School,GEOM,55.25
+394,Regents,2010,Elmcrest Children's Center School,GLOBAL,56
+395,Regents,2010,Elmcrest Children's Center School,SC_EARTH,82
+396,Regents,2010,Elmcrest Children's Center School,SC_LIVENR,65.0625
+397,Regents,2010,Elmcrest Children's Center School,US_HIST,63.66666667
+398,Regents,2010,Fowler High School,ALGEBRA,54.84658298
+399,Regents,2010,Fowler High School,ALGEBRA2/TRIG,55.74418605
+400,Regents,2010,Fowler High School,COMP_ENG,53.86119874
+401,Regents,2010,Fowler High School,GEOM,50.56632653
+402,Regents,2010,Fowler High School,GLOBAL,50.84652278
+403,Regents,2010,Fowler High School,MATH_B,50.8
+404,Regents,2010,Fowler High School,SC_CHEM,55.52542373
+405,Regents,2010,Fowler High School,SC_EARTH,51.62765957
+406,Regents,2010,Fowler High School,SC_LIVENR,57.61007958
+407,Regents,2010,Fowler High School,SC_PHYS,70.56521739
+408,Regents,2010,Fowler High School,SPANISH,67.79710145
+409,Regents,2010,Fowler High School,US_HIST,52.36971831
+410,Regents,2010,Frazer Middle School,ALGEBRA,72.54166667
+411,Regents,2010,Grant Middle School,ALGEBRA,72.18
+412,Regents,2010,Henninger High School,ALGEBRA,54.22814815
+413,Regents,2010,Henninger High School,ALGEBRA2/TRIG,55.08235294
+414,Regents,2010,Henninger High School,COMP_ENG,66.00733945
+415,Regents,2010,Henninger High School,FRENCH,73.22222222
+416,Regents,2010,Henninger High School,GEOM,50.97073171
+417,Regents,2010,Henninger High School,GLOBAL,60.65789474
+418,Regents,2010,Henninger High School,MATH_B,51.90625
+419,Regents,2010,Henninger High School,SC_CHEM,65.30081301
+420,Regents,2010,Henninger High School,SC_EARTH,63.969163
+421,Regents,2010,Henninger High School,SC_LIVENR,70.25882353
+422,Regents,2010,Henninger High School,SC_PHYS,71.71428571
+423,Regents,2010,Henninger High School,SPANISH,68.15060241
+424,Regents,2010,Henninger High School,US_HIST,66.85933504
+425,Regents,2010,Huntington Middle School,ALGEBRA,76.29166667
+426,Regents,2010,Huntington Middle School,SC_EARTH,68
+427,Regents,2010,Hurlbut W. Smith Middle School,ALGEBRA,74.33333333
+428,Regents,2010,Hurlbut W. Smith Middle School,FRENCH,84
+429,Regents,2010,Hurlbut W. Smith Middle School,SC_LIVENR,77.74074074
+430,Regents,2010,Institute of Technology at Syracuse Central,ALGEBRA,60.99166667
+431,Regents,2010,Institute of Technology at Syracuse Central,ALGEBRA2/TRIG,40.25714286
+432,Regents,2010,Institute of Technology at Syracuse Central,COMP_ENG,71.12380952
+433,Regents,2010,Institute of Technology at Syracuse Central,GEOM,53.78703704
+434,Regents,2010,Institute of Technology at Syracuse Central,GLOBAL,64.18867925
+435,Regents,2010,Institute of Technology at Syracuse Central,SC_CHEM,61.21212121
+436,Regents,2010,Institute of Technology at Syracuse Central,SC_EARTH,64.4375
+437,Regents,2010,Institute of Technology at Syracuse Central,SC_LIVENR,70.27272727
+438,Regents,2010,Institute of Technology at Syracuse Central,SPANISH,73.77777778
+439,Regents,2010,Institute of Technology at Syracuse Central,US_HIST,64.19871795
+440,Regents,2010,Lincoln Middle School,ALGEBRA,76.77272727
+441,Regents,2010,Nottingham High School,ALGEBRA,55.6872428
+442,Regents,2010,Nottingham High School,ALGEBRA2/TRIG,59.51162791
+443,Regents,2010,Nottingham High School,COMP_ENG,61.27854671
+444,Regents,2010,Nottingham High School,FRENCH,75.76315789
+445,Regents,2010,Nottingham High School,GEOM,62.30232558
+446,Regents,2010,Nottingham High School,GLOBAL,55.03137255
+447,Regents,2010,Nottingham High School,MATH_B,49.225
+448,Regents,2010,Nottingham High School,SC_CHEM,62.38888889
+449,Regents,2010,Nottingham High School,SC_EARTH,69.7751938
+450,Regents,2010,Nottingham High School,SC_LIVENR,60.83965015
+451,Regents,2010,Nottingham High School,SC_PHYS,69.91428571
+452,Regents,2010,Nottingham High School,SPANISH,73.6302521
+453,Regents,2010,Nottingham High School,US_HIST,60.26358696
+454,Regents,2010,Roberts Middle School,ALGEBRA,73.46153846
+455,Regents,2010,Roberts Middle School,SC_EARTH,74.23076923
+456,Regents,2010,NA,ALGEBRA,46.14285714
+457,Regents,2010,NA,SC_EARTH,65
+458,Regents,2010,NA,SC_LIVENR,61
+459,Regents,2015,3,ALGEBRA,26
+460,Regents,2015,3,ALGEBRACC,11
+461,Regents,2015,3,GLOBAL,29.75
+462,Regents,2015,3,SC_LIVENR,23
+463,Regents,2015,3,US_HIST,42
+464,Regents,2015,C.B.A.,GEOM,51
+465,Regents,2015,Clary Middle School,ALGEBRACC,58.34782609
+466,Regents,2015,Clary Middle School,LOTE_A,81.04347826
+467,Regents,2015,Clary Middle School,SC_LIVENR,71.52777778
+468,Regents,2015,Corcoran High School,ALGEBRA,56.01869159
+469,Regents,2015,Corcoran High School,ALGEBRA2/TRIG,54.06382979
+470,Regents,2015,Corcoran High School,ALGEBRACC,55.91150442
+471,Regents,2015,Corcoran High School,COMP_ENG,67.49444444
+472,Regents,2015,Corcoran High School,GEOM,62.06746032
+473,Regents,2015,Corcoran High School,GEOM_CC,47.60846561
+474,Regents,2015,Corcoran High School,GLOBAL,59.08965517
+475,Regents,2015,Corcoran High School,LOTE_B,81.42372881
+476,Regents,2015,Corcoran High School,SC_CHEM,66.8125
+477,Regents,2015,Corcoran High School,SC_EARTH,68.81954887
+478,Regents,2015,Corcoran High School,SC_LIVENR,62.10882353
+479,Regents,2015,Corcoran High School,SC_PHYS,63.30952381
+480,Regents,2015,Corcoran High School,US_HIST,71.49428571
+481,Regents,2015,Danforth Middle School,LOTE_A,66.76190476
+482,Regents,2015,Danforth Middle School,SC_LIVENR,62
+483,Regents,2015,Edward Smith Middle,ALGEBRACC,69.11538462
+484,Regents,2015,Edward Smith Middle,LOTE_A,79.7173913
+485,Regents,2015,Edward Smith Middle,SC_LIVENR,86.64285714
+486,Regents,2015,Elmcrest Children's Center School,ALGEBRA,48.31578947
+487,Regents,2015,Elmcrest Children's Center School,ALGEBRA2/TRIG,55
+488,Regents,2015,Elmcrest Children's Center School,ALGEBRACC,54.09090909
+489,Regents,2015,Elmcrest Children's Center School,COMP_ENG,72.75
+490,Regents,2015,Elmcrest Children's Center School,GEOM,40.2
+491,Regents,2015,Elmcrest Children's Center School,GEOM_CC,46.33333333
+492,Regents,2015,Elmcrest Children's Center School,GLOBAL,45.07142857
+493,Regents,2015,Elmcrest Children's Center School,SC_EARTH,48.16666667
+494,Regents,2015,Elmcrest Children's Center School,SC_LIVENR,65.57142857
+495,Regents,2015,Elmcrest Children's Center School,US_HIST,65
+496,Regents,2015,Expeditionary Learning Middle School,LOTE_A,87.47619048
+497,Regents,2015,Fowler High School,ALGEBRA,55.36344086
+498,Regents,2015,Fowler High School,ALGEBRA2/TRIG,52.02857143
+499,Regents,2015,Fowler High School,ALGEBRACC,48.65284974
+500,Regents,2015,Fowler High School,COMP_ENG,55.66489362
+501,Regents,2015,Fowler High School,GEOM,49.78828829
+502,Regents,2015,Fowler High School,GEOM_CC,41.26993865
+503,Regents,2015,Fowler High School,GLOBAL,48.72361809
+504,Regents,2015,Fowler High School,LOTE_B,85.2
+505,Regents,2015,Fowler High School,SC_CHEM,54
+506,Regents,2015,Fowler High School,SC_EARTH,55.59016393
+507,Regents,2015,Fowler High School,SC_LIVENR,51.40104167
+508,Regents,2015,Fowler High School,SC_PHYS,51.9
+509,Regents,2015,Fowler High School,US_HIST,60.51886792
+510,Regents,2015,Frazer Middle School,ALGEBRACC,62.07692308
+511,Regents,2015,Frazer Middle School,LOTE_A,79.44897959
+512,Regents,2015,Frazer Middle School,SC_LIVENR,76.58333333
+513,Regents,2015,Grant Middle School,ALGEBRACC,67.6875
+514,Regents,2015,Grant Middle School,LOTE_A,78.14516129
+515,Regents,2015,Grant Middle School,SC_LIVENR,78.37931034
+516,Regents,2015,Henninger High School,ALGEBRA,56.43603133
+517,Regents,2015,Henninger High School,ALGEBRA2/TRIG,57.26966292
+518,Regents,2015,Henninger High School,ALGEBRACC,51.53826531
+519,Regents,2015,Henninger High School,COMP_ENG,66.18241758
+520,Regents,2015,Henninger High School,GEOM,55.45214521
+521,Regents,2015,Henninger High School,GEOM_CC,52.15765766
+522,Regents,2015,Henninger High School,GLOBAL,57.00723589
+523,Regents,2015,Henninger High School,LOTE_B,83.73626374
+524,Regents,2015,Henninger High School,SC_CHEM,62.9047619
+525,Regents,2015,Henninger High School,SC_EARTH,56.19047619
+526,Regents,2015,Henninger High School,SC_LIVENR,59.16853933
+527,Regents,2015,Henninger High School,SC_PHYS,63.51162791
+528,Regents,2015,Henninger High School,US_HIST,69.33412322
+529,Regents,2015,Huntington Middle School,ALGEBRACC,66.93548387
+530,Regents,2015,Huntington Middle School,LOTE_A,54.09090909
+531,Regents,2015,Huntington Middle School,SC_LIVENR,75.89655172
+532,Regents,2015,Hurlbut W. Smith Middle School,ALGEBRACC,65.42307692
+533,Regents,2015,Hurlbut W. Smith Middle School,LOTE_A,78.9375
+534,Regents,2015,Hurlbut W. Smith Middle School,SC_LIVENR,80.57692308
+535,Regents,2015,Institute of Technology at Syracuse Central,ALGEBRA,65.11111111
+536,Regents,2015,Institute of Technology at Syracuse Central,ALGEBRA2/TRIG,53.75510204
+537,Regents,2015,Institute of Technology at Syracuse Central,ALGEBRACC,58.57391304
+538,Regents,2015,Institute of Technology at Syracuse Central,COMP_ENG,64.32748538
+539,Regents,2015,Institute of Technology at Syracuse Central,GEOM,58.88741722
+540,Regents,2015,Institute of Technology at Syracuse Central,GEOM_CC,46.5462963
+541,Regents,2015,Institute of Technology at Syracuse Central,GLOBAL,62.70535714
+542,Regents,2015,Institute of Technology at Syracuse Central,LOTE_B,87.58823529
+543,Regents,2015,Institute of Technology at Syracuse Central,SC_CHEM,62.3015873
+544,Regents,2015,Institute of Technology at Syracuse Central,SC_EARTH,67.01754386
+545,Regents,2015,Institute of Technology at Syracuse Central,SC_LIVENR,75.83969466
+546,Regents,2015,Institute of Technology at Syracuse Central,SC_PHYS,98
+547,Regents,2015,Institute of Technology at Syracuse Central,US_HIST,76.54901961
+548,Regents,2015,Lincoln Middle School,ALGEBRACC,63.44827586
+549,Regents,2015,Lincoln Middle School,LOTE_A,64.34848485
+550,Regents,2015,Lincoln Middle School,SC_LIVENR,70.70833333
+551,Regents,2015,Nottingham High School,ALGEBRA,59.36923077
+552,Regents,2015,Nottingham High School,ALGEBRA2/TRIG,64.89010989
+553,Regents,2015,Nottingham High School,ALGEBRACC,59.73033708
+554,Regents,2015,Nottingham High School,COMP_ENG,68.11764706
+555,Regents,2015,Nottingham High School,GEOM,56.4469697
+556,Regents,2015,Nottingham High School,GEOM_CC,44.62
+557,Regents,2015,Nottingham High School,GLOBAL,57.20034542
+558,Regents,2015,Nottingham High School,LOTE_B,80.9375
+559,Regents,2015,Nottingham High School,SC_CHEM,70.51923077
+560,Regents,2015,Nottingham High School,SC_EARTH,59.00684932
+561,Regents,2015,Nottingham High School,SC_LIVENR,57.42643392
+562,Regents,2015,Nottingham High School,SC_PHYS,76.27586207
+563,Regents,2015,Nottingham High School,US_HIST,71.61702128
+564,Regents,2015,Public Service Leadership Academy at Fowler,ALGEBRA,63
+565,Regents,2015,Public Service Leadership Academy at Fowler,ALGEBRA2/TRIG,49
+566,Regents,2015,Public Service Leadership Academy at Fowler,ALGEBRACC,48.71276596
+567,Regents,2015,Public Service Leadership Academy at Fowler,GEOM,69.33333333
+568,Regents,2015,Public Service Leadership Academy at Fowler,GEOM_CC,59.16666667
+569,Regents,2015,Public Service Leadership Academy at Fowler,GLOBAL,41.6
+570,Regents,2015,Public Service Leadership Academy at Fowler,LOTE_B,94
+571,Regents,2015,Public Service Leadership Academy at Fowler,SC_EARTH,69.5
+572,Regents,2015,Public Service Leadership Academy at Fowler,SC_LIVENR,57.65873016
+573,Regents,2015,Roberts Middle School,ALGEBRACC,69.4
+574,Regents,2015,Roberts Middle School,LOTE_A,86.14285714
+575,Regents,2015,Roberts Middle School,SC_LIVENR,85.30769231
+576,Regents,2015,Westside Academy at Blodgett,LOTE_A,57.16901408
+577,Regents,2015,NA,ALGEBRACC,55.8125
+578,Regents,2015,NA,COMP_ENG,69
+579,Regents,2015,NA,GEOM,70.83333333
+580,Regents,2015,NA,GEOM_CC,42.4
+581,Regents,2015,NA,GLOBAL,58
+582,Regents,2015,NA,LOTE_B,87
+583,Regents,2015,NA,SC_EARTH,62.66666667
+584,Regents,2015,NA,SC_LIVENR,65.65454545
+585,Regents,2015,NA,US_HIST,83
