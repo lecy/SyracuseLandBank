@@ -1,0 +1,46 @@
+---
+title: "Parks in Syracuse"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+```
+
+
+```{}
+#Load Packages
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( sp )
+```
+
+
+
+```{r}
+setwd("C:/Users/mgao05/Desktop/PAI INdenpendent study/park")
+
+
+#Load Onondaga Data in Environment
+ono_tracts <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
+syr <- ono_tracts[as.numeric(as.character(ono_tracts$NAME10)) < 62, ]
+
+
+###load park shapefiles
+
+park <- readShapePoly( fn="SyracuseParks051414_UTM", proj4string=CRS("+proj=longlat +datum=WGS84") )
+
+syr <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
+
+plot(syr, border="gray10")
+plot(park, border="gray10")
+
+```
+
+
