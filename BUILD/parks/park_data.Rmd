@@ -40,6 +40,20 @@ syr <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat
 
 plot(syr, border="gray10")
 plot(park, border="gray10")
+dat <- read_csv("C:\\Users\\mgao05\\Desktop\\PAI INdenpendent study\\landbank\\SyracuseLandBank\\DATA\\RAW_DATA\\public_park.csv")
+
+dat.park <- dat[dat$LandUse == "Parks", ]
+tbl.nhood <- table(dat.park$Nhood)
+tbl.nhood
+
+
+plot(dat.park$ACRES)
+area.cate1 <- dat.park[dat.park$ACRES <= 20, ]
+area.cate2 <- dat.park[dat.park$ACRES <= 40 & dat.park$ACRES > 20, ]
+area.cate3 <- dat.park[dat.park$ACRES <= 150 & dat.park$ACRES > 40, ]
+
+
+
 
 ```
 
