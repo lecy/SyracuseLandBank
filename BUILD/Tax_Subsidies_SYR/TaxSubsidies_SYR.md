@@ -235,7 +235,7 @@ legend( "bottomright",
         title="Number of Subsidies" )
 ```
 
-![](TaxSubsidies_SYR_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
 rm(col.ramp)
@@ -265,7 +265,7 @@ histPercent(values, main= "Distribution of Tax Subsidies per Total Amount",
 col="firebrick4")
 ```
 
-![](TaxSubsidies_SYR_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
 rm(histPercent)
@@ -290,7 +290,7 @@ text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "
 axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
 ```
 
-![](TaxSubsidies_SYR_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
 rm(xx)
