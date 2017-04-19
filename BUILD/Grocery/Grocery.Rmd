@@ -1,0 +1,70 @@
+---
+title: "Grocery"
+author: "Christine Brown"
+date: "April 8, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+```
+Set-Up
+```{r}
+#Load Packages
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( sp )
+
+#Prepare Working Directory
+setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/Grocery")
+
+```
+
+
+```{r}
+
+#load shapefiles
+##download.file("https://raw.githubusercontent.com/lecy/geojson/master/syr_parcels.geojson", "syr_parcels.geojson" )
+syr_parcels <- readOGR(dsn = "syr_parcels.geojson")
+
+#load grocery shapefiles
+##download.file("http://communitygeography.org/wp-content/uploads/2015/08/Supermarkets.shp_.zip", "Supermarkets.zip" )
+##unzip( "Supermarkets.zip" )
+##file.remove( "Supermarkets.zip" )
+grocery <- readShapePoints( fn="Supermarkets", proj4string=CRS("+proj=longlat +datum=WGS84") )
+grocery <- filter(grocery@data, City == "SYRACUSE" | City =="Syracuse" )
+grocery <- mutate(grocery, Address=paste(Location,", Syracuse, NY ",ZipCode))
+grocery <- grocery[, c("Supermarke", "Address")]
+grocery_coordinates <- suppressMessages(geocode( grocery$Address, messaging=F ))
+grocery <- cbind(grocery, grocery_coordinates)
+grocery_SP <- SpatialPoints(grocery_coordinates, proj4string=CRS("+proj=longlat +datum=WGS84") )
+
+#half-mile buffer
+grocery_buff_halfmile <- gBuffer( grocery_SP, width=.005, byid=T )
+grocery_buff_halfmile <- gUnaryUnion( grocery_buff_halfmile, id = NULL )
+
+#one-mile buffer
+grocery_buff_onemile <- gBuffer( grocery_SP, width=.01, byid=T )
+grocery_buff_onemile <- gUnaryUnion( grocery_buff_onemile, id = NULL )
+
+
+#plot
+par(mar=c(0,0,0,0))
+plot(syr_parcels, col="grey95", border=F )
+plot(grocery_buff_onemile, col=adjustcolor( "magenta", alpha.f=0.6 ), add=T, border=T)
+plot(grocery_buff_halfmile, col=rgb(49, 109, 206, 60, maxColorValue=255), add=T, border=T)
+points(grocery$lon, grocery$lat, col="cyan", pch=19, cex=.8)
+
+
+##NOTES AND QUESTIONS FOR CLASSMATES
+#buffer approximiates 1/2 mile and 1 mile from grocery store, as these are the measures used to identify food deserts.  i think someone figured out how to get the distances exact - we should apply that here before moving forward.
+#some points are falling outside of the city, even though they were listed with Syracuse addresses.  this is a data entry issue (by whoever posted from community geography). should we manually identify and eliminate those outside the bounds?
+#r won't plot colors of buffer zones when assigned an alpha - why is that?
+
+```
