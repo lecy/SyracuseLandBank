@@ -1,0 +1,81 @@
+---
+title: "Download and clean the code violations dataset"
+output: 
+  html_document:
+    df_print: paged
+    keep_md: true
+    
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set( message = F, warning = F)
+
+library(maptools)
+library(sp)
+library(dplyr)
+library(pander)
+library(rgdal)
+library(geojsonio)
+
+```
+
+## Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 is incomplete so we will work with only data from 2012 to 2016. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
+
+## 1. Load Syracuse Geojson Files
+
+```{r}
+
+#Load shapefiles from Github
+syr <- geojson_read("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/tracts.geojson", method="local", what="sp" )
+
+```
+
+## 2. Load Code violations data
+
+```{r}
+
+#Load data on code violations from Githib
+violations <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/codeviolations.csv", header = TRUE)
+
+#Drop all information besides complaint type, violation date, latitude, and longitude
+violations.2 <- violations[ , c("Complaint.Type","Violation.Date", "Address", "lat","lon") ]
+
+#Transform date variable into workable format with seperate variables year
+violations.2$Violation.Date <- as.Date( violations.2$Violation.Date, format="%m/%d/%Y" )
+
+violations.3 <- mutate( violations.2, year = format(violations.2$Violation.Date, format = "%Y"))
+
+#Drop data from before 2012 (before that time there were less than 60 violatiions logged in each year, after there were more than 10,000 so we can assume the data before 2012 is incomplete)
+violations.4 <- filter(violations.3, year > "2011")
+
+#Drop any rows with an NA for latitude or longitude.
+violations.coordinates <- violations.4[!is.na(violations.4$lon) & !is.na(violations.4$lat), ]
+
+#There are repeated entries in the data, keep only one copy of each of these
+violations.coordinates.2 <- unique(violations.coordinates)
+
+```
+
+## 3. Spatial join of violation data and shapefile
+
+```{r}
+
+#Pull out latitude and longitude from code violations data
+violations.coordinates.3 <- violations.coordinates.2[ c("lon", "lat") ]
+
+#Use latitude and longitude to turn data into Spatial points
+violations.spatial <- SpatialPoints(violations.coordinates.3,
+                     proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+#Project shapefiles so that CRS matches Spatial points
+syr.2 <- spTransform(syr, CRS("+proj=longlat +datum=WGS84"))
+
+#Use these spatial points to link violatons to the Syracuse city shapefile by geographic location
+violations.over <- over(violations.spatial , syr.2)
+
+#Combine this linking with the orginal code violations data. We now have a data frame with rows that have code violation information and information about the tract that the violation is located within
+violations.shape <- cbind(violations.coordinates.2, violations.over)
+
+```
+
+
