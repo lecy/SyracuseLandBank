@@ -19,7 +19,9 @@ library(geojsonio)
 
 ```
 
-## Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 is incomplete so we will work with only data from 2012 to 2016. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
+##Code Violations Data
+
+#### Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 is incomplete so we will work with only data from 2012 to 2016. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
 
 ## 1. Load Syracuse Geojson Files
 
