@@ -47,6 +47,7 @@ tbl.nhood <- table(dat.park$Nhood)
 tbl.nhood
 
 
+
 plot(dat.park$ACRES)
 area.cate1 <- dat.park[dat.park$ACRES <= 20, ]
 area.cate2 <- dat.park[dat.park$ACRES <= 40 & dat.park$ACRES > 20, ]
