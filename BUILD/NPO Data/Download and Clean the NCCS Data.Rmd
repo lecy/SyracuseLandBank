@@ -9,11 +9,11 @@ output:
       
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set( message=F, warning=F )
 ```
 
-## Download the Zip File
+## 1. Download the Zip File
 
 Set your working directory before downloading the .zip file. For example, please see the address in the code chunk below. Update the address as appropriate before running the code:
 ```{r}
@@ -38,10 +38,10 @@ You can see what has been unzipped by running the command dir(). Because the .zi
 setwd("~/Graduate School/PAI 690 Independent Study_DDM II/Group Project/NPO Variables/data/extracts")
 dat <- read.csv( "N2s8d2m.csv" )
 ```
-*The data dictionary for this .CSV file* is located at [the NCCS' website](http://nccsweb.urban.org/PubApps/showDD.php#Business%20Master%20Files).
+*The data dictionary for this .CSV file is located at __[the NCCS' website](http://nccsweb.urban.org/PubApps/showDD.php#Business%20Master%20Files)__*.
 
 
-## Filter the Values
+## 2. Filter the Values
 
 The dataset that was just loaded contains information on nonprofits from across the United States. We will need to filter the dataset in two steps. 
 
@@ -88,7 +88,7 @@ rm( syrNames )
 write.csv( dat, "NPO_Data.csv", row.names=F )
 ```
 
-## Geocode the Nonprofit Addresses
+## 3: Geocode the Nonprofit Addresses
 
 The package "ggmap" has a function, geocode, that allows you to query Google via the Maps API to return longitude and latitude coordinates for a street address. We will be using that function later on, when the addresses have been cleaned up and pasted together.
 
@@ -116,10 +116,9 @@ address$a <- gsub( "\\.", "", address$a )
 ## Combine the strings in this order: Address, City, State, Zip. Each is separated with a comma and a space
 addresses <- paste( address$a, address$c, address$s, address$z, sep=", " )
 
-
 ```
 
-**Second**, we will geocode the addresses. Please note that there is a limit to how many addresses Google will geocode for free. A data scientist who hit the 2,500 address-per-day cap developed an alternative to batch geocoding, which can be found [here](http://www.shanelynn.ie/massive-geocoding-with-r-and-google-maps/). 
+**Second**, we will geocode the addresses. Please note that there is a limit to how many addresses Google will geocode for free. A data scientist who hit the 2,500 address-per-day cap developed an alternative to batch geocoding, which can be found **[here](http://www.shanelynn.ie/massive-geocoding-with-r-and-google-maps/)**. 
 Once we have the addresses, we will bind the columns back into the original dataset, so that each NPO now has two additional columns of data: one a longitudinal coordinate, and the other a latitudinal coordinate.
 
 ```{r}
