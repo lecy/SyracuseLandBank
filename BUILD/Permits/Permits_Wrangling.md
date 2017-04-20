@@ -1,26 +1,7 @@
----
-title: "Description of data Wrangling for Permits Dataset"
-output: github_document
-html_document:
-  df_print: paged
-  keep_md: true
----
+Description of data Wrangling for Permits Dataset
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set( message=F, warning=F, fig.width = 10, fig.height = 10 )
-#install.packages("rmarkdown")
-library(dplyr)
-library(pander)
-library(ggmap)
-library(sp) #coordinates function ir here
-#install.packages("geojsonio")
-library(geojsonio )
-library(maptools )
-library(rgdal)
-library(spatialEco)
-```
-
-```{r}
+``` r
 #LOADING DAT 
 dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/Permits_raw.csv", stringsAsFactors = F)
 
@@ -46,60 +27,68 @@ x <- gsub( "\\d{2}/\\d{2}/", "", x) #deleting everything except the year. btw: "
 x <- as.numeric(x)
 dat$Year <- x
 dat <- dat[,c(1:6,9,7,8)]
-
 ```
 
-#Introducing the Dataset
+Introducing the Dataset
+=======================
 
-The Permits Dataset was provided by the City of Syracuse. It contains information for 21,556 permits from 2012 - 2016. 
-For each permit the Dataset inclueds variables like:
+The Permits Dataset was provided by the City of Syracuse. It contains information for 21,556 permits from 2012 - 2016. For each permit the Dataset inclueds variables like:
 
-* Type of Permit
-* Applicant name (can be either a person or a company)
-* Location
-* SBL
-* Date Issued
-* Valuation (cost of the activity the applicant is requesting permit for)
-* Fee Amount (the monies for the City)
+-   Type of Permit
+-   Applicant name (can be either a person or a company)
+-   Location
+-   SBL
+-   Date Issued
+-   Valuation (cost of the activity the applicant is requesting permit for)
+-   Fee Amount (the monies for the City)
 
 We used the types of permits to construct 4 categories that we will aggregate as variables at the Census Tract level.
 
 There are 32 types of permits:
 
-```{r, echo = F}
-unique(dat$Type)
-```
+    ##  [1] "Site Work"                 "Electric"                 
+    ##  [3] "Sprinkler"                 "Sign"                     
+    ##  [5] "HVAC/Mechanical"           "Fire Alarm"               
+    ##  [7] "Elevator"                  "Antenna / Dish"           
+    ##  [9] "Demolition"                "Com. Reno/Rem/Chg Occ"    
+    ## [11] "Curb Cut"                  "Road Cut"                 
+    ## [13] "Com. New Building"         "Electric (Meter Set)"     
+    ## [15] "Res. Remodel/Chg Occ"      "Misc.(deck, fence,ramp)"  
+    ## [17] "Sidewalk Replace"          "Security Alarm"           
+    ## [19] "Tank"                      "Sidewalk Cafe"            
+    ## [21] "Pool / Hot Tub"            "Liability Waiver"         
+    ## [23] "Public Assembly"           "Loading Zone (Business)"  
+    ## [25] "Encroach (Major)"          "Encroach (Deminimus)"     
+    ## [27] "Footing / Foundation"      "Encroachment (Converted)" 
+    ## [29] "Res. New 1-2 Family"       "Block Party (Business)"   
+    ## [31] "Parking Meter Rental"      "Block Party (Residential)"
 
+Categories created
+==================
 
-#Categories created
+We have placed this types of Permits into 4 categories to analyze them separately. They are:
 
-We have placed this types of Permits into 4 categories to analyze them separately. 
-They are:
+-   Residential Properties, 2 Types of permits in this category: "Res. Remodel/Chg Occ", "Res. New 1-2 Family"
 
-* Residential Properties, 
-  2 Types of permits in this category: "Res. Remodel/Chg Occ", "Res. New 1-2 Family" 
+-   Commercial Properties, 2 Types of permits in this category: "Com. New Building", "Com. Reno/Rem/Chg Occ"
 
-* Commercial Properties, 
-  2 Types of permits in this category: "Com. New Building", "Com. Reno/Rem/Chg Occ"
+-   Demolitions, 1 Type of permit in this category: Demolitions
 
-* Demolitions, 
-  1 Type of permit in this category: Demolitions
-
-* Installations and Repairs (to public space, res and com), 
-  9 Types of permits in this category: Electric, Elevator, Fire Alarm, HVAC/Mechanical, Misc.(deck, fence,ramp), Pool / Hot Tub, Security Alarm, Sprinkler, Tank.
+-   Installations and Repairs (to public space, res and com), 9 Types of permits in this category: Electric, Elevator, Fire Alarm, HVAC/Mechanical, Misc.(deck, fence,ramp), Pool / Hot Tub, Security Alarm, Sprinkler, Tank.
 
 Finally, 18 permit types have been ignored.
 
-#Description of Data wrangling
+Description of Data wrangling
+=============================
 
 This process produced two datasets:
 
-* Permits_Processed.csv
-* Permits_aggregated.csv
+-   Permits\_Processed.csv
+-   Permits\_aggregated.csv
 
 Before geocoding and due to the size of the dataset, we will make subsetsand then proceed to batch geocode them.
 
-```{r}
+``` r
 #BEFORE GEOCODING, CREATING SUBSETS
 
 #dividing by categories
@@ -137,14 +126,14 @@ df.Ign <- dat[df.Ign,]
 #this three ignored permit types were initially geocoded and therefore have tract id in the dataframe, but will not be used for aggregating the variables 
 
 #save(df.Ign, file = "df.Ign.rda") #we save this subset separatelly
-
 ```
 
-##GEOCODING
+GEOCODING
+---------
 
 The following code chunks are not being evaluated because the process of geocoding is expensive
 
-```{r, eval=FALSE}
+``` r
 #GEOCODING the dataframes
 
 #devtools::install_github("dkahle/ggmap") #Installing latest ggmap from the creators webpage. Need to download this in order for the code to work.
@@ -186,7 +175,7 @@ After the first geocode, we had a considerable amount of NAs, mainly because of 
 
 Some Locations where given as intersections between Addresses or an extension between two addresses. This created problems in the geocoding so we dropped the second address. Other replacements were deleting information from the address.
 
-```{r, eval=FALSE}
+``` r
 #1. CLEANING ADDRESSES
 #good source for regular expressions:
 #https://rstudio-pubs-static.s3.amazonaws.com/74603_76cd14d5983f47408fdf0b323550b846.html
@@ -384,14 +373,11 @@ miss <- gsub( "^ ", "", miss)
 miss <- paste(miss, ", Syracuse, New York", sep = "")
 
 df.Ina$Location2 <- miss
-
 ```
 
-Now that the addresses are clean, we geocode again and save the objects. 
-After the second goecode, persisting NAs were fixed mannually.
+Now that the addresses are clean, we geocode again and save the objects. After the second goecode, persisting NAs were fixed mannually.
 
-```{r, eval= FALSE}
-
+``` r
 #2. GEOCODING THE NAs
 
 register_google(key = "YOUR KEY HERE", account_type = "premium", day_limit = 100000) #Need to put premium to fool the function. I did not have a premium, just a google API key that was authorized to bill me
@@ -456,14 +442,11 @@ df.Ina[x,12] <- location[,1]
 #adding lat
 df.Ina[x,13] <- location[,2]
 save(df.Ina, file = "df.Ina.rda")
-
-
-
 ```
 
-Now we add the geocode information to the NAs in the  original subsets
-```{r, eval=FALSE}
+Now we add the geocode information to the NAs in the original subsets
 
+``` r
 #Adding the geocode information to the NAs in the  original subsets
 
 #FOUND
@@ -508,12 +491,11 @@ sum(x)
 dim(df.Ina)
 df.I[x,] <- df.Ina
 save(df.I, file = "df.I.rda")
-
 ```
 
 Merging all geocoded subets
-```{r, eval=FALSE}
 
+``` r
 #Merging ALL geocoded SUBSETS
 
 dat <- rbind(df.R, df.C, df.I, df.D, df.F)
@@ -521,8 +503,10 @@ dat <- rbind(df.R, df.C, df.I, df.D, df.F)
 #write.csv(dat, file= "Permits_noNAs.csv", row.names = F) #this dataset is missing the Ignored permits which we will add later. we are saving it just in case.
 ```
 
-## Adding the tract id to the permits.
-```{r, eval=FALSE}
+Adding the tract id to the permits.
+-----------------------------------
+
+``` r
 #Creating a TRACT variable for each permit in dat
 
 #making the permit dat object a spatial object
@@ -548,10 +532,9 @@ class(x) #x is a dataframe with only one column.
 dat@data$Tract <- as.character(x[,1]) #we want the vector for column one to be added to de dataset
 
 #now the dataset has tract numbers - points outside the tract polygons of our shape fileappear with an NA.
-
 ```
 
-```{r, eval=FALSE}
+``` r
 #merging the df.Ign and dat dataset (with the geocoded and tract id permits) 
 
 #making dat a regular dataframe object to make the bind
@@ -566,11 +549,12 @@ df.Ign$lat <- NA
 df.Ign$Tract <- NA
 
 dat <- rbind(dat, df.Ign)
-
 ```
 
-##Sorting and saving the CSV file
-```{r, eval=FALSE}
+Sorting and saving the CSV file
+-------------------------------
+
+``` r
 #sorting the dataset and saving it as a csv file. 
 dat <- arrange(dat, Type, Year)
 
@@ -578,14 +562,14 @@ dat <- arrange(dat, Type, Year)
 dat[,c("Antenna...Dish","SBL.")] <- NULL
 
 #write.csv(dat, file= "Permits_processed.csv", row.names = F)
-
 ```
 
-##Generating aggregated dataframe
+Generating aggregated dataframe
+-------------------------------
 
 First we divide the permits types that we want to use from the ingored ones creating two subsets.
 
-```{r, eval=FALSE}
+``` r
 dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/Permits_processed.csv", stringsAsFactors = F)
 
 #Creating two subsets: dat and df.Ign
@@ -605,41 +589,38 @@ df.Ign <- dat[Ign,]
 
 #2. dat subset holds all permit types we are going to use. These are geocoded and have tract id (14 permit types)
 dat <- dat[!Ign,]
-
 ```
 
 Now we delete the permits that have no tract id assigned.
 
-```{r, eval=FALSE}
+``` r
 #CLIPPING all dat permits outside syracuse city
 #use the tract variable, because of the over spatial function (described in the data wrangling rmd) the points outside the tracts have NA
 
 x<- is.na(dat$Tract) #191 NAs, or points outside the tracts
 dat <- dat[!x,] # eliminating the NAs
-
-
 ```
 
 And now we aggregate the data to census tract to produce the final dataset
 
 This dataset will have the following columns:
 
-* TRACT
-* YEAR
-* PER_TOT_FRQ
-* PER_TOT_VAL
-* PER_RES_FRQ
-* PER_RES_VAL
-* PER_COM_FRQ
-* PER_COM_VAL
-* PER_INS_FRQ
-* PER_INS_VAL
-* PER_DEM_FRQ
-* PER_DEM_VAL
+-   TRACT
+-   YEAR
+-   PER\_TOT\_FRQ
+-   PER\_TOT\_VAL
+-   PER\_RES\_FRQ
+-   PER\_RES\_VAL
+-   PER\_COM\_FRQ
+-   PER\_COM\_VAL
+-   PER\_INS\_FRQ
+-   PER\_INS\_VAL
+-   PER\_DEM\_FRQ
+-   PER\_DEM\_VAL
 
 Look at the data dictionary for more information about this variables.
 
-```{r, eval=FALSE}
+``` r
 #Aggregating the variables and binding them.
 
 #TOTAL 
@@ -698,130 +679,9 @@ var <- merge(var,Ins, all = T)
 colnames(var)[c(1,2)] <- c("TRACT", "YEAR")
 getwd()
 #write.csv(var, file = "Permits_aggregated.csv", row.names = FALSE) #writting the aggregated dataset!
-
 ```
 
-#Descriptives from the datasets
+Descriptives from the datasets
+==============================
 
-
-```{r, echo=FALSE}
-
-#LOADING DATASET, formating it for sp and creating a types subset
-
-#LOADING DAT 
-dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/Permits_processed.csv", stringsAsFactors = F)
-
-#Creating two subsets: dat and df.Ign
-
-#1. df.Ign subset holds  the permit types we are not using.
-#creating a vector that contains all the cases of ignored permit types.
-x <- dat$Type
-Ign <- x == "Antenna / Dish" | x =="Electric (Meter Set)" |  x=="Block Party (Business)" | x=="Block Party (Residential)" | x=="Curb Cut" | x=="Encroach (Deminimus)" | x=="Encroach (Major)"  | x=="Encroachment (Converted)" | x=="Footing / Foundation"  | x=="Liability Waiver" | x=="Loading Zone (Business)" | x=="Parking Meter Rental" | x=="Public Assembly" | x=="Road Cut" | x=="Sidewalk Cafe" | x=="Sidewalk Replace" | x=="Sign" | x=="Site Work"
-
-#subsetting it (18 ignored permit types)
-df.Ign <- dat[Ign,]
-
-#2. dat subset holds all permit types we are going to use. These are geocoded and have tract id (14 permit types)
-dat <- dat[!Ign,]
-
-#CLIPPING all dat permits outside syracuse city
-#use the tract variable, because of the over spatial function (described in the data wrangling rmd) the points outside the tracts have NA
-
-x<- is.na(dat$Tract) #191 NAs, or points outside the tracts
-dat <- dat[!x,] # eliminating the NAs
-
-####################
-
-#CREATING types SUBSET for dat and df.Ign: just to show the freq of the different permits types
-
-#First for the dat dataset.
-#using table to create a dataframe with the frequencies for each category
-types <- data.frame(type = names(table(dat$Type)), freq = as.numeric(table(dat$Type)))
-rownames(types) <- NULL
-types <- arrange(types, type) #ordering types alphabetically
-
-#getting the mean/max/min value per type
-x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=mean)
-x <- arrange(x, Group.1)
-types$meanval <- x$x
-
-#getting the min value per type
-x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=min)
-x <- arrange(x, Group.1)
-types$minval <- x$x
-
-#getting the max value per type
-x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=max)
-x <- arrange(x, Group.1)
-types$maxval <- x$x
-
-#Second, for the df.Ign dataset
-#using table to create a dataframe with the frequencies for each category
-types.Ign <- data.frame(type = names(table(df.Ign$Type)), freq = as.numeric(table(df.Ign$Type)))
-rownames(types.Ign) <- NULL
-types.Ign <- arrange(types.Ign, type) #ordering types alphabetically
-
-#getting the mean/max/min value per type
-x <- aggregate(df.Ign$Valuation, by=list(df.Ign$Type), FUN=mean)
-x <- arrange(x, Group.1)
-types.Ign$meanval <- x$x
-
-#getting the min value per type
-x <- aggregate(df.Ign$Valuation, by=list(df.Ign$Type), FUN=min)
-x <- arrange(x, Group.1)
-types.Ign$minval <- x$x
-
-#getting the max value per type
-x <- aggregate(df.Ign$Valuation, by=list(df.Ign$Type), FUN=max)
-x <- arrange(x, Group.1)
-types.Ign$maxval <- x$x
-
-
-
-####################
-
-#FORMATTING dat as a spatial object
-dat <- SpatialPointsDataFrame(dat[ ,c( "lon", "lat") ], dat, proj4string=CRS("+proj=longlat +datum=WGS84")) #this is so that it does not lose the lat lon in the dataframe when transformed into a sp
-
-
-#########################
-
-#LOADING THE SHAPEFILE
-
-#loading shape file
-shapes <- geojson_read("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
-
-```
-
-
-```{r, echo=FALSE}
-#df.R
-cat <- as.character(dat@data$Type)  #setting up indexes
-df.R <- cat== "Res. Remodel/Chg Occ" | cat == "Res. New 1-2 Family" 
-df.R <- dat[df.R,] 
-
-
-#df
-df.C <- cat== "Com. New Building" | cat=="Com. Reno/Rem/Chg Occ"
-df.C <- dat[df.C,] 
-
-#df
-df.D <- cat=="Demolition"
-df.D <- dat[df.D,] 
-
-#df
-df.I <- cat=="Electric" | cat=="Elevator" | cat=="Fire Alarm" | cat=="HVAC/Mechanical" | cat=="Misc.(deck, fence,ramp)" | cat=="Pool / Hot Tub" | cat=="Security Alarm" | cat=="Sprinkler" | cat=="Tank"
-df.I <- dat[df.I,] 
-
-par( mar = c( 1, 1, 3, 1 ) )
-plot(shapes, col = F, border = "grey10") 
-  title(main = "All categories of Permits")
-  points(df.I, pch=20, cex= .4, col=adjustcolor("orange", alpha.f = .8))
-  points(df.D, pch=20, cex= .4, col=adjustcolor("forestgreen", alpha.f = .8))
-  points(df.C, pch=20, cex= .4, col=adjustcolor("red2", alpha.f = .8))
-  points(df.R, pch=20, cex = .4, col=adjustcolor("dodgerblue4", alpha.f = .8))
-  legend("bottomright", legend = c("Residential", "Commercial", "Insta/Rep", "Demolitions"), bty = "n", pch = 20, cex = .8, pt.cex = 2, col = c("orange","forestgreen","red2","dodgerblue4"))
-
-```
-
-
+![](Permits_Wrangling_files/figure-markdown_github/unnamed-chunk-16-1.png)

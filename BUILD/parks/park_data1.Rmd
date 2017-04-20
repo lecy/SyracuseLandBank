@@ -34,13 +34,22 @@ syr <- ono_tracts[as.numeric(as.character(ono_tracts$NAME10)) < 62, ]
 
 ###load park shapefiles
 
-park <- readShapePoly( fn="SyracuseParks051414_UTM", proj4string=CRS("+proj=longlat +datum=WGS84") )
+park <- readShapePoly( fn="SyracuseParks051414_UTM", verbose=TRUE,proj4string=CRS("+proj=longlat +datum=WGS84") )
 
 syr <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
 
+library(rgdal)
+library(sp)
+library(maptools)
+
+# write geojson
+#geojson_file <- "C:/Users/mgao05/Desktop/PAI INdenpendent study/park/park.geojson"
+#writeOGR(park, geojson_file,layer = "geojson", driver = "GeoJSON")
+
+
 plot(syr, border="gray10")
 plot(park, border="gray10")
-dat <- read_csv("C:\\Users\\mgao05\\Desktop\\PAI INdenpendent study\\landbank\\SyracuseLandBank\\DATA\\RAW_DATA\\public_park.csv")
+dat <- read.csv("C:/Users/mgao05/Desktop/PAI INdenpendent study/park/public_park.csv", sep = ",", header=TRUE )
 
 dat.park <- dat[dat$LandUse == "Parks", ]
 tbl.nhood <- table(dat.park$Nhood)
@@ -49,9 +58,26 @@ tbl.nhood
 
 
 plot(dat.park$ACRES)
-area.cate1 <- dat.park[dat.park$ACRES <= 20, ]
-area.cate2 <- dat.park[dat.park$ACRES <= 40 & dat.park$ACRES > 20, ]
-area.cate3 <- dat.park[dat.park$ACRES <= 150 & dat.park$ACRES > 40, ]
+
+#seperate parks of different areas
+small.size.park <- dat.park[dat.park$ACRES <= 1, ]
+
+medium.size.park <- dat.park[dat.park$ACRES <= 10 & dat.park$ACRES > 1, ]
+
+large.size.park <- dat.park[dat.park$ACRES <= 150 & dat.park$ACRES >10, ]
+
+#seperate by neighborhoods function since parks in different neighborhood might have different effect on house value
+
+sep.nhood <- function(Nhood){
+  dat <- dat.park[dat.park$Nhood == Nhood, ]
+  return(dat)
+}
+
+#test on south valley
+South.Valley <- sep.nhood("South Valley")
+Southside <- sep.nhood("Southside")
+
+
 
 
 
