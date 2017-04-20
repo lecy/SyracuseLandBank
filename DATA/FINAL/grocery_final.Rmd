@@ -38,6 +38,6 @@ grocery_tract <- as.data.frame(table(grocery$GEOID10))
 names(grocery_tract) <- c("GEOID10", "GROCERY2015")
 
 #Export to CSV
-write.csv(grocery, file = "grocery_final.csv", row.names=FALSE)
+write.csv(grocery_tract, file = "grocery_final.csv", row.names=FALSE)
 
 ```
