@@ -156,3 +156,8 @@ fullFrame <- rbind(fullFrame, d)
 
 ```
 
+```{r}
+write.csv(fullFrame, file = "censusDataFromChris.csv")
+```
+
+
