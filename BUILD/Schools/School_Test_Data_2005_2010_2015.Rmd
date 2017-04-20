@@ -194,6 +194,8 @@ INTPTLON10=unique(INTPTLON10))
 #rename variable "Year" name for merge with other datasets
 #census.score.year <- plyr::rename(census.score.year, c("Test.Year"="Year"))
 
+
+
 #write csv to be uploaded to github
 #write.csv(census.score.year, file = "syr__ed_score_per_tract.csv")
 
