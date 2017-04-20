@@ -171,10 +171,12 @@ labels &lt;- c(&quot;name&quot;, &quot;state&quot;, &quot;county&quot;,
             &quot;less18&quot;, &quot;singleMotherBelowPoverty&quot;, &quot;travelTimeToWorkMin&quot;, &quot;enrolledInSchool&quot;, 
             &quot;year&quot;, &quot;GEOID&quot;)
 
+labels &lt;- toupper(labels)
+
 names(census) &lt;- labels
 census &lt;- tbl_df(census)
 
-syrCensus&lt;- filter(census, as.numeric(tract)&lt;10000)
+syrCensus&lt;- filter(census, as.numeric(TRACT)&lt;10000)
 
 
 census2010 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2010, 
@@ -187,14 +189,14 @@ census2010 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2010,
                         region = &quot;tract:*&quot;, 
                         regionin = &quot;state: 36 + county:067&quot;)
 
-names(census2010) &lt;- c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
+names(census2010) &lt;- toupper(c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
                        &quot;total&quot;, &quot;white&quot;, &quot;black&quot;, &quot;asian&quot;, 
                        &quot;hispanic&quot;, &quot;vacant&quot;, &quot;otherVacant&quot;, 
                        &quot;vacantForRent&quot;, &quot;seasonalVacant&quot;, &quot;forSaleVacant&quot;,
                        &quot;households&quot;, &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, 
-                       &quot;totalHousingUnits&quot;, &quot;less18&quot;)
+                       &quot;totalHousingUnits&quot;, &quot;less18&quot;))
 census2010 &lt;- tbl_df(census2010)
-census2010&lt;- filter(census2010, as.numeric(tract)&lt;10000)
+census2010&lt;- filter(census2010, as.numeric(TRACT)&lt;10000)
 
 census2000 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2000, 
                         key = censuskey, 
@@ -206,15 +208,15 @@ census2000 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2000,
                         region = &quot;tract:*&quot;, 
                         regionin = &quot;state: 36 + county:067&quot;)
 
-names(census2000) &lt;- c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
+names(census2000) &lt;- toupper(c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
                        &quot;total&quot;, &quot;white&quot;, &quot;black&quot;, &quot;asian&quot;, 
                        &quot;hispanic&quot;, &quot;vacant&quot;, &quot;otherVacant&quot;, 
                        &quot;vacantForRent&quot;, &quot;seasonalVacant&quot;, 
                        &quot;forSaleVacant&quot;, &quot;households&quot;, 
-                       &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, &quot;totalHousingUnits&quot;)
+                       &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, &quot;totalHousingUnits&quot;))
 
 census2000 &lt;- tbl_df(census2000)
-census2000&lt;- filter(census2000, as.numeric(tract)&lt;10000)
+census2000&lt;- filter(census2000, as.numeric(TRACT)&lt;10000)
 
 moreCensus2000&lt;- getCensus(name = &quot;sf3&quot;, vintage = 2000, 
                            key = censuskey,
@@ -224,15 +226,15 @@ moreCensus2000&lt;- getCensus(name = &quot;sf3&quot;, vintage = 2000,
                                     &quot;H047003&quot;, &quot;H050003&quot;, &quot;P130003&quot;, &quot;P038010&quot;, &quot;H076001&quot;), 
                            region = &quot;tract:*&quot;, regionin = &quot;state: 36 + county:067&quot;)
 
-names(moreCensus2000) &lt;- c(&quot;name&quot;, &quot;state&quot;, &quot;county&quot;, &quot;tract&quot;, 
+names(moreCensus2000) &lt;- toupper(c(&quot;name&quot;, &quot;state&quot;, &quot;county&quot;, &quot;tract&quot;, 
                            &quot;medianHouseIncome&quot;, &quot;medianFamIncome&quot;, &quot;maleUnemployed&quot;,
                            &quot;femaleUnemployed&quot;, &quot;maleLaborForce&quot;, &quot;femaleLaborForce&quot;, 
                            &quot;poverty&quot;, &quot;totalForPoverty&quot;, &quot;lackingPlumbing&quot;,
                            &quot;lackingKitchenFacilities&quot;, &quot;aggregateTravelTimeToWork&quot;,
-                           &quot;enrolledInSchool&quot;, &quot;housingValues&quot;)
+                           &quot;enrolledInSchool&quot;, &quot;housingValues&quot;))
 
 moreCensus2000 &lt;- tbl_df(moreCensus2000)
-moreCensus2000&lt;- filter(moreCensus2000, as.numeric(tract)&lt;10000)
+moreCensus2000&lt;- filter(moreCensus2000, as.numeric(TRACT)&lt;10000)
 
 
 
