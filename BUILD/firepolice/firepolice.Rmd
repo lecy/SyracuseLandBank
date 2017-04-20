@@ -48,7 +48,7 @@ write.csv( firepolice, file = "firepolice_processed.csv", row.names=FALSE )
 #Aggregate
 firepolice_tract <- as.data.frame( table( firepolice$TRACT ) )
 firepolice_tract$YEAR <- 2017
-names( firepolice_tract ) <- c( "TRACT", "firepolice", "YEAR" )
+names( firepolice_tract ) <- c( "TRACT", "FIREPOLICE", "YEAR" )
 
 #Export Aggregate to CSV
 setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/AGGREGATED_DATA" )
