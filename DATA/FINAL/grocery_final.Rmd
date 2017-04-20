@@ -6,7 +6,7 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+knitr::opts_chunk$set( echo = TRUE,  warning = F , message = F )
 ```
 Set-Up
 ```{r}
@@ -23,7 +23,7 @@ library( sp )
 library( tools )
 
 #Prepare Working Directory
-setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/FINAL")
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/FINAL" )
 
 ```
 
@@ -31,13 +31,12 @@ setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/
 ```{r}
 
 #Load Data
-grocery <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/grocery_processed.csv", stringsAsFactors=FALSE)
-grocery
-grocery_tract <- as.data.frame(table(grocery$GEOID10))
+grocery <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/grocery_processed.csv", stringsAsFactors=FALSE )
+grocery_tract <- as.data.frame( table( grocery$GEOID10 ) )
 
-names(grocery_tract) <- c("GEOID10", "GROCERY2015")
+names( grocery_tract ) <- c( "GEOID10", "GROCERY2015" )
 
 #Export to CSV
-write.csv(grocery_tract, file = "grocery_final.csv", row.names=FALSE)
+write.csv( grocery_tract, file = "grocery_final.csv", row.names=FALSE )
 
 ```
