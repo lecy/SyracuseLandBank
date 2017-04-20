@@ -1,0 +1,49 @@
+---
+title: "firepolice_processed"
+author: "Christine Brown"
+date: "April 19, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+```
+
+Set-Up
+```{r}
+#Load Packages
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( sp )
+
+#Prepare Working Directory
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/PROCESSED_DATA" )
+
+```
+
+
+```{r}
+
+#Load Shapefiles
+syr_tracts <- geojson_read( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
+syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
+syr_parcels <- geojson_read( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/syr_parcels.geojson", method="local", what="sp" )
+syr_parcels <- spTransform( syr_parcels, CRS( "+proj=longlat +datum=WGS84" ) )
+
+#Identify Fire/Police Station Parcels and Add Coordinates
+firepolice_sp <- syr_parcels[ syr_parcels$LUCODE == 662, ]
+firepolice_centroid <- gCentroid( firepolice_sp, byid=TRUE )
+firepolice <- cbind( as.data.frame( firepolice_sp ), as.data.frame( firepolice_centroid ) )
+firepolice <- mutate( firepolice, GEOID10=( as.numeric( as.character( CensusTrac ) ) )*100+36067000000 )
+firepolice <- firepolice[ , c( "GEOID10", "x", "y" ) ]
+names( firepolice ) <- c( "GEOID10", "LON", "LAT" )
+
+#Export to CSV
+write.csv( firepolice, file = "firepolice_processed.csv", row.names=FALSE )
+```
