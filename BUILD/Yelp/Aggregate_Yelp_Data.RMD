@@ -1,0 +1,173 @@
+---
+title: "Aggregate_Yelp_Data"
+author: "Kyle Crichton"
+date: "April 19, 2017"
+output: github_document
+---
+
+#Setup
+
+Load Packages
+
+```{r, warning=F, message=F }
+library(maptools)
+library(sp)
+```
+
+Dowloads zip of census track shapefiles, unzips and removes zipped file.
+
+```{r, warning=F, message=F }
+download.file("ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_36067_tract10.zip", "Support Files/onondaga census tracts.zip")
+
+unzip("Support Files/onondaga census tracts.zip", exdir = "Support Files/CensusTracks")
+
+file.remove("Support Files/onondaga census tracts.zip")
+```
+
+Loads shapefiles for census tracks.
+
+```{r, warning=F, message=F }
+syr <- readShapePoly(fn="Support Files/CensusTracks/tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84"))
+```
+
+Load Yelp Dataset and prep data.
+```{r, warning=F, message=F }
+dat <- read.csv( "Yelp_Data.csv", stringsAsFactors=FALSE )
+dat$RATING[is.na(dat$RATING)] <- 0
+dat$PRICE_HIGH[dat$PRICE_HIGH == 999] <- 90
+head(dat)
+```
+
+# Aggregate Data
+
+Convert to spatial points and perform spatial join to census tract shapefiles.
+
+```{r, warning=F, message=F }
+dat$coord <- dat[ ,c("LONGITUDE","LATITUDE")]
+yelp <- SpatialPoints(dat$coord, proj4string=CRS("+proj=longlat +datum=WGS84"))
+
+```
+
+Plot restaurants and bars across Syracuse.
+
+```{r, warning=F, message=F }
+par(mar=c(0,0,0,0))
+plot(syr, col="grey90", border="White")
+points(yelp, pch=20, cex = 0.7, col="darkorange2")
+```
+
+Match yelp data to census tract.  Store census FIPS code in yelp dataset.
+
+```{r, warning=F, message=F }
+tracts.yelp <- over(yelp, syr)
+dat$FIPS <- tracts.yelp$GEOID10
+dat$COUNT <- rep.int(1, 932)
+```
+
+Create a new data frame to store aggregate information.  
+
+```{r, warning=F, message=F }
+yelp.data <- data.frame("TRACT" = syr$GEOID10, "YEAR" = rep.int(2017, 140))
+```
+
+Aggregation: Rating
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$RATING, list(dat$FIPS), FUN="mean")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$RATING <- temp$x[tract.order]
+```
+
+Aggregation: Reviews
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$REVIEWS, list(dat$FIPS), FUN="mean")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$REVIEWS <- temp$x[tract.order]
+```
+
+Aggregation: Price
+
+```{r, warning=F, message=F }
+temp <- aggregate((dat$PRICE_HIGH - dat$PRICE_LOW)/2, list(dat$FIPS), FUN="mean")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$PRICE <- temp$x[tract.order]
+```
+
+Aggregation: Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT, list(dat$FIPS), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$ESTABLISHMENTS <- temp$x[tract.order]
+```
+
+Aggregation: Bars
+
+```{r, warning=F, message=F }
+bars <- c("Bars", "Beer Bars", "Gay Bars", "Dive Bars", "Beer, Wine & Spirits
+", "Pubs", "Breweries", "Sports Bars", "Lounges", "Wine Bars", "Nightlife", "Music Venues", "Dance Clubs", "Pool Halls")
+temp <- aggregate(dat$REVIEWS[dat$SUBTYPE1 %in% bars], list(dat$FIPS[dat$SUBTYPE1 %in% bars]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$BARS <- temp$x[tract.order]
+```
+
+Aggregation: Restaurants
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[!(dat$SUBTYPE1 %in% bars)], list(dat$FIPS[!(dat$SUBTYPE1 %in% bars)]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$RESTAURANTS <- temp$x[tract.order]
+```
+
+Aggregation: 4-5 Star Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[dat$RATING >= 4], list(dat$FIPS[dat$RATING >= 4]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$STARS_4_5 <- temp$x[tract.order]
+```
+
+Aggregation: 3-4 Star Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[dat$RATING >= 3 & dat$RATING < 4], list(dat$FIPS[dat$RATING >= 3 & dat$RATING < 4]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$STARS_3_4 <- temp$x[tract.order]
+```
+
+Aggregation: 2-3 Star Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[dat$RATING >= 2 & dat$RATING < 3], list(dat$FIPS[dat$RATING >= 2 & dat$RATING < 3]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$STARS_2_3 <- temp$x[tract.order]
+```
+
+Aggregation: 1-2 Star Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[dat$RATING >= 1 & dat$RATING < 2], list(dat$FIPS[dat$RATING >= 1 & dat$RATING < 2]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$STARS_1_2 <- temp$x[tract.order]
+```
+
+Aggregation: 0-1 Star Establishments
+
+```{r, warning=F, message=F }
+temp <- aggregate(dat$COUNT[dat$RATING < 1], list(dat$FIPS[dat$RATING < 1]), FUN="sum")
+tract.order <- match(yelp.data$TRACT, temp$Group.1)
+yelp.data$STARS_0_1 <- temp$x[tract.order]
+```
+
+Display sample of the Data Frame
+
+```{r, warning=F, message=F }
+head(yelp.data)
+```
+
+Create output csv file
+
+```{r, warning=F, message=F }
+write.csv(yelp.data, file = "Yelp_Aggregated.csv")
+```
