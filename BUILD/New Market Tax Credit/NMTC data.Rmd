@@ -1,0 +1,65 @@
+---
+title: "NMTC data"
+author: "Linnea Powell"
+date: "April 13, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What is the NMTC and how might it impact home values?
+
+## Raw data source and description
+You can download the full national dataset for NMTC for years 2003-2014 from https://www.cdfifund.gov/news-events/news/Pages/news-detail.aspx?NewsID=225&Category=Press%20Releases in the form of a spreadsheet. A Data Point Description on the first tab of the spreadsheet explains each variable. You can save the second tab of the spreadsheet "Financial Notes 1 - Data Set PU" off as a csv file to then manipulate in R.
+
+The data has a row for each project ID and you can filter based on a variety of location variables and the year placed in service (Yr_PIS) or the allocation year (Yr_Alloc)
+
+## Wrangling the data
+```{r}
+#loading relevant libraries
+library( maptools )
+library( sp )
+library( dplyr )
+library( pander )
+```
+
+```{r}
+# read in raw data with csv file
+NMTC.full.dat <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/2014_NMTC_FINANCES.csv", header=TRUE)
+# select only the rows for the city of Syracuse
+NMTC.syr <- subset (NMTC.full.dat, City == "Syracuse")
+
+```
+
+
+```{r}
+#select columns
+NMTC.syr.year.dol<- select(NMTC.syr, X2010.Census.Tract, Origination.Year, QLICI.Amount)
+
+#clean values
+NMTC.syr.year.dol$QLICI.Amount<-substring(NMTC.syr.year.dol$QLICI.Amount,2)
+NMTC.syr.year.dol$X2010.Census.Tract<-substring(NMTC.syr.year.dol$X2010.Census.Tract,8)
+NMTC.syr.year.dol$QLICI.Amount <- as.numeric(gsub(",","",NMTC.syr.year.dol$QLICI.Amount))
+NMTC.syr.year.dol
+
+# aggregate dollars by census tract
+NMTC.ct.group<- group_by(NMTC.syr.year.dol, X2010.Census.Tract, Origination.Year, QLICI.Amount)
+NMTC.ct.group
+NMTC.agg <-aggregate(NMTC.ct.group$QLICI.Amount, by=list(NMTC.ct.group$X2010.Census.Tract, NMTC.ct.group$Origination.Year), FUN=sum, na.rm=TRUE)
+colnames(NMTC.agg) <- c("Tract","Year","NMTC Dollars")
+NMTC.agg$Tract <-as.numeric(as.character(NMTC.agg$Tract))
+NMTC.agg$Tract <- (NMTC.agg$Tract/100)
+NMTC.agg
+
+```
+
+```{r}
+
+# Generate a .CSV file 
+
+setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
+write.csv( NMTC.agg, "NMTC.data.csv", row.names=F )
+
+```
