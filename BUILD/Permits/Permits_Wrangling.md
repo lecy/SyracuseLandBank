@@ -29,9 +29,10 @@ dat$Year <- x
 dat <- dat[,c(1:6,9,7,8)]
 ```
 
-### Information about the Dataset
+Introducing the Dataset
+=======================
 
-The Permits Dataset has information for 21,556 permits from 2012 - 2016. For each permit the Dataset inclueds variables like:
+The Permits Dataset was provided by the City of Syracuse. It contains information for 21,556 permits from 2012 - 2016. For each permit the Dataset inclueds variables like:
 
 -   Type of Permit
 -   Applicant name (can be either a person or a company)
@@ -62,6 +63,9 @@ There are 32 types of permits:
     ## [29] "Res. New 1-2 Family"       "Block Party (Business)"   
     ## [31] "Parking Meter Rental"      "Block Party (Residential)"
 
+Categories created
+==================
+
 We have placed this types of Permits into 4 categories to analyze them separately. They are:
 
 -   Residential Properties, 2 Types of permits in this category: "Res. Remodel/Chg Occ", "Res. New 1-2 Family"
@@ -74,10 +78,18 @@ We have placed this types of Permits into 4 categories to analyze them separatel
 
 Finally, 18 permit types have been ignored.
 
+Description of Data wrangling
+=============================
+
+This process produced two datasets:
+
+-   Permits\_Processed.csv
+-   Permits\_aggregated.csv
+
+Before geocoding and due to the size of the dataset, we will make subsetsand then proceed to batch geocode them.
+
 ``` r
 #BEFORE GEOCODING, CREATING SUBSETS
-
-#Due to the size of the dataset, we will make 4 subsets (one for each category) and batch geocode them.
 
 #dividing by categories
 
@@ -116,9 +128,10 @@ df.Ign <- dat[df.Ign,]
 #save(df.Ign, file = "df.Ign.rda") #we save this subset separatelly
 ```
 
-### GEOCODING
+GEOCODING
+---------
 
-The following code chunk is not being evaluated because the process of geocoding is expensive
+The following code chunks are not being evaluated because the process of geocoding is expensive
 
 ``` r
 #GEOCODING the dataframes
@@ -490,7 +503,8 @@ dat <- rbind(df.R, df.C, df.I, df.D, df.F)
 #write.csv(dat, file= "Permits_noNAs.csv", row.names = F) #this dataset is missing the Ignored permits which we will add later. we are saving it just in case.
 ```
 
-### Adding the tract id to the permits.
+Adding the tract id to the permits.
+-----------------------------------
 
 ``` r
 #Creating a TRACT variable for each permit in dat
@@ -537,7 +551,8 @@ df.Ign$Tract <- NA
 dat <- rbind(dat, df.Ign)
 ```
 
-### Sorting and saving the CSV file
+Sorting and saving the CSV file
+-------------------------------
 
 ``` r
 #sorting the dataset and saving it as a csv file. 
@@ -549,7 +564,8 @@ dat[,c("Antenna...Dish","SBL.")] <- NULL
 #write.csv(dat, file= "Permits_processed.csv", row.names = F)
 ```
 
-### Generating a datafram with the variables aggregated to census tract
+Generating aggregated dataframe
+-------------------------------
 
 First we divide the permits types that we want to use from the ingored ones creating two subsets.
 
@@ -664,3 +680,10 @@ colnames(var)[c(1,2)] <- c("TRACT", "YEAR")
 getwd()
 #write.csv(var, file = "Permits_aggregated.csv", row.names = FALSE) #writting the aggregated dataset!
 ```
+
+Descriptives from the datasets
+==============================
+
+Nice map
+
+![](Permits_Wrangling_files/figure-markdown_github/unnamed-chunk-16-1.png)
