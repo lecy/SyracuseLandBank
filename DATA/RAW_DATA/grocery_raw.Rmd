@@ -1,0 +1,45 @@
+---
+title: "Grocery_Raw"
+author: "Christine Brown"
+date: "April 19, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+```
+Set-Up
+```{r}
+#Load Packages
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( sp )
+
+setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA")
+```
+
+
+```{r}
+
+#Get Grocery Data from Community Geography
+dir.create("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA/Grocery")
+setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA/Grocery")
+download.file("http://communitygeography.org/wp-content/uploads/2015/08/Supermarkets.shp_.zip", "supermarkets.zip" )
+unzip( "supermarkets.zip" )
+file.remove( "supermarkets.zip" )
+
+#Change Original Data into Shapefile and Convert to CSV
+grocery <- readShapePoints( fn="Supermarkets", proj4string=CRS("+proj=longlat +datum=WGS84") )
+setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA")
+write.csv(grocery@data, file = "grocery_raw.csv", row.names=FALSE)
+
+#Delete Community Geography File because CSV Has All Information
+unlink("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA/Grocery", recursive = TRUE)
+
+```
