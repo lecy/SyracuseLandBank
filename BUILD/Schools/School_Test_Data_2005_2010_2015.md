@@ -99,7 +99,7 @@ school.test.avgd <- data.frame(school.test.avgd)
 6. Read in Syracuse Census Map Data
 ===================================
 
-Transform latitude and longitude points intow spatial points Join latitude and longitude points with census spatial data
+Transform latitude and longitude points intow spatial points Join latitude and longitude points with census spatial data Write CSV file for Desaggreagated school test score data
 
 ``` r
 #load in census tracts
@@ -124,6 +124,9 @@ census.matched.to.points <- over(school.lat.long2, census.syr )
 
 #bind census tracts to schools
 school.w.census <- cbind( school.test.avgd, census.matched.to.points)
+
+#write csv for school point desgregated data 
+#write.csv(school.w.census, file = "syr_avg_school_score_desaggregated.csv")
 
 #maximum latitude and longitude to zoom in on 'cuse
 #x.min1 <- min(school.lat.long2$lon)
