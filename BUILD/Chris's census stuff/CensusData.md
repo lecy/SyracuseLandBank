@@ -52,10 +52,12 @@ labels <- c("name", "state", "county",
             "less18", "singleMotherBelowPoverty", "travelTimeToWorkMin", "enrolledInSchool", 
             "year", "GEOID")
 
+labels <- toupper(labels)
+
 names(census) <- labels
 census <- tbl_df(census)
 
-syrCensus<- filter(census, as.numeric(tract)<10000)
+syrCensus<- filter(census, as.numeric(TRACT)<10000)
 
 
 census2010 <- getCensus(name = "sf1", vintage = 2010, 
@@ -65,17 +67,17 @@ census2010 <- getCensus(name = "sf1", vintage = 2010,
                                  "H0030003",  "H0050008", "H0050002", 
                                  "H0050006", "H0050004", "P0180001", "H0140002", 
                                  "H0040004", "H00010001", "P0160002"),
-                        region = "block:*", 
+                        region = "tract:*", 
                         regionin = "state: 36 + county:067")
 
-names(census2010) <- c("name","state", "county", "tract", "block",
+names(census2010) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
-                       "totalHousingUnits", "less18")
+                       "totalHousingUnits", "less18"))
 census2010 <- tbl_df(census2010)
-census2010<- filter(census2010, as.numeric(tract)<10000)
+census2010<- filter(census2010, as.numeric(TRACT)<10000)
 
 census2000 <- getCensus(name = "sf1", vintage = 2000, 
                         key = censuskey, 
@@ -87,39 +89,68 @@ census2000 <- getCensus(name = "sf1", vintage = 2000,
                         region = "tract:*", 
                         regionin = "state: 36 + county:067")
 
-names(census2000) <- c("name","state", "county", "tract",
+names(census2000) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", 
                        "forSaleVacant", "households", 
-                       "ownerOccupied", "renterOccupied", "totalHousingUnits")
+                       "ownerOccupied", "renterOccupied", "totalHousingUnits"))
 
 census2000 <- tbl_df(census2000)
-census2000<- filter(census2000, as.numeric(tract)<10000)
+census2000<- filter(census2000, as.numeric(TRACT)<10000)
 
 moreCensus2000<- getCensus(name = "sf3", vintage = 2000, 
                            key = censuskey,
                            vars = c("NAME", "P053001", "P077001",
                                     "P043007", "P043014", "P043003",
                                     "P043010", "P087002", "P087001", 
-                                    "H047003", "H050003", "P130003", "P038010"), 
+                                    "H047003", "H050003", "P130003", "P038010", "H076001"), 
                            region = "tract:*", regionin = "state: 36 + county:067")
 
-names(moreCensus2000) <- c("name", "state", "county", "tract", 
+names(moreCensus2000) <- toupper(c("name", "state", "county", "tract", 
                            "medianHouseIncome", "medianFamIncome", "maleUnemployed",
                            "femaleUnemployed", "maleLaborForce", "femaleLaborForce", 
                            "poverty", "totalForPoverty", "lackingPlumbing",
                            "lackingKitchenFacilities", "aggregateTravelTimeToWork",
-                           "enrolledInSchool")
+                           "enrolledInSchool", "housingValues"))
 
 moreCensus2000 <- tbl_df(moreCensus2000)
-moreCensus2000<- filter(moreCensus2000, as.numeric(tract)<10000)
+moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
 
-#availablevars <- listCensusMetadata(name="sf3", vintage=2000)
+
+
+#availablevars <- listCensusMetadata(name="sf1", vintage=2010)
 
 #poverty_possible_vars <- subset(availablevars, 
-  #grepl("enrolled in school", availablevars$label, 
-  #ignore.case = TRUE))   
+  #grepl("value", availablevars$label, 
+  #ignore.case = TRUE))
+```
+
+
+```r
+all <- names(syrCensus)
+all <- c(all, names(census2000))
+all <- c(all, names(moreCensus2000))
+all <- c(all, names(census2010))
+all <- unique(all)
+
+df = data.frame(matrix(vector(), 1, 42,
+                dimnames=list(c(), all)),
+                stringsAsFactors=F)
+
+a <- merge(df, syrCensus, all = T)
+b <- merge(df, census2000, all = T)
+c <- merge(df, moreCensus2000, all = T)
+d <- merge(df, census2010, all = T)
+
+fullFrame <- rbind(a, b)
+fullFrame <- rbind(fullFrame, c)
+fullFrame <- rbind(fullFrame, d)
+```
+
+
+```r
+write.csv(fullFrame, file = "censusDataFromChris.csv")
 ```
 
 
