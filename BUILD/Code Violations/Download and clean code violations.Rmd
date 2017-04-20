@@ -22,9 +22,9 @@ library(geojsonio)
 
 ## Code Violations Data
 
-#### Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. 
+Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. 
 
-#### To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 and after 2015 is incomplete so we will work with only data from 2012 to 2015. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
+To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 and after 2015 is incomplete so we will work with only data from 2012 to 2015. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
 
 ## 1. Load Syracuse Geojson Files
 
@@ -40,10 +40,10 @@ syr <- geojson_read("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-ic
 ```{r}
 
 #Load data on code violations from Githib
-violations <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/codeviolations.csv", header = TRUE)
+violations.dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/codeviolations.csv", header = TRUE)
 
 #Drop all information besides complaint type, violation date, latitude, and longitude
-violations.2 <- violations[ , c("Complaint.Type","Violation.Date", "Address", "lat","lon") ]
+violations.2 <- violations.dat[ , c("Complaint.Type","Violation.Date", "Address", "lat","lon") ]
 
 #Transform date variable into workable format with seperate variables year
 violations.2$Violation.Date <- as.Date( violations.2$Violation.Date, format="%m/%d/%Y" )
@@ -88,7 +88,19 @@ violations.shape <- cbind(violations.coordinates.2, violations.over)
 ```{r}
 
 #Create a data frame that lists the number of code violations in each census tract by year
-violations.agg <- count(violations.shape, c("Tract" , "year"))
+violations <- count(violations.shape, Tract , year)
+
+#Rename the frequency column
+colnames(violations)[3] <- "Code.Violations"
+
+```
+
+# 5. Add data frame to Processed Data folder on GitHub
+
+```{r}
+
+setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
+write.csv( violations, "codeviolations_aggregated.csv", row.names=F )
 
 ```
 
