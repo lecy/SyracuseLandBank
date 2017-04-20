@@ -184,10 +184,10 @@ census2010 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2010,
                                  &quot;H0030003&quot;,  &quot;H0050008&quot;, &quot;H0050002&quot;, 
                                  &quot;H0050006&quot;, &quot;H0050004&quot;, &quot;P0180001&quot;, &quot;H0140002&quot;, 
                                  &quot;H0040004&quot;, &quot;H00010001&quot;, &quot;P0160002&quot;),
-                        region = &quot;block:*&quot;, 
+                        region = &quot;tract:*&quot;, 
                         regionin = &quot;state: 36 + county:067&quot;)
 
-names(census2010) &lt;- c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;, &quot;block&quot;,
+names(census2010) &lt;- c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
                        &quot;total&quot;, &quot;white&quot;, &quot;black&quot;, &quot;asian&quot;, 
                        &quot;hispanic&quot;, &quot;vacant&quot;, &quot;otherVacant&quot;, 
                        &quot;vacantForRent&quot;, &quot;seasonalVacant&quot;, &quot;forSaleVacant&quot;,
@@ -221,7 +221,7 @@ moreCensus2000&lt;- getCensus(name = &quot;sf3&quot;, vintage = 2000,
                            vars = c(&quot;NAME&quot;, &quot;P053001&quot;, &quot;P077001&quot;,
                                     &quot;P043007&quot;, &quot;P043014&quot;, &quot;P043003&quot;,
                                     &quot;P043010&quot;, &quot;P087002&quot;, &quot;P087001&quot;, 
-                                    &quot;H047003&quot;, &quot;H050003&quot;, &quot;P130003&quot;, &quot;P038010&quot;), 
+                                    &quot;H047003&quot;, &quot;H050003&quot;, &quot;P130003&quot;, &quot;P038010&quot;, &quot;H076001&quot;), 
                            region = &quot;tract:*&quot;, regionin = &quot;state: 36 + county:067&quot;)
 
 names(moreCensus2000) &lt;- c(&quot;name&quot;, &quot;state&quot;, &quot;county&quot;, &quot;tract&quot;, 
@@ -229,16 +229,37 @@ names(moreCensus2000) &lt;- c(&quot;name&quot;, &quot;state&quot;, &quot;county&
                            &quot;femaleUnemployed&quot;, &quot;maleLaborForce&quot;, &quot;femaleLaborForce&quot;, 
                            &quot;poverty&quot;, &quot;totalForPoverty&quot;, &quot;lackingPlumbing&quot;,
                            &quot;lackingKitchenFacilities&quot;, &quot;aggregateTravelTimeToWork&quot;,
-                           &quot;enrolledInSchool&quot;)
+                           &quot;enrolledInSchool&quot;, &quot;housingValues&quot;)
 
 moreCensus2000 &lt;- tbl_df(moreCensus2000)
 moreCensus2000&lt;- filter(moreCensus2000, as.numeric(tract)&lt;10000)
 
-#availablevars &lt;- listCensusMetadata(name=&quot;sf3&quot;, vintage=2000)
+
+
+#availablevars &lt;- listCensusMetadata(name=&quot;sf1&quot;, vintage=2010)
 
 #poverty_possible_vars &lt;- subset(availablevars, 
-  #grepl(&quot;enrolled in school&quot;, availablevars$label, 
-  #ignore.case = TRUE))   </code></pre>
+  #grepl(&quot;value&quot;, availablevars$label, 
+  #ignore.case = TRUE))</code></pre>
+<pre class="r"><code>all &lt;- names(syrCensus)
+all &lt;- c(all, names(census2000))
+all &lt;- c(all, names(moreCensus2000))
+all &lt;- c(all, names(census2010))
+all &lt;- unique(all)
+
+df = data.frame(matrix(vector(), 1, 42,
+                dimnames=list(c(), all)),
+                stringsAsFactors=F)
+
+a &lt;- merge(df, syrCensus, all = T)
+b &lt;- merge(df, census2000, all = T)
+c &lt;- merge(df, moreCensus2000, all = T)
+d &lt;- merge(df, census2010, all = T)
+
+fullFrame &lt;- rbind(a, b)
+fullFrame &lt;- rbind(fullFrame, c)
+fullFrame &lt;- rbind(fullFrame, d)</code></pre>
+<pre class="r"><code>write.csv(fullFrame, file = &quot;censusDataFromChris.csv&quot;)</code></pre>
 
 
 
