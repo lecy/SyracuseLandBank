@@ -154,14 +154,19 @@ pubhous.4 <- pubhous.3[ , c("year","tract", "Subsidized.units.available") ]
 #Drop all rows with NA units available
 public.housing <- pubhous.4[!is.na(pubhous.4$Subsidized.units.available), ]
 
+#Rename columns for consistancy 
+colnames(public.housing)[1] <- "YEAR"
+
+colnames(public.housing)[2] <- "TRACT"
+
 ```
 
 ## 4. Add data frame to Processed Data folder in GitHub
 
 ```{r}
 
-setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
-write.csv( public.housing, "publichousing_all.csv", row.names=F )
+setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+write.csv( public.housing, "publichousing_aggregated.csv", row.names=F )
 
 ```
 
