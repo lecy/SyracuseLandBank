@@ -684,6 +684,4 @@ getwd()
 Descriptives from the datasets
 ==============================
 
-Nice map
-
 ![](Permits_Wrangling_files/figure-markdown_github/unnamed-chunk-16-1.png)
