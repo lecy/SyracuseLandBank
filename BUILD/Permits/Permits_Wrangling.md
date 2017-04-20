@@ -1,26 +1,7 @@
----
-title: "Description of data Wrangling for Permits Dataset"
-output: github_document
-html_document:
-  df_print: paged
-  keep_md: true
----
+Description of data Wrangling for Permits Dataset
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set( message=F, warning=F, fig.width = 10, fig.height = 10 )
-
-library(dplyr)
-library(pander)
-library(ggmap)
-library(sp) #coordinates function ir here
-#install.packages("geojsonio")
-library(geojsonio )
-library(maptools )
-library(rgdal)
-library(spatialEco)
-```
-
-```{r}
+``` r
 #LOADING DAT 
 dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/Permits_raw.csv", stringsAsFactors = F)
 
@@ -46,48 +27,54 @@ x <- gsub( "\\d{2}/\\d{2}/", "", x) #deleting everything except the year. btw: "
 x <- as.numeric(x)
 dat$Year <- x
 dat <- dat[,c(1:6,9,7,8)]
-
 ```
 
-###Information about the Dataset
-The Permits Dataset has information for 21,556 permits from 2012 - 2016. 
-For each permit the Dataset inclueds variables like:
+### Information about the Dataset
 
-* Type of Permit
-* Applicant name (can be either a person or a company)
-* Location
-* SBL
-* Date Issued
-* Valuation (cost of the activity the applicant is requesting permit for)
-* Fee Amount (the monies for the City)
+The Permits Dataset has information for 21,556 permits from 2012 - 2016. For each permit the Dataset inclueds variables like:
+
+-   Type of Permit
+-   Applicant name (can be either a person or a company)
+-   Location
+-   SBL
+-   Date Issued
+-   Valuation (cost of the activity the applicant is requesting permit for)
+-   Fee Amount (the monies for the City)
 
 We used the types of permits to construct 4 categories that we will aggregate as variables at the Census Tract level.
 
 There are 32 types of permits:
 
-```{r, echo = F}
-unique(dat$Type)
-```
+    ##  [1] "Site Work"                 "Electric"                 
+    ##  [3] "Sprinkler"                 "Sign"                     
+    ##  [5] "HVAC/Mechanical"           "Fire Alarm"               
+    ##  [7] "Elevator"                  "Antenna / Dish"           
+    ##  [9] "Demolition"                "Com. Reno/Rem/Chg Occ"    
+    ## [11] "Curb Cut"                  "Road Cut"                 
+    ## [13] "Com. New Building"         "Electric (Meter Set)"     
+    ## [15] "Res. Remodel/Chg Occ"      "Misc.(deck, fence,ramp)"  
+    ## [17] "Sidewalk Replace"          "Security Alarm"           
+    ## [19] "Tank"                      "Sidewalk Cafe"            
+    ## [21] "Pool / Hot Tub"            "Liability Waiver"         
+    ## [23] "Public Assembly"           "Loading Zone (Business)"  
+    ## [25] "Encroach (Major)"          "Encroach (Deminimus)"     
+    ## [27] "Footing / Foundation"      "Encroachment (Converted)" 
+    ## [29] "Res. New 1-2 Family"       "Block Party (Business)"   
+    ## [31] "Parking Meter Rental"      "Block Party (Residential)"
 
+We have placed this types of Permits into 4 categories to analyze them separately. They are:
 
-We have placed this types of Permits into 4 categories to analyze them separately. 
-They are:
+-   Residential Properties, 2 Types of permits in this category: "Res. Remodel/Chg Occ", "Res. New 1-2 Family"
 
-* Residential Properties, 
-  2 Types of permits in this category: "Res. Remodel/Chg Occ", "Res. New 1-2 Family" 
+-   Commercial Properties, 2 Types of permits in this category: "Com. New Building", "Com. Reno/Rem/Chg Occ"
 
-* Commercial Properties, 
-  2 Types of permits in this category: "Com. New Building", "Com. Reno/Rem/Chg Occ"
+-   Demolitions, 1 Type of permit in this category: Demolitions
 
-* Demolitions, 
-  1 Type of permit in this category: Demolitions
-
-* Installations and Repairs (to public space, res and com), 
-  9 Types of permits in this category: Electric, Elevator, Fire Alarm, HVAC/Mechanical, Misc.(deck, fence,ramp), Pool / Hot Tub, Security Alarm, Sprinkler, Tank.
+-   Installations and Repairs (to public space, res and com), 9 Types of permits in this category: Electric, Elevator, Fire Alarm, HVAC/Mechanical, Misc.(deck, fence,ramp), Pool / Hot Tub, Security Alarm, Sprinkler, Tank.
 
 Finally, 18 permit types have been ignored.
 
-```{r}
+``` r
 #BEFORE GEOCODING, CREATING SUBSETS
 
 #Due to the size of the dataset, we will make 4 subsets (one for each category) and batch geocode them.
@@ -127,14 +114,13 @@ df.Ign <- dat[df.Ign,]
 #this three ignored permit types were initially geocoded and therefore have tract id in the dataframe, but will not be used for aggregating the variables 
 
 #save(df.Ign, file = "df.Ign.rda") #we save this subset separatelly
-
 ```
 
-###GEOCODING
+### GEOCODING
 
 The following code chunk is not being evaluated because the process of geocoding is expensive
 
-```{r, eval=FALSE}
+``` r
 #GEOCODING the dataframes
 
 #devtools::install_github("dkahle/ggmap") #Installing latest ggmap from the creators webpage. Need to download this in order for the code to work.
@@ -176,7 +162,7 @@ After the first geocode, we had a considerable amount of NAs, mainly because of 
 
 Some Locations where given as intersections between Addresses or an extension between two addresses. This created problems in the geocoding so we dropped the second address. Other replacements were deleting information from the address.
 
-```{r, eval=FALSE}
+``` r
 #1. CLEANING ADDRESSES
 #good source for regular expressions:
 #https://rstudio-pubs-static.s3.amazonaws.com/74603_76cd14d5983f47408fdf0b323550b846.html
@@ -374,14 +360,11 @@ miss <- gsub( "^ ", "", miss)
 miss <- paste(miss, ", Syracuse, New York", sep = "")
 
 df.Ina$Location2 <- miss
-
 ```
 
-Now that the addresses are clean, we geocode again and save the objects. 
-After the second goecode, persisting NAs were fixed mannually.
+Now that the addresses are clean, we geocode again and save the objects. After the second goecode, persisting NAs were fixed mannually.
 
-```{r, eval= FALSE}
-
+``` r
 #2. GEOCODING THE NAs
 
 register_google(key = "YOUR KEY HERE", account_type = "premium", day_limit = 100000) #Need to put premium to fool the function. I did not have a premium, just a google API key that was authorized to bill me
@@ -446,14 +429,11 @@ df.Ina[x,12] <- location[,1]
 #adding lat
 df.Ina[x,13] <- location[,2]
 save(df.Ina, file = "df.Ina.rda")
-
-
-
 ```
 
-Now we add the geocode information to the NAs in the  original subsets
-```{r, eval=FALSE}
+Now we add the geocode information to the NAs in the original subsets
 
+``` r
 #Adding the geocode information to the NAs in the  original subsets
 
 #FOUND
@@ -498,12 +478,11 @@ sum(x)
 dim(df.Ina)
 df.I[x,] <- df.Ina
 save(df.I, file = "df.I.rda")
-
 ```
 
 Merging all geocoded subets
-```{r, eval=FALSE}
 
+``` r
 #Merging ALL geocoded SUBSETS
 
 dat <- rbind(df.R, df.C, df.I, df.D, df.F)
@@ -512,7 +491,8 @@ dat <- rbind(df.R, df.C, df.I, df.D, df.F)
 ```
 
 ### Adding the tract id to the permits.
-```{r, eval=FALSE}
+
+``` r
 #Creating a TRACT variable for each permit in dat
 
 #making the permit dat object a spatial object
@@ -538,10 +518,9 @@ class(x) #x is a dataframe with only one column.
 dat@data$Tract <- as.character(x[,1]) #we want the vector for column one to be added to de dataset
 
 #now the dataset has tract numbers - points outside the tract polygons of our shape fileappear with an NA.
-
 ```
 
-```{r, eval=FALSE}
+``` r
 #merging the df.Ign and dat dataset (with the geocoded and tract id permits) 
 
 #making dat a regular dataframe object to make the bind
@@ -556,11 +535,11 @@ df.Ign$lat <- NA
 df.Ign$Tract <- NA
 
 dat <- rbind(dat, df.Ign)
-
 ```
 
-###Sorting and saving the CSV file
-```{r, eval=FALSE}
+### Sorting and saving the CSV file
+
+``` r
 #sorting the dataset and saving it as a csv file. 
 dat <- arrange(dat, Type, Year)
 
@@ -568,14 +547,13 @@ dat <- arrange(dat, Type, Year)
 dat[,c("Antenna...Dish","SBL.")] <- NULL
 
 #write.csv(dat, file= "Permits_processed.csv", row.names = F)
-
 ```
 
-###Generating a datafram with the variables aggregated to census tract
+### Generating a datafram with the variables aggregated to census tract
 
 First we divide the permits types that we want to use from the ingored ones creating two subsets.
 
-```{r, eval=FALSE}
+``` r
 dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/Permits_processed.csv", stringsAsFactors = F)
 
 #Creating two subsets: dat and df.Ign
@@ -595,41 +573,38 @@ df.Ign <- dat[Ign,]
 
 #2. dat subset holds all permit types we are going to use. These are geocoded and have tract id (14 permit types)
 dat <- dat[!Ign,]
-
 ```
 
 Now we delete the permits that have no tract id assigned.
 
-```{r, eval=FALSE}
+``` r
 #CLIPPING all dat permits outside syracuse city
 #use the tract variable, because of the over spatial function (described in the data wrangling rmd) the points outside the tracts have NA
 
 x<- is.na(dat$Tract) #191 NAs, or points outside the tracts
 dat <- dat[!x,] # eliminating the NAs
-
-
 ```
 
 And now we aggregate the data to census tract to produce the final dataset
 
 This dataset will have the following columns:
 
-* TRACT
-* YEAR
-* PER_TOT_FRQ
-* PER_TOT_VAL
-* PER_RES_FRQ
-* PER_RES_VAL
-* PER_COM_FRQ
-* PER_COM_VAL
-* PER_INS_FRQ
-* PER_INS_VAL
-* PER_DEM_FRQ
-* PER_DEM_VAL
+-   TRACT
+-   YEAR
+-   PER\_TOT\_FRQ
+-   PER\_TOT\_VAL
+-   PER\_RES\_FRQ
+-   PER\_RES\_VAL
+-   PER\_COM\_FRQ
+-   PER\_COM\_VAL
+-   PER\_INS\_FRQ
+-   PER\_INS\_VAL
+-   PER\_DEM\_FRQ
+-   PER\_DEM\_VAL
 
 Look at the data dictionary for more information about this variables.
 
-```{r, eval=FALSE}
+``` r
 #Aggregating the variables and binding them.
 
 #TOTAL 
@@ -688,7 +663,4 @@ var <- merge(var,Ins, all = T)
 colnames(var)[c(1,2)] <- c("TRACT", "YEAR")
 getwd()
 #write.csv(var, file = "Permits_aggregated.csv", row.names = FALSE) #writting the aggregated dataset!
-
 ```
-
-
