@@ -4,12 +4,6 @@ output: github_document
 html_document:
   df_print: paged
   keep_md: true
-  toc: true
-  toc_float:
-    collapsed: false
-    smooth_scroll: false
-
-
 ---
 
 ```{r setup, include=FALSE}
@@ -799,8 +793,6 @@ shapes <- geojson_read("https://raw.githubusercontent.com/christine-brown/Syracu
 
 ```
 
-
-Nice map
 
 ```{r, echo=FALSE}
 #df.R
