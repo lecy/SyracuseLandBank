@@ -27,7 +27,7 @@ library( pander )
 
 ```{r}
 # read in raw data with csv file
-NMTC.full.dat <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/2014_NMTC_raw.csv", header=TRUE)
+NMTC.full.dat <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/NMTC_raw.csv", header=TRUE)
 # select only the rows for the city of Syracuse
 NMTC.syr <- subset (NMTC.full.dat, City == "Syracuse")
 
