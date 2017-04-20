@@ -31,26 +31,13 @@ setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/
 ```{r}
 
 #Load Data
-grocery <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/grocery_raw.csv", stringsAsFactors=FALSE)
-syr_tracts <- geojson_read("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp")
-syr_tracts <- spTransform(syr_tracts, CRSobj=CRS("+proj=longlat +datum=WGS84"))
+grocery <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/grocery_processed.csv", stringsAsFactors=FALSE)
+grocery
+grocery_tract <- as.data.frame(table(grocery$GEOID10))
 
-#Clean Data
-grocery$City <- ifelse(is.na(grocery$City), grocery$ARC_City_1, grocery$City)
-grocery <- mutate( grocery, Address=paste( Location,City,"NY",ZipCode, sep=", "))
-grocery <- grocery[, c("Supermarke", "Address")]
-
-#Geocode
-grocery_coordinates <- suppressMessages(geocode( grocery$Address, messaging=F ))
-grocery <- cbind(grocery, grocery_coordinates)
-
-#Match to Census Tract
-grocery_coordinates_SP <- SpatialPoints(grocery_coordinates, proj4string=CRS("+proj=longlat +datum=WGS84") )
-grocery_tracts <- over(grocery_coordinates_SP, syr_tracts ) # note that this will only provide information for stores in Syracuse census tracts, so many of the stores will have NA as values
-grocery <- cbind( grocery, grocery_tracts )
-grocery <- filter(grocery, !is.na(INTPTLON10) )
+names(grocery_tract) <- c("GEOID10", "GROCERY2015")
 
 #Export to CSV
-write.csv(grocery, file = "grocery_processed.csv", row.names=FALSE)
+write.csv(grocery, file = "grocery_final.csv", row.names=FALSE)
 
 ```
