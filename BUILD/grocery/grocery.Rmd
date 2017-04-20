@@ -20,8 +20,6 @@ library( raster )
 library( rgdal )
 library( rgeos )
 library( sp )
-
-setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA")
 ```
 
 
@@ -36,21 +34,15 @@ file.remove( "supermarkets.zip" )
 
 #Change Original Data into Shapefile and Convert to CSV
 grocery <- readShapePoints( fn="Supermarkets", proj4string=CRS("+proj=longlat +datum=WGS84") )
+grocery <- as.data.frame( grocery, stringsAsFactors=FALSE )
 setwd("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA")
-write.csv(grocery@data, file = "grocery_raw.csv", row.names=FALSE)
+write.csv(grocery, file = "grocery_raw.csv", row.names=FALSE)
 
 #Delete Community Geography File because CSV Has All Information
 unlink("C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/RAW_DATA/Grocery", recursive = TRUE)
 
-
-
-#Load Data
-grocery <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/grocery_raw.csv", stringsAsFactors=FALSE )
-syr_tracts <- geojson_read( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
-syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
-
 #Clean Data
-grocery$City <- ifelse( is.na( grocery$City ), grocery$ARC_City_1, grocery$City )
+grocery$City <- ifelse( is.na( grocery$City ), as.character(grocery$ARC_City_1), as.character(grocery$City) )
 grocery <- mutate( grocery, Address=paste( Location, City, "NY", ZipCode, sep=", " ) )
 grocery <- grocery[ , c( "Supermarke", "Address" ) ]
 
@@ -58,27 +50,28 @@ grocery <- grocery[ , c( "Supermarke", "Address" ) ]
 grocery_coordinates <- suppressMessages( geocode( grocery$Address, messaging=F ) )
 grocery <- cbind( grocery, grocery_coordinates )
 
+#Get Tract Information
+syr_tracts <- geojson_read( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
+syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
+
 #Match to Census Tract
 grocery_coordinates_SP <- SpatialPoints( grocery_coordinates, proj4string=CRS("+proj=longlat +datum=WGS84" ) )
-grocery_tracts <- over( grocery_coordinates_SP, syr_tracts ) # note that this will only provide information for stores in Syracuse census tracts, so many of the stores will have NA as values
-grocery <- cbind( grocery, grocery_tracts )
+grocery_tract <- over( grocery_coordinates_SP, syr_tracts )
+
+grocery <- cbind( grocery, grocery_tract )
 grocery <- filter( grocery, !is.na( INTPTLON10 ) )
 
 #Export to CSV
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/PROCESSED_DATA" )
 write.csv( grocery, file = "grocery_processed.csv", row.names=FALSE )
 
-
-#Load Data
-grocery <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/grocery_processed.csv", stringsAsFactors=FALSE )
-grocery_tract <- as.data.frame( table( grocery$GEOID10 ) )
-
-names( grocery_tract ) <- c( "GEOID10", "GROCERY2015" )
+#Aggregate Data
+grocery <- as.data.frame( table( grocery$NAME10 ) )
+grocery$YEAR <- 2015
+names( grocery ) <- c( "TRACT", "GROCERY", "YEAR" )
 
 #Export to CSV
-write.csv( grocery_tract, file = "grocery_final.csv", row.names=FALSE )
-
-
-
-
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+write.csv( grocery, file = "grocery_aggregated.csv", row.names=FALSE )
 
 ```
