@@ -1,0 +1,68 @@
+---
+title: "LIHTC data"
+author: "Linnea Powell"
+date: "April 19, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## What is the LIHTC and how might it impact home values?
+
+## Raw data source and description
+You can download the full national dataset for LIHTC from https://lihtc.huduser.gov/ in the form of a spreadsheet. A Data Dictionary explains each variable. The data has a row for each project ID and you can filter based on a variety of location variables and the year placed in service (Yr_PIS) or the allocation year (Yr_Alloc)
+
+## Wrangling the data
+```{r}
+#loading relevant libraries
+library( maptools )
+library( sp )
+library( dplyr )
+library( pander )
+```
+
+
+```{r}
+# read in raw data with csv file
+LIHTC.dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/LIHTCPUB.csv", header=TRUE)
+# select only the rows for Syracuse, NY
+LIHTC.syr <- subset (LIHTC.dat, Proj_St == "NY" & Proj_Cty == "SYRACUSE")
+# select only the rows for years 2005-2015
+LIHTC.syr.years <- subset (LIHTC.syr, Yr_Alloc >= 2005 & Yr_Alloc < 2016)
+
+
+```
+
+## aggregate by census tract and year
+```{r}
+LIHTC.syr.years.filtered<- select(LIHTC.syr.years, TRCT2010, Yr_Alloc, Project)
+
+LIHTC.ct.group<- group_by(LIHTC.syr.years.filtered, TRCT2010)
+LIHTC.ct.group
+
+LIHTC.ct.group.counted <-count(LIHTC.ct.group, TRCT2010, Yr_Alloc)
+
+LIHTC.data<-as.data.frame(LIHTC.ct.group.counted)
+
+colnames(LIHTC.data) <- c("Tract","Year","LIHTC")
+
+LIHTC.data
+
+LIHTC.ctdat<- LIHTC.data[complete.cases(LIHTC.data),]
+
+LIHTC.ctdat
+```
+
+
+
+```{r}
+
+# Generate a .CSV file 
+
+setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
+write.csv( LIHTC.ctdat, "LIHTC.data.csv", row.names=F )
+
+```
+
+
