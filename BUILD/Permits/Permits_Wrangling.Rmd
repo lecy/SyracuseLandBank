@@ -1,0 +1,627 @@
+---
+title: "Data Wrangling for Permits Dataset"
+output: github_document
+html_document:
+  df_print: paged
+  keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( message=F, warning=F, fig.width = 10, fig.height = 10 )
+
+setwd("C:/Users/icps/Dropbox/3. Maxwell/3. Spring Term/5. Data Driven II/Labs/all-labs-ddmii-icps86/Permits_and_EC/")
+
+library(dplyr)
+library(pander)
+library(ggmap)
+library(sp) #coordinates function ir here
+#install.packages("geojsonio")
+library(geojsonio )
+library(maptools )
+library(rgdal)
+library(spatialEco)
+```
+
+
+```{r, echo=FALSE, eval=FALSE}
+#Formatting the dataframe
+dat <- read.csv("C:/Users/icps/Dropbox/3. Maxwell/3. Spring Term/5. Data Driven II/Labs/Instructions/Permits_ED/PrivateInvestment_Clean.csv", stringsAsFactors = F)
+
+#making valuation and fee variables to be numeric
+x <- dat$Valuation
+x <- gsub("$", "", x, fixed = T)
+x <- gsub(",", "", x, fixed = T)
+x <- as.numeric(x)
+dat$Valuation <- x
+
+x <- dat$Fee.Amount
+x <- gsub("$", "", x, fixed = T)
+x <- gsub(",", "", x, fixed = T)
+x <- as.numeric(x)
+dat$Fee.Amount <- x
+
+
+#Creating a variable for the year
+x <- dat$Issued
+x <- gsub( "\\d{2}/\\d{2}/", "", x) #deleting everything except the year. btw: "\\d{2}" means any two digits
+x <- as.numeric(x)
+dat$Year <- x
+dat <- dat[,c(1:6,9,7,8)]
+save(dat, file= "Permits.rda")
+```
+
+```{r, echo=FALSE, eval=FALSE}
+#CREATING SUBSETS from the PERMITS.rda (dat) for EACH VARIABLE
+
+load("Permits.rda")
+
+#Found
+x <- as.character(dat$Type)
+
+df.F <- x == "Footing / Foundation"
+df.F <- dat[df.F, ]
+
+#Res
+df.R <- x== "Res. Remodel/Chg Occ" | x == "Res. New 1-2 Family" 
+df.R <- dat[df.R,]
+
+#Com
+df.C <- x== "Com. New Building" | x=="Com. Reno/Rem/Chg Occ"
+df.C <- dat[df.C,]
+
+#Dem
+df.D <- x=="Demolition"
+df.D <- dat[df.D,]
+
+#Ins
+df.I <- x=="Antenna / Dish" | x=="Electric" | x=="Electric (Meter Set)" | x=="Elevator" | x=="Fire Alarm" | x=="HVAC/Mechanical" | x=="Misc.(deck, fence,ramp)" | x=="Pool / Hot Tub" | x=="Security Alarm" | x=="Sprinkler" | x=="Tank"
+df.I <- dat[df.I,]
+
+
+#Ign
+df.Ign <- x=="Block Party (Business)" | x=="Block Party (Residential)" | x=="Curb Cut" | x=="Encroach (Deminimus)" | x=="Encroach (Major)"  | x=="Encroachment (Converted)" | x=="Liability Waiver" | x=="Loading Zone (Business)" | x=="Parking Meter Rental" | x=="Public Assembly" | x=="Road Cut" | x=="Sidewalk Cafe" | x=="Sidewalk Replace" | x=="Sign" | x=="Site Work"
+df.Ign <- dat[df.Ign,]  
+save(df.Ign, file = "df.Ign.rda")
+
+```
+
+```{r, echo=FALSE, eval=FALSE}
+#GEOCODING the dataframes
+
+#devtools::install_github("dkahle/ggmap") #Installing latest ggmap from the creators webpage. Need to download this in order for the code to work.
+
+register_google(key = "YOUR KEY HERE", account_type = "premium", day_limit = 100000) #Need to put premium to fool the function. I did not have a premium, just a google API key that was authorized to bill me
+ggmap_credentials()
+geocodeQueryCheck()
+
+#in what follows I geocoded 17,933 permits in approx 3h
+
+#Found
+df.F$Location2 <- paste(df.F$Location, ", Syracuse, New York", sep = "")
+df.F <- mutate_geocode(df.F, Location2, source = "google")
+save(df.F, file = "df.F.rda")
+
+#Res
+df.R$Location2 <- paste(df.R$Location, ", Syracuse, New York", sep = "")
+df.R <- mutate_geocode(df.R, Location2, source = "google")
+save(df.R, file = "df.R.rda")
+
+#Com
+df.C$Location2 <- paste(df.C$Location, ", Syracuse, New York", sep = "")
+df.C <- mutate_geocode(df.C, Location2, source = "google")
+save(df.C, file = "df.C.rda")
+
+#Dem
+df.D$Location2 <- paste(df.D$Location, ", Syracuse, New York", sep = "")
+df.D <- mutate_geocode(df.D, Location2, source = "google")
+save(df.D, file = "df.D.rda")
+
+#Ins
+df.I$Location2 <- paste(df.I$Location, ", Syracuse, New York")
+df.I <- mutate_geocode(df.I, Location2, source = "google")
+save(df.I, file = "df.I.rda")
+
+```
+
+```{r, echo=FALSE, eval=FALSE}
+#cLEANING ADDRESSES AND BATCH GEOCODEDING THEM
+
+#1. CLEANING ADDRESSES
+#good source for regular expressions:
+#https://rstudio-pubs-static.s3.amazonaws.com/74603_76cd14d5983f47408fdf0b323550b846.html
+#https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf
+
+#FOUNDATIONS
+load("df.F.rda") #loading the data frame 
+x <- is.na(df.F$lat)
+df.Fna <- df.F[x,]
+
+miss <- df.Fna$Location2
+
+miss <- gsub( " R \\d{1,} .*", "", miss)
+miss <- gsub( " To .*", "", miss)
+miss <- paste(miss, ", Syracuse, New York", sep = "")
+
+df.Fna$Location2 <- miss
+
+#RESIDENTIAL
+load("df.R.rda") #loading the data frame 
+x <- is.na(df.R$lat)
+df.Rna <- df.R[x,]
+
+miss <- df.Rna$Location2
+
+miss <- gsub( " , Syracuse, New York", "", miss) # removing syra
+miss <- gsub( "Skytop Housing ", "", miss)
+miss <- gsub( "Rear", "", miss)
+miss <- gsub( " To .*", "", miss)
+miss <- gsub( " & .*", "", miss)
+miss <- gsub( "Scott O'Grady ", "", miss)
+miss <- gsub( " R \\d{1,} .*", "", miss)
+miss <- paste(miss, ", Syracuse, New York",sep = "")
+
+df.Rna$Location2 <- miss
+
+#COMERCIAL
+load("df.C.rda") #loading the data frame 
+x <- is.na(df.C$lat)
+df.Cna <- df.C[x,]
+
+miss <- df.Cna$Location2
+
+miss <- gsub( " , Syracuse, New York", "", miss) # removing syra
+miss <- gsub( "\n", "", miss)
+
+#if content replace whole address by name of building/location
+miss <- gsub( ".*Flanagan Gym.*", "Flanagan Gym", miss)
+miss <- gsub( ".*Falk College.*", "Falk College", miss)
+miss <- gsub( ".*Hinds Hall.*", "Hinds Hall", miss)
+miss <- gsub( ".*Graham Dining Hall.*", "Graham Dining Hall", miss)
+miss <- gsub( ".*Bowne Hall.*", "Bowne Hall", miss)
+miss <- gsub( ".*Flint Hall.*", "Flint Hall", miss)
+miss <- gsub( ".*Physics Bldg.*", "Physics Building", miss)
+miss <- gsub( ".*Hendricks Chapel.*", "Hendricks Chapel", miss)
+miss <- gsub( ".*1320 Jamesville Ave.*", "1320 Jamesville Ave", miss)
+miss <- gsub( ".*Carousel Center.*","Carousel Center Dr", miss)
+miss <- gsub( ".*Hiawatha.*","306 Hiawatha Blvd W", miss)
+miss <- gsub( ".*Destiny USA Dr.*","Destiny USA Dr", miss)
+miss <- gsub( ".*Airport Boulevard.*", "Airport Boulevard", miss)
+miss <- gsub( ".*Bird Library.*", "Bird Library", miss)
+
+#Delete from string
+miss <- gsub( "Rear", "", miss)
+miss <- gsub( "Skytop Housing ", "", miss)
+miss <- gsub( "Slocum Heights ", "", miss)
+miss <- gsub( "Small Rd", "", miss)
+miss <- gsub( "M17 Daycare ", "", miss)
+miss <- gsub( "Lambreth Ln", "", miss)
+miss <- gsub( "Farm Acre Rd", "", miss)
+miss <- gsub( "Chinook Dr", "", miss)
+miss <- gsub( "Life Science Center", "", miss)
+miss <- gsub( "Playing Fields, Courts", "", miss)
+miss <- gsub( "Newhouse 1 and 2", "", miss)
+miss <- gsub( "Steam & Chilled Water", "", miss)
+miss <- gsub( "Physical Plan & Commissary ", "", miss)
+miss <- gsub( "Scott O'Grady ", "", miss)
+miss <- gsub( "Sutherland Group ", "", miss)
+miss <- gsub( "Unit \\d{1,3} ", "", miss)
+miss <- gsub( "Watson Hall 306-12 ", "", miss)
+
+miss <- gsub( " To .*", "", miss)
+miss <- gsub( " to .*", "", miss)
+miss <- gsub( "&.*", "", miss)
+miss <- gsub( "\\d{3} \\(.*\\) ", "", miss)
+miss <- gsub( "^ ", "", miss)
+
+#adding back syracuse and new york
+miss <- paste(miss, ", Syracuse, New York", sep = "")
+
+df.Cna$Location2 <- miss
+
+
+#DEMOLITION
+load("df.D.rda") #loading the data frame 
+x <- is.na(df.D$lat)
+df.Dna <- df.D[x,]
+
+miss <- df.Dna$Location2
+
+miss <- gsub( " , Syracuse, New York", "", miss) # removing syra
+miss <- gsub( "\n", "", miss)
+miss <- gsub( "Woodframe Rental ", "", miss)
+miss <- gsub( "VPA East Genesee St ", "", miss)
+miss <- gsub( "Rear", "", miss)
+miss <- gsub( " To .*", "", miss)
+miss <- gsub( " to .*", "", miss)
+miss <- gsub( "&.*", "", miss)
+
+#adding back syracuse and new york
+miss <- paste(miss, ", Syracuse, New York", sep = "")
+
+df.Dna$Location2 <- miss
+
+#INSTALATIONS AND REPAIRS
+load("df.I.rda") #loading the data frame 
+x <- is.na(df.I$lat)
+df.Ina <- df.I[x,]
+
+miss <- df.Ina$Location2
+
+#delete content in string
+miss <- gsub( " , Syracuse, New York", "", miss) # removing syra
+miss <- gsub( "\n", "", miss)
+miss <- gsub( "Rear", "", miss)
+
+#if content replace whole address by name of building/location
+miss <- gsub( ".*Flanagan Gym.*", "Flanagan Gym", miss)
+miss <- gsub( ".*Falk College.*", "Falk College", miss)
+miss <- gsub( ".*Hinds Hall.*", "Hinds Hall", miss)
+miss <- gsub( ".*Graham Dining Hall.*", "Graham Dining Hall", miss)
+miss <- gsub( ".*Bowne Hall.*", "Bowne Hall", miss)
+miss <- gsub( ".*Flint Hall.*", "Flint Hall", miss)
+miss <- gsub( ".*Physics Bldg.*", "Physics Building", miss)
+miss <- gsub( ".*Hendricks Chapel.*", "Hendricks Chapel", miss)
+miss <- gsub( ".*1320 Jamesville Ave.*", "1320 Jamesville Ave", miss)
+miss <- gsub( ".*Carousel Center.*","Carousel Center Dr", miss)
+miss <- gsub( ".*Hiawatha.*","306 Hiawatha Blvd W", miss)
+miss <- gsub( ".*Destiny USA Dr.*","Destiny USA Dr", miss)
+miss <- gsub( ".*Airport Boulevard.*", "Airport Boulevard", miss)
+miss <- gsub( ".*Bird Library.*", "Bird Library", miss)
+miss <- gsub( ".*1320 Jamesville Ave.*", "1320 Jamesville Ave", miss)
+miss <- gsub( ".*Archbold Gym.*", "Archbold Gym", miss)
+miss <- gsub( ".*Schine Student Center.*", "Schine Student Center", miss)
+
+#delete content in string
+miss <- gsub( "Shaffer Art ", "", miss)
+miss <- gsub( "Tolley Humanities Bldg ", "", miss)
+miss <- gsub( "Machinery Hall ", "", miss)
+miss <- gsub( "Raynor Parking Lot ", "", miss)
+miss <- gsub( "Henry Parking Lot ", "", miss)
+miss <- gsub( "Newhouse 1 and 2 ", "", miss)
+miss <- gsub( "Watson Hall ", "", miss)
+miss <- gsub( "DellPlain and Ernie Davis Hall ", "", miss)
+miss <- gsub( "Academic Bldg ", "", miss)
+miss <- gsub( "Playing Fields, Courts", "", miss)
+miss <- gsub( "Physical Plan & Commissary ", "", miss)
+miss <- gsub( "R \\d{2,3} Xavier", "", miss)
+miss <- gsub( "121 (253-260) Small Rd ", "", miss)
+miss <- gsub( "Skytop Housing East ", "", miss)
+miss <- gsub( "Skytop Housing West ", "", miss)
+miss <- gsub( "Skytop Housing ", "", miss)
+miss <- gsub( "Unit \\d{1,3} ", "", miss)
+miss <- gsub( "\\d{3} \\(.*\\) ", "", miss)
+miss <- gsub( "160 Small Rd ", "", miss)
+miss <- gsub( "Small Rd ", "", miss)
+miss <- gsub( "Slocum Heights ", "", miss)
+miss <- gsub( "Winding Ridge Rd ", "", miss)
+miss <- gsub( "Lambreth Ln ", "", miss)
+miss <- gsub( "Farm Acre Rd ", "", miss)
+miss <- gsub( "Chinook Dr ", "", miss)
+miss <- gsub( "M17 Daycare ", "", miss)
+miss <- gsub( "norman Jemal ", "", miss)
+miss <- gsub( "Life Science Center ", "", miss)
+miss <- gsub( " Comm #1-3A", "", miss)
+miss <- gsub( " Condo [[:alpha:]]{3,4}", "", miss)
+miss <- gsub( "Scott O'Grady", "", miss)
+miss <- gsub( "R \\d{2} Nursery", "", miss)
+miss <- gsub( "Unit 24 Sutherland Group ", "", miss)
+miss <- gsub( "Unit 18 M/E Engineering ", "", miss)
+miss <- gsub( "Irving Garage and Dineen Hall ", "", miss)
+miss <- gsub( "VPA East Genesee St ", "", miss)
+miss <- gsub( "Haft Hall ", "", miss)
+miss <- gsub( "Sutherland Group ", "", miss)
+miss <- gsub( "M/E Engineering ", "", miss)
+miss <- gsub( "Steam & Chilled Water", "", miss)
+miss <- gsub( "Physical Plan & Commissary ", "", miss)
+
+miss <- gsub( " To .*", "", miss)
+miss <- gsub( " to .*", "", miss)
+miss <- gsub( "&.*", "", miss)
+miss <- gsub( "^ ", "", miss)
+
+#adding back syracuse and new york
+miss <- paste(miss, ", Syracuse, New York", sep = "")
+
+df.Ina$Location2 <- miss
+
+
+
+
+
+###############
+
+
+#2. GEOCODING THE NAs
+
+register_google(key = "YOUR KEY HERE", account_type = "premium", day_limit = 100000) #Need to put premium to fool the function. I did not have a premium, just a google API key that was authorized to bill me
+ggmap_credentials()
+geocodeQueryCheck()
+
+#Found
+df.Fna <- mutate_geocode(df.Fna, Location2, source = "google")
+sum(is.na(df.Fna$lat)) #no NAs
+save(df.Fna, file = "df.Fna.rda")
+
+#Res
+df.Rna <- mutate_geocode(df.Rna, Location2, source = "google")
+sum(is.na(df.Rna$lat)) #1 NA
+
+x <- is.na(df.Rna$lat)
+
+#manually fixing last addresses
+df.Rna[x,11] <- "115 Marlett St, Syracuse, New York"
+
+#geocoding
+location <- geocode(df.Rna[x,11], source = "google")
+
+#adding lon
+df.Rna[x,12] <- location[,1]
+
+#adding lat
+df.Rna[x,13] <- location[,2]
+
+save(df.Rna, file = "df.Rna.rda")
+
+
+#Com
+df.Cna <- mutate_geocode(df.Cna, Location2, source = "google")
+sum(is.na(df.Cna$lat)) #4 NAs
+
+x <- is.na(df.Cna$lat)
+
+#manually fixing last addresses
+df.Cna[x,11] <- c("914-22 Genesee St E, Syracuse, New York",
+                  "Schine Student Center, Syracuse, New York",
+                  "605-11 Raynor Ave E, Syracuse, New York",
+                  "605-11 Raynor Ave E, Syracuse, New York")
+
+#geocoding
+location <- geocode(df.Cna[x,11], source = "google")
+
+#adding lon
+df.Cna[x,12] <- location[,1]
+
+#adding lat
+df.Cna[x,13] <- location[,2]
+
+save(df.Cna, file = "df.Cna.rda")
+
+
+#Dem
+df.Dna <- mutate_geocode(df.Dna, Location2, source = "google")
+sum(is.na(df.Dna$lat)) #no NAs
+
+save(df.Dna, file = "df.Dna.rda")
+
+#Installations
+df.Ina <- mutate_geocode(df.Ina, Location2, source = "google")
+sum(is.na(df.Ina$lat)) #2 NAs
+
+x <- is.na(df.Ina$lat)
+
+#manually fixing last addresses
+df.Ina[x,11] <- c("104 Mc Allister Ave, Syracuse, New York","867 Emerson Ave, Syracuse, New York")
+
+#geocoding
+location <- geocode(df.Ina[x,11], source = "google")
+
+#adding lon
+df.Ina[x,12] <- location[,1]
+
+#adding lat
+df.Ina[x,13] <- location[,2]
+
+save(df.Ina, file = "df.Ina.rda")
+
+
+########################
+
+
+#Merging the NAs with the originals
+
+#FOUND
+load("df.F.rda")
+dim(df.F)
+x <- is.na(df.F$lat)
+df.F[x,] <- df.Fna
+save(df.F, file = "df.F.rda")
+
+#RES
+load("df.R.rda")
+dim(df.R)
+x <- is.na(df.R$lat)
+sum(x)
+dim(df.Rna)
+df.R[x,] <- df.Rna
+save(df.R, file = "df.R.rda")
+
+#COM
+load("df.C.rda")
+dim(df.C)
+x <- is.na(df.C$lat)
+sum(x)
+dim(df.Cna)
+df.C[x,] <- df.Cna
+save(df.C, file = "df.C.rda")
+
+#DEM
+load("df.D.rda")
+dim(df.D)
+x <- is.na(df.D$lat)
+sum(x)
+dim(df.Dna)
+df.D[x,] <- df.Dna
+save(df.D, file = "df.D.rda")
+
+#INSTALLATION
+load("df.I.rda")
+dim(df.I)
+x <- is.na(df.I$lat)
+sum(x)
+dim(df.Ina)
+df.I[x,] <- df.Ina
+save(df.I, file = "df.I.rda")
+
+```
+
+
+```{r, echo=FALSE, eval=FALSE}
+#AGGREGATING ALL SUBSETS AND CREATING A CSV
+load("df.R.rda")
+load("df.c.rda")
+load("df.D.rda")
+load("df.I.rda")
+load("df.F.rda")
+load("df.Ign.rda")
+
+x<- rbind(df.R, df.C, df.I, df.D, df.F, df.Ign)
+x$id <- c(1:nrow(x))
+dat <- x
+write.csv(dat, file= "Permits.csv", row.names = F)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+#splitting the dataframe into two: (1) permit types used for analysis and (2)ignored permit types
+
+#fIRST Loading data file and formatting (this csv file in my repository has changed)
+dat <- read.csv("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/Permits.csv", stringsAsFactors = F)
+
+
+x <- dat$Type #creating an index
+#selecting all the types that go to the ignored dataset
+x <- x == "Antenna / Dish"  |  x=="Block Party (Business)" | x=="Block Party (Residential)" | x=="Curb Cut" | x =="Electric (Meter Set)" | x=="Encroach (Deminimus)" | x=="Encroach (Major)"  | x=="Encroachment (Converted)" | x=="Liability Waiver" | x=="Loading Zone (Business)" | x=="Parking Meter Rental" | x=="Public Assembly" | x=="Road Cut" | x=="Sidewalk Cafe" | x=="Sidewalk Replace" | x=="Sign" | x=="Site Work"
+
+df.Ign <- dat[x,] #SAVING THE IGNORED TYPES AS A DIFFERENT SUBSET
+dat <- dat[!x,] #removing the IGNORED TYPES from dat 
+
+#nrow(dat) + nrow(df.Ign)
+#17036 + 4520 = 21556 
+
+```
+
+
+```{r, echo=FALSE, eval=FALSE}
+#Creating a tract variable for each permit in dat (this process also clipped the data)
+
+#making the permit dat object a spatial object
+dat <- SpatialPointsDataFrame(dat[ ,c( "lon", "lat") ], dat, proj4string=CRS("+proj=longlat +datum=WGS84")) #this is so that it does not lose the lat lon in the dataframe when transformed into a sp
+
+#loading shape file
+shapes <- geojson_read("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/tracts.geojson", method="local", what="sp" )
+
+#need to make CRS in both shapes and dat =
+proj4string(dat)
+proj4string(shapes)
+
+shapes <- spTransform( shapes, CRS( "+proj=longlat +datum=WGS84")) #changing the CRS of the shape file to match the dat
+
+# ORIGINALLY I USED POINTS IN POLY, BUT THIS MADE ME DROP 191 CASES. 
+#dat <- point.in.poly( dat, shapes) #all the permits that were outside the tracks were dropped. 
+#new dat file haD 16845
+#16845 - 17036 = 191 lost
+
+# SO I USED THE OVER function to determine what points are within the buffer
+x <- over( dat, shapes ) #outputs a dummy variable
+dat@data$Tract <- x
+x <- dat@data
+x$Tract <- as.factor(as.numeric(as.character(dat$Tract[,1]))) #for some reason x after the over function was a dataframe.
+write.csv(x, file= "Permits.csv", row.names = F)
+
+#formatting df.Ign
+df.Ign$Tract <- NA
+dim(df.Ign)
+df.Ign$id <- c(1:nrow(df.Ign))
+
+#saving csv
+write.csv(df.Ign, file= "df.Ign.csv", row.names = F)
+
+#also making the types rda a csv
+write.csv(types, file= "types.csv", row.names = F)
+
+```
+
+```{r}
+dat <- read.csv("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/Permits_processed.csv", stringsAsFactors = F)
+
+#Creating two subsets: dat and df.Ign
+
+#1. df.Ign subset holds  the permit types we are not using.
+#creating a vector that contains all the cases of ignored permit types.
+x <- dat$Type
+Ign <- x == "Antenna / Dish" | x =="Electric (Meter Set)" |  x=="Block Party (Business)" | x=="Block Party (Residential)" | x=="Curb Cut" | x=="Encroach (Deminimus)" | x=="Encroach (Major)"  | x=="Encroachment (Converted)" | x=="Footing / Foundation"  | x=="Liability Waiver" | x=="Loading Zone (Business)" | x=="Parking Meter Rental" | x=="Public Assembly" | x=="Road Cut" | x=="Sidewalk Cafe" | x=="Sidewalk Replace" | x=="Sign" | x=="Site Work"
+
+#subsetting it (18 ignored permit types)
+df.Ign <- dat[Ign,]
+
+#2. dat subset holds all permit types we are going to use. These are geocoded and have tract id (14 permit types)
+dat <- dat[!Ign,]
+
+#CLIPPING all dat permits outside syracuse city
+#use the tract variable, because of the over spatial function (described in the data wrangling rmd) the points outside the tracts have NA
+
+x<- is.na(dat$Tract) #191 NAs, or points outside the tracts
+dat <- dat[!x,] # eliminating the NAs
+
+####################
+
+#Creating the Dataframe with aggregates for each variable
+dat <- dat@data
+
+#TOTAL 
+x <- group_by(dat, Tract, Year)
+total <- summarize(x, 
+                   Tot.Frq = n(),
+                   Tot.Val = sum(Valuation)
+                   )
+
+#df.R
+cat <- as.character(dat@data$Type)  #setting up indexes
+df.R <- cat== "Res. Remodel/Chg Occ" | cat == "Res. New 1-2 Family" 
+df.R <- dat[df.R,] 
+
+x <- group_by(df.R, Tract, Year)
+Res <- summarize(x, 
+                   Res.Frq = n(),
+                   Res.Val = sum(Valuation)
+                   )
+
+#df.C
+df.C <- cat== "Com. New Building" | cat=="Com. Reno/Rem/Chg Occ"
+df.C <- dat[df.C,] 
+
+x <- group_by(df.C, Tract, Year)
+Com <- summarize(x, 
+                   Com.Frq = n(),
+                   Com.Val = sum(Valuation)
+                   )
+
+#df.D
+df.D <- cat=="Demolition"
+df.D <- dat[df.D,] 
+
+x <- group_by(df.D, Tract, Year)
+Dem <- summarize(x, 
+                   Dem.Frq = n(),
+                   Dem.Val = sum(Valuation)
+                   )
+
+#df.I
+df.I <- cat=="Electric" | cat=="Elevator" | cat=="Fire Alarm" | cat=="HVAC/Mechanical" | cat=="Misc.(deck, fence,ramp)" | cat=="Pool / Hot Tub" | cat=="Security Alarm" | cat=="Sprinkler" | cat=="Tank"
+df.I <- dat[df.I,] 
+
+x <- group_by(df.I, Tract, Year)
+Ins <- summarize(x, 
+                   Ins.Frq = n(),
+                   Ins.Val = sum(Valuation)
+                   )
+
+#binding the different aggregates by variable
+var <- merge(total, Res, all = T)
+var <- merge(w,Com, all = T)
+var <- merge(w,Ins, all = T)
+
+#write.csv(var, file = "Permits_var.csv")
+
+```
+
+
