@@ -31,7 +31,7 @@ To examine the effects of these violations will use data obtained from the city 
 ```{r}
 
 #Load shapefiles from Github
-syr <- geojson_read("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/tracts.geojson", method="local", what="sp" )
+syr <- geojson_read("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
 
 ```
 
@@ -88,10 +88,16 @@ violations.shape <- cbind(violations.coordinates.2, violations.over)
 ```{r}
 
 #Create a data frame that lists the number of code violations in each census tract by year
-violations <- count(violations.shape, Tract , year)
+violations <- count(violations.shape, NAME10 , year)
 
 #Rename the frequency column
 colnames(violations)[3] <- "Code.Violations"
+
+#Rename the year and tract column for consistancy
+colnames(violations)[1] <- "TRACT"
+
+colnames(violations)[2] <- "YEAR"
+
 
 ```
 
@@ -99,7 +105,7 @@ colnames(violations)[3] <- "Code.Violations"
 
 ```{r}
 
-setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
+setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
 write.csv( violations, "codeviolations_aggregated.csv", row.names=F )
 
 ```
