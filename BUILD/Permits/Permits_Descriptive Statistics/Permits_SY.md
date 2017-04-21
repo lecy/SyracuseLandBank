@@ -70,7 +70,7 @@ In what follows we explain the categories that we have constructed and show some
 </tbody>
 </table>
 
-![](Permits_SY_files/figure-markdown_github/unnamed-chunk-2-1.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-2-2.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-2-3.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-2-4.png)
+![](figure-markdown_github/unnamed-chunk-2-1.png)![](figure-markdown_github/unnamed-chunk-2-2.png)![](figure-markdown_github/unnamed-chunk-2-3.png)![](figure-markdown_github/unnamed-chunk-2-4.png)
 
 #### **2. Residential Property Investments**
 
@@ -152,7 +152,7 @@ In what follows we explain the categories that we have constructed and show some
 </tbody>
 </table>
 
-![](Permits_SY_files/figure-markdown_github/unnamed-chunk-3-1.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-3-2.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-3-3.png)
+![](figure-markdown_github/unnamed-chunk-3-1.png)![](figure-markdown_github/unnamed-chunk-3-2.png)![](figure-markdown_github/unnamed-chunk-3-3.png)
 
 ### **3. New/Reno of Commercial Property**
 
@@ -234,7 +234,7 @@ In what follows we explain the categories that we have constructed and show some
 </tbody>
 </table>
 
-![](Permits_SY_files/figure-markdown_github/unnamed-chunk-4-1.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-4-2.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-4-3.png)
+![](figure-markdown_github/unnamed-chunk-4-1.png)![](figure-markdown_github/unnamed-chunk-4-2.png)![](figure-markdown_github/unnamed-chunk-4-3.png)
 
 ### **4. Demolitions**
 
@@ -276,7 +276,7 @@ In what follows we explain the categories that we have constructed and show some
 </tbody>
 </table>
 
-![](Permits_SY_files/figure-markdown_github/unnamed-chunk-5-1.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-5-2.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-5-3.png)
+![](figure-markdown_github/unnamed-chunk-5-1.png)![](figure-markdown_github/unnamed-chunk-5-2.png)![](figure-markdown_github/unnamed-chunk-5-3.png)
 
 ### **5. Installations and Repairs on all properties**
 
@@ -414,4 +414,4 @@ In what follows we explain the categories that we have constructed and show some
 </tbody>
 </table>
 
-![](Permits_SY_files/figure-markdown_github/unnamed-chunk-6-1.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-6-2.png)![](Permits_SY_files/figure-markdown_github/unnamed-chunk-6-3.png)
+![](figure-markdown_github/unnamed-chunk-6-1.png)![](figure-markdown_github/unnamed-chunk-6-2.png)![](figure-markdown_github/unnamed-chunk-6-3.png)
