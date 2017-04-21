@@ -94,18 +94,19 @@ colnames( npo_years_sum )[1] <- "GEOID10"
 npos_years <- rbind( npos_years, npo_years_sum )
 ```
 
-**Second**, we will create a dataframe that breaks down the nonprofits per census tract by subsector. The subsectors of nonprofits identified in the variable NTMAJ12 are:
-•	AR	Arts, culture, and humanities
-•	BH	Education, higher
-•	ED	Education
-•	EH	Hospitals
-•	EN	Environment
-•	HE	Health
-•	HU	Human services
-•	IN	International
-•	MU	Mutual benefit
-•	PU	Public and societal benefit
-•	RE	Religion
+**Second**, we will create a dataframe that breaks down the nonprofits per census tract by subsector. The subsectors of nonprofits identified in the variable NTMAJ12 are:<br><br>
+
+•	AR	Arts, culture, and humanities<br>
+•	BH	Education, higher<br>
+•	ED	Education<br>
+•	EH	Hospitals<br>
+•	EN	Environment<br>
+•	HE	Health<br>
+•	HU	Human services<br>
+•	IN	International<br>
+•	MU	Mutual benefit<br>
+•	PU	Public and societal benefit<br>
+•	RE	Religion<br>
 •	UN	Unknown
 
 ```{r}
