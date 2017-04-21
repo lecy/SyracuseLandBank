@@ -26,7 +26,7 @@ library(spatialEco)
 #### a. The first step involved loading the dataset and manually fixing all address and company name inconsistencies. This is an important process before we geocode all the projects that received a tax break in the City of Syracuse.
 ```{r}
 #Loading data and fixing addresses
-allsyracuse <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/All%20Syracuse%20Local.csv", header=TRUE)
+allsyracuse <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/TaxSubsidies_raw.csv", header=TRUE)
 
 #Fixing Addresses
 allsyracuse[allsyracuse==""]<-NA
