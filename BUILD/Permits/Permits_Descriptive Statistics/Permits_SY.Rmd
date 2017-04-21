@@ -1,0 +1,689 @@
+---
+title: "Permits"
+author: "Ignacio & Alejandro"
+date: "April 20, 2017"
+output: github_document
+html_document:
+  df_print: paged
+  keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( message=F, warning=F , fig.width = 10, fig.height = 10)
+
+library(dplyr)
+library(pander)
+library(ggmap)
+library(sp) #coordinates function ir here
+#install.packages("geojsonio")
+library(geojsonio )
+library(maptools )
+library(rgdal)
+library(spatialEco)
+
+```
+
+```{r,echo=FALSE}
+#LOADING DATASET, formating it for sp and creating a types subset
+
+dat <- read.csv("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/Permits_processed.csv", stringsAsFactors = F)
+
+#Creating two subsets: dat and df.Ign
+
+#1. df.Ign subset holds  the permit types we are not using.
+#creating a vector that contains all the cases of ignored permit types.
+x <- dat$Type
+Ign <- x == "Antenna / Dish" | x =="Electric (Meter Set)" |  x=="Block Party (Business)" | x=="Block Party (Residential)" | x=="Curb Cut" | x=="Encroach (Deminimus)" | x=="Encroach (Major)"  | x=="Encroachment (Converted)" | x=="Footing / Foundation"  | x=="Liability Waiver" | x=="Loading Zone (Business)" | x=="Parking Meter Rental" | x=="Public Assembly" | x=="Road Cut" | x=="Sidewalk Cafe" | x=="Sidewalk Replace" | x=="Sign" | x=="Site Work"
+
+#2. dat subset holds all permit types we are going to use. These are geocoded and have tract id (14 permit types)
+dat <- dat[!Ign,]
+rm(Ign)
+#CLIPPING all dat permits outside syracuse city
+#use the tract variable, because of the over spatial function (described in the data wrangling rmd) the points outside the tracts have NA
+
+x<- is.na(dat$Tract) #191 NAs, or points outside the tracts
+dat <- dat[!x,] # eliminating the NAs
+rm(x)
+#FORMATTING dat as a spatial object
+dat_sp <- SpatialPointsDataFrame(dat[ ,c( "lon", "lat") ], dat, proj4string=CRS("+proj=longlat +datum=WGS84")) #this is so that it does not lose the lat lon in the dataframe when transformed into a sp
+
+#CREATING types SUBSET for dat: just to show the freq of the different permits types
+#First for the dat dataset.
+#using table to create a dataframe with the frequencies for each category
+##types <- data.frame(type = names(table(dat$Type)), freq = as.numeric(table(dat$Type)))
+##rownames(types) <- NULL
+##types <- arrange(types, type) #ordering types alphabetically
+
+#getting the mean/max/min value per type
+##x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=mean)
+##x <- arrange(x, Group.1)
+##types$meanval <- x$x
+
+#getting the min value per type
+##x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=min)
+##x <- arrange(x, Group.1)
+##types$minval <- x$x
+
+#getting the max value per type
+##x <- aggregate(dat$Valuation, by=list(dat$Type), FUN=max)
+##x <- arrange(x, Group.1)
+##types$maxval <- x$x
+##rm(x)
+
+#########################
+
+#LOADING THE SHAPEFILE
+
+#Loading a geojson file of only census tracts
+shapes <- geojson_read("https://raw.githubusercontent.com/R-Class/all-labs-ddmii-icps86/master/Permits_and_EC/tracts.geojson", method="local", what="sp" )
+```
+
+
+##Information about the Dataset
+The Permits Dataset has information for 21,556 permits from 2012 - 2016. 
+For each permit the Dataset inclueds variables like:
+
+* Type of Permit
+* Applicant name (can be either a person or a company)
+* Location
+* SBL
+* Date Issued
+* Valuation (cost of the activity the applicant is requesting permit for)
+* Fee Amount (the monies for the City)
+
+We used the types of permits to construct 4 categories that we will aggregate as variables at the Census Tract level.
+
+There are 32 types of permits, and we have placed this types of Permits into 4 categories to analyze them separately. They are:
+
+* Residential Properties
+* Commercial Properties
+* Demolitions
+* Installations and Repairs (to public space, res and com)
+
+
+In what follows we explain the categories that we have constructed and show some descriptives.
+
+###DESCRIPTIVE STATISTICS
+
+###**1. All Categories Permit Categories**
+
+####Main takeaways:
+
+* This dataset we have a total of 16829 observations (or permits), with a median project valuation of $3,400.  
+* During the last five years, the average number of permits given per year is approx. 3,360. This number has been very stable in recent years, with a small fall during 2016.  
+* Most investment projects (60.2%) have a value below $5,000, while 17.5% have a value of $20,000+.  
+* Investment projects are fairly distributed across the city. Installation and Repairs are the most prevalent form of investments, followed by residential property investment project.  
+* The census tracts around Downtown, Lakefront, University Hill, Strathmore, Highway 81 and Highway 690 have received most investments projects, measured in aggregate value.  
+```{r, echo=FALSE}
+dat <- tbl_df(dat_sp@data)
+
+##SUMMARY TABLES
+summarise(dat,  Type= "All Permits", Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+
+## GRAPHS OF PERMITS PER YEAR
+## Make the frequencies numbers (rather than factors)
+peryear <- as.data.frame(table(dat_sp$Year))
+peryear$Freq <- as.numeric(as.character(peryear$Freq))
+## Find a range of y's that'll leave sufficient space above the tallest bar
+ylim <- c(0, 1.1*max(peryear$Freq))
+## Plot, and store x-coordinates of bars in xx
+xx <- barplot(peryear$Freq, xaxt = 'n', width = 0.85, ylim = ylim,
+              main = "Number of Permits per Year", 
+              ylab = "Frequency", col="firebrick4", xlab = "Year")
+### Add text at top of bars
+text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "black")
+### Add x-axis labels 
+axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
+rm(xx)
+rm(ylim)
+rm(peryear)
+rm(dat)
+
+## DISTRIBUTION OF PERMITS PER VALUATION
+Working_df.All <- dat_sp[,]
+Working_df.All$Valuation[Working_df.All$Valuation > 25000] <- 25000
+values <- Working_df.All$Valuation
+peryear <- table(dat_sp$Year)
+histPercent <- function(x, ...) {
+  H <- hist(x, breaks=c(0, 5000, 10000, 15000, 20000, 25000), plot = FALSE)
+  H$density <- with(H, 100 * density* diff(breaks)[1])
+  labs <- paste(round(H$density, 1), "%", sep="")
+  plot(H, freq = FALSE, xaxt="n", ylab= "Percentage", xlab= "Dollars", labels = labs, ylim=c(0, 1.08*max(H$density)),...)
+  axis(1, at=c(0, 5000, 10000, 15000, 20000, 25000), labels=c("0", "5000", "10000", "15000", "20000", "25000+"), pos=0)
+}
+par(mar=c(5,3,2,3)+0.1)
+histPercent(values, main= "Distribution of Permits per Total Amount",
+col="firebrick4")
+rm(histPercent)
+rm(values)
+rm(Working_df.All)
+
+#PLOTTING ALL PERMITS - LOCATION
+Ins <- c("Electric", "Elevator", "Fire Alarm", "HVAC/Mechanical", "Misc.(deck, fence,ramp)", "Pool / Hot Tub", "Security Alarm", "Sprinkler", "Tank")
+workingdata <- dat_sp@data
+workingdata$Type[workingdata$Type %in% Ins ] <- "Installations and Repairs"
+workingdata$Type[workingdata$Type == "Res. New 1-2 Family" | workingdata$Type == "Res. Remodel/Chg Occ" ] <- "Residential Property"
+workingdata$Type[workingdata$Type == "Com. New Building" | workingdata$Type == "Com. Reno/Rem/Chg Occ" ] <- "Commercial Property"
+workingdata$Color[workingdata$Type == "Residential Property" ] <- "darkblue"
+workingdata$Color[workingdata$Type == "Commercial Property" ] <- "green"
+workingdata$Color[workingdata$Type == "Demolition" ] <- "orange"
+workingdata$Color[workingdata$Type == "Installations and Repairs" ] <- "red"
+plot(shapes, 
+     main="Location of Investments Projects in Syracuse, 2012-2016",
+     border="grey80")
+points(dat_sp, col= workingdata$Color, pch=19, cex=.3)
+legend.text <- c("Residential Property", "Commercial Property", "Demolitions", "Installations and Repairs")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col= c("darkblue", "green", "orange", "red"), box.col="white",
+        title="Investment Category" )
+rm(legend.text)
+rm(workingdata)
+rm(Ins)
+
+##PLOTTING ALL PERMITS - Aggregate VALUE
+dat <- tbl_df(dat_sp@data)
+GroupedbyCT <- group_by(dat, Tract)
+FinalTable <- summarise(GroupedbyCT,
+                        NumbOfPermits = n(),
+                        TotalAmount = sum(Valuation, na.rm = TRUE))
+shapes1 <- merge(shapes, FinalTable, by= "Tract", all.x=TRUE)
+shapes1$NumbOfPermits[is.na(shapes1$NumbOfPermits)] <- 0
+shapes1$TotalAmount[is.na(shapes1$TotalAmount)] <- 0
+# ranking function
+rankingf <- function(x, lower = 0, upper, by = 10,
+                     sep = "-", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by - 1, upper - 1, by = by),
+                  sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+# get colors for labeling the points
+plotvar <- shapes1$TotalAmount / 1000000 # pick a variable to plot
+nclr <- 6 # number of colors
+color.function <- colorRampPalette( c("steel blue","light gray","firebrick4"))
+col.ramp <- color.function(nclr)
+colornum <- rankingf(plotvar, lower = 0, upper=10, by = 2)
+colcode <- col.ramp[colornum] # assign color
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot(shapes1, 
+     main="Aggregate Value of Investment Projects per Census Tract, 2012-2016",
+     border="grey80", 
+     col= colcode
+     )
+legend.text <- c("$0 - $1M", "$2M - $3M", "$4M - $5M", "$6M - $7M", "$8M - $9M", "$10M+")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col=col.ramp, box.col="white",
+        title="Aggregate Value" )
+rm(col.ramp)
+rm(colcode)
+rm(colornum)
+rm(nclr)
+rm(plotvar)
+rm(legend.text)
+rm(color.function)
+rm(rankingf)
+rm(GroupedbyCT)
+rm(FinalTable)
+rm(shapes1)
+```
+
+####**2. Residential Property Investments**
+
+####Main takeaways:
+
+* This category contains permits for new 1-2 family residential projects as well as remodeling and change in occupancy projects. 
+* There have been 2257 residential investment projects in the City of Syracuse over the last five years. Most of them are remodeling and change in occupancy projects (98%).
+* The years 2014 and 2015 showed an important increase in the number of residential projects in, with a total of 565 and 598 projects, respectively. This figure dropped to 404 in 2016.
+* Most residential investment projects (63.5%) have a value of $5,000 or below, while only 6.1% have a value of $20,000+.  
+* The census tracts around the South Valley, Far-West side, Westside, Near Northeast, Eastwood, Near Eastside, Westcott, University Neighborhood, Lincoln, Salt Springs, Sedgwick and Meadowbrook neighborhoods have received most residential investments projects, measured in aggregate value.
+```{r, echo=FALSE}
+df.R <- dat_sp[dat_sp$Type=="Res. Remodel/Chg Occ" | dat_sp$Type== "Res. New 1-2 Family", ]
+dat <- tbl_df(df.R@data)
+dat_grouped <- group_by(dat, Type)
+
+##SUMMARY TABLES
+summarise(dat_grouped,  Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+summarise(dat,  Type= "All Residential Property", Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+
+## GRAPHS OF PERMITS PER YEAR
+## Make the frequencies numbers (rather than factors)
+peryear <- as.data.frame(table(df.R$Year))
+peryear$Freq <- as.numeric(as.character(peryear$Freq))
+## Find a range of y's that'll leave sufficient space above the tallest bar
+ylim <- c(0, 1.1*max(peryear$Freq))
+## Plot, and store x-coordinates of bars in xx
+xx <- barplot(peryear$Freq, xaxt = 'n', width = 0.85, ylim = ylim,
+              main = "Number of Permits per Year", 
+              ylab = "Frequency", col="firebrick4", xlab = "Year")
+### Add text at top of bars
+text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "black")
+### Add x-axis labels 
+axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
+rm(xx)
+rm(ylim)
+rm(peryear)
+rm(dat)
+rm(dat_grouped)
+
+## DISTRIBUTION OF PERMITS PER VALUATION
+Working_df.R <- df.R[,]
+Working_df.R$Valuation[Working_df.R$Valuation > 25000] <- 25000
+values <- Working_df.R$Valuation
+peryear <- table(df.R$Year)
+histPercent <- function(x, ...) {
+  H <- hist(x, breaks=c(0, 5000, 10000, 15000, 20000, 25000), plot = FALSE)
+  H$density <- with(H, 100 * density* diff(breaks)[1])
+  labs <- paste(round(H$density, 1), "%", sep="")
+  plot(H, freq = FALSE, xaxt="n", ylab= "Percentage", xlab= "Dollars", labels = labs, ylim=c(0, 1.08*max(H$density)),...)
+  axis(1, at=c(0, 5000, 10000, 15000, 20000, 25000), labels=c("0", "5000", "10000", "15000", "20000", "25000+"), pos=0)
+}
+par(mar=c(5,3,2,3)+0.1)
+histPercent(values, main= "Distribution of Permits per Total Amount",
+col="firebrick4")
+rm(histPercent)
+rm(values)
+rm(Working_df.R)
+
+#PLOTTING RESIDENTIAL
+dat <- tbl_df(df.R@data)
+GroupedbyCT <- group_by(dat, Tract)
+FinalTable <- summarise(GroupedbyCT,
+                        NumbOfPermits = n(),
+                        TotalAmount = sum(Valuation, na.rm = TRUE))
+shapes1 <- merge(shapes, FinalTable, by= "Tract", all.x=TRUE)
+shapes1$NumbOfPermits[is.na(shapes1$NumbOfPermits)] <- 0
+shapes1$TotalAmount[is.na(shapes1$TotalAmount)] <- 0
+# ranking function
+rankingf <- function(x, lower = 0, upper, by = 10,
+                     sep = "-", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by - 1, upper - 1, by = by),
+                  sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+# get colors for labeling the points
+plotvar <- shapes1$TotalAmount / 1000 # pick a variable to plot
+nclr <- 6 # number of colors
+color.function <- colorRampPalette( c("steel blue","light gray","firebrick4"))
+col.ramp <- color.function(nclr)
+colornum <- rankingf(plotvar, lower = 0, upper=500, by=100)
+colcode <- col.ramp[colornum] # assign color
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot(shapes1, 
+     main="Aggregate Value of Residential Investment Projects per Census Tract, 2012-2016",
+     border="grey80",
+     col= colcode
+     )
+legend.text <- c("0-$99,000", "$100,000 - $199,000", "$200,000 - $299,000", "$300,000 - $399,000", "$400,000 - $499,000", "$500,000+")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col=col.ramp, box.col="white",
+        title="Aggregate Value" )
+rm(col.ramp)
+rm(colcode)
+rm(colornum)
+rm(nclr)
+rm(plotvar)
+rm(legend.text)
+rm(color.function)
+rm(rankingf)
+rm(GroupedbyCT)
+rm(FinalTable)
+rm(shapes1)
+rm(df.R)
+```
+
+###**3. New/Reno of Commercial Property**
+
+####Main takeaways:
+
+* This category contains permits for the construction of new commercial buildings as well as the renovation, remodeling or change in occupancy projects. 
+* There have been 1716 commercial investment projects over the last five years. Most of them have been renovation, remodeling or change in occupancy projects (96.7%).
+* The number of commercial projects has been fairly consistent over the last five years, with an annual average of 342 permits per year.
+* Most commercial investment projects (59.7%) had a value of $20,000+ and only 19.3% of projects had a value of $5,000 or below.
+* Census tracts around Downtown, Lakefront, University Hill, Near Eastside, Highway 81 and Highway 690 have received most commercial investments projects, measured in aggregate value.
+```{r, echo=FALSE}
+df.C <- dat_sp[dat_sp$Type=="Com. New Building" | dat_sp$Type== "Com. Reno/Rem/Chg Occ", ]
+dat <- tbl_df(df.C@data)
+dat_grouped <- group_by(dat, Type)
+
+##SUMMARY TABLES
+summarise(dat_grouped,  Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+summarise(dat,  Type= "All Commercial Property", Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+
+## GRAPHS OF PERMITS PER YEAR
+## Make the frequencies numbers (rather than factors)
+peryear <- as.data.frame(table(df.C$Year))
+peryear$Freq <- as.numeric(as.character(peryear$Freq))
+## Find a range of y's that'll leave sufficient space above the tallest bar
+ylim <- c(0, 1.1*max(peryear$Freq))
+## Plot, and store x-coordinates of bars in xx
+xx <- barplot(peryear$Freq, xaxt = 'n', width = 0.85, ylim = ylim,
+              main = "Number of Permits per Year", 
+              ylab = "Frequency", col="firebrick4", xlab = "Year")
+### Add text at top of bars
+text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "black")
+### Add x-axis labels 
+axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
+rm(xx)
+rm(ylim)
+rm(peryear)
+rm(dat)
+rm(dat_grouped)
+
+## DISTRIBUTION OF PERMITS PER VALUATION
+Working_df.C <- df.C[,]
+Working_df.C$Valuation[Working_df.C$Valuation > 25000] <- 25000
+values <- Working_df.C$Valuation
+peryear <- table(df.C$Year)
+histPercent <- function(x, ...) {
+  H <- hist(x, breaks=c(0, 5000, 10000, 15000, 20000, 25000), plot = FALSE)
+  H$density <- with(H, 100 * density* diff(breaks)[1])
+  labs <- paste(round(H$density, 1), "%", sep="")
+  plot(H, freq = FALSE, xaxt="n", ylab= "Percentage", xlab= "Dollars", labels = labs, ylim=c(0, 1.08*max(H$density)),...)
+  axis(1, at=c(0, 5000, 10000, 15000, 20000, 25000), labels=c("0", "5000", "10000", "15000", "20000", "25000+"), pos=0)
+}
+par(mar=c(5,3,2,3)+0.1)
+histPercent(values, main= "Distribution of Permits per Total Amount",
+col="firebrick4")
+rm(histPercent)
+rm(values)
+rm(Working_df.C)
+
+#PLOTTING COMMERCIAL
+dat <- tbl_df(df.C@data)
+GroupedbyCT <- group_by(dat, Tract)
+FinalTable <- summarise(GroupedbyCT,
+                        NumbOfPermits = n(),
+                        TotalAmount = sum(Valuation, na.rm = TRUE))
+shapes1 <- merge(shapes, FinalTable, by= "Tract", all.x=TRUE)
+shapes1$NumbOfPermits[is.na(shapes1$NumbOfPermits)] <- 0
+shapes1$TotalAmount[is.na(shapes1$TotalAmount)] <- 0
+# ranking function
+rankingf <- function(x, lower = 0, upper, by = 10,
+                     sep = "-", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by - 1, upper - 1, by = by),
+                  sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+# get colors for labeling the points
+plotvar <- shapes1$TotalAmount / 1000000 # pick a variable to plot
+nclr <- 6 # number of colors
+color.function <- colorRampPalette( c("steel blue","light gray","firebrick4"))
+col.ramp <- color.function(nclr)
+colornum <- rankingf(plotvar, lower = 0, upper=10, by=2)
+colcode <- col.ramp[colornum] # assign color
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot(shapes1, 
+     main="Aggregate Value of Commercial Investment Projects per Census Tract, 2012-2016",
+     border="grey80",
+     col= colcode
+     )
+legend.text <- c("$0 - $1M", "$2M - $3M", "$4M - $5M", "$6M - $7M", "$8M - $9M", "$10M+")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col=col.ramp, box.col="white",
+        title="Aggregate Value" )
+rm(col.ramp)
+rm(colcode)
+rm(colornum)
+rm(nclr)
+rm(plotvar)
+rm(legend.text)
+rm(color.function)
+rm(rankingf)
+rm(GroupedbyCT)
+rm(FinalTable)
+rm(shapes1)
+rm(df.C)
+```
+
+###**4. Demolitions**
+
+####Main takeaways:
+
+* This category contains 595 observations for demolition permits in the City of Syracuse. 
+* Over the last five years, the demolition permits annual average has been 119. This number has been fairly consistent, with a small increase (164 permits) in 2015.
+* The value of the demolition projects ranges from zero dollars to $300,000, with most projects (24.2%) falling between $10,000 and $20,000.
+* Census tracts around Downtown, Lakefront, Westside, Near Westside, Near Eastside, Southwest, and Brighton have seen the largest number of demolition projects, measured in aggregate value.
+```{r, echo=FALSE}
+df.D <- dat_sp[dat_sp$Type=="Demolition", ]
+dat <- tbl_df(df.D@data)
+dat_grouped <- group_by(dat, Type)
+
+##SUMMARY TABLES
+summarise(dat,  Type= "Demolitions", Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+
+## GRAPHS OF PERMITS PER YEAR
+## Make the frequencies numbers (rather than factors)
+peryear <- as.data.frame(table(df.D$Year))
+peryear$Freq <- as.numeric(as.character(peryear$Freq))
+## Find a range of y's that'll leave sufficient space above the tallest bar
+ylim <- c(0, 1.1*max(peryear$Freq))
+## Plot, and store x-coordinates of bars in xx
+xx <- barplot(peryear$Freq, xaxt = 'n', width = 0.85, ylim = ylim,
+              main = "Number of Permits per Year", 
+              ylab = "Frequency", col="firebrick4", xlab = "Year")
+### Add text at top of bars
+text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "black")
+### Add x-axis labels 
+axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
+rm(xx)
+rm(ylim)
+rm(peryear)
+rm(dat)
+
+## DISTRIBUTION OF PERMITS PER VALUATION
+Working_df.D <- df.D[,]
+Working_df.D$Valuation[Working_df.D$Valuation > 25000] <- 25000
+values <- Working_df.D$Valuation
+peryear <- table(df.D$Year)
+histPercent <- function(x, ...) {
+  H <- hist(x, breaks=c(0, 5000, 10000, 15000, 20000, 25000), plot = FALSE)
+  H$density <- with(H, 100 * density* diff(breaks)[1])
+  labs <- paste(round(H$density, 1), "%", sep="")
+  plot(H, freq = FALSE, xaxt="n", ylab= "Percentage", xlab= "Dollars", labels = labs, ylim=c(0, 1.08*max(H$density)),...)
+  axis(1, at=c(0, 5000, 10000, 15000, 20000, 25000), labels=c("0", "5000", "10000", "15000", "20000", "25000+"), pos=0)
+}
+par(mar=c(5,3,2,3)+0.1)
+histPercent(values, main= "Distribution of Permits per Total Amount",
+col="firebrick4")
+rm(histPercent)
+rm(values)
+rm(Working_df.D)
+
+#PLOTTING DEMOLITIONS
+dat <- tbl_df(df.D@data)
+GroupedbyCT <- group_by(dat, Tract)
+FinalTable <- summarise(GroupedbyCT,
+                        NumbOfPermits = n(),
+                        TotalAmount = sum(Valuation, na.rm = TRUE))
+shapes1 <- merge(shapes, FinalTable, by= "Tract", all.x=TRUE)
+shapes1$NumbOfPermits[is.na(shapes1$NumbOfPermits)] <- 0
+shapes1$TotalAmount[is.na(shapes1$TotalAmount)] <- 0
+# ranking function
+rankingf <- function(x, lower = 0, upper, by = 10,
+                     sep = "-", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by - 1, upper - 1, by = by),
+                  sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+# get colors for labeling the points
+plotvar <- shapes1$TotalAmount / 1000 # pick a variable to plot
+nclr <- 6 # number of colors
+color.function <- colorRampPalette( c("steel blue","light gray","firebrick4"))
+col.ramp <- color.function(nclr)
+colornum <- rankingf(plotvar, lower = 0, upper=250, by=50)
+colcode <- col.ramp[colornum] # assign color
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot(shapes1, 
+     main="Aggregate Value of Demolitions per Census Tract, 2012-2016",
+     border="grey80",
+     col= colcode
+     )
+legend.text <- c("$0 - $49,000", "$50,000 - $99,000", "$100,000 - $149,000", "$150,000 - $199,000", "$200,000 - $249,00", "$250,000+")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col=col.ramp, box.col="white",
+        title="Aggregate Value" )
+rm(col.ramp)
+rm(colcode)
+rm(colornum)
+rm(nclr)
+rm(plotvar)
+rm(legend.text)
+rm(color.function)
+rm(rankingf)
+rm(GroupedbyCT)
+rm(FinalTable)
+rm(shapes1)
+rm(df.D)
+```
+
+###**5. Installations and Repairs on all properties**
+
+####Main takeaways:
+
+* This category is composed several kinds of permits, including: Electric, Elevator, Fire Alarm, HVAC/Mechanical, Misc.(deck, fence,ramp), Pool / Hot Tub, Security Alarm, Sprinkler, and Tank.
+* There have been a total of 12,261 installations and repairs projects over the last five years. Most of them have been Electric (46.6%), HVAC/Mechanical (17.6%) and Sprinkler (14.5%) projects.
+* The number of installations and repairs projects has been somewhat consistent over the last five years, with an annual average of 2,449 permits per year. However, last year, there was a small decrease in the number of installations and repairs permits with only 2,013.
+* Most installations and repairs projects (67%) had a value of $5,000 or below and only and only 13.7% of projects had a value of $20,000+.
+* The census tracts around Downtown, Lakefront, Westside, Near Eastside, Near Northeast, and Highway 81 have received most commercial investments projects, measured in aggregate value.
+```{r, echo=FALSE}
+Ins <- c("Electric", "Elevator", "Fire Alarm", "HVAC/Mechanical", "Misc.(deck, fence,ramp)", "Pool / Hot Tub", "Security Alarm", "Sprinkler", "Tank")
+df.I <- dat_sp[dat_sp$Type %in% Ins, ]
+dat <- tbl_df(df.I@data)
+dat_grouped <- group_by(dat, Type)
+
+##SUMMARY TABLES
+summarise(dat_grouped,  Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+summarise(dat,  Type= "All Installations and Repairs", Observations = n(), 
+          Min. = min(Valuation), Median = median(Valuation), 
+          Mean = mean(Valuation), Max.= max(Valuation)) %>% pander
+
+## GRAPHS OF PERMITS PER YEAR
+## Make the frequencies numbers (rather than factors)
+peryear <- as.data.frame(table(df.I$Year))
+peryear$Freq <- as.numeric(as.character(peryear$Freq))
+## Find a range of y's that'll leave sufficient space above the tallest bar
+ylim <- c(0, 1.1*max(peryear$Freq))
+## Plot, and store x-coordinates of bars in xx
+xx <- barplot(peryear$Freq, xaxt = 'n', width = 0.85, ylim = ylim,
+              main = "Number of Permits per Year", 
+              ylab = "Frequency", col="firebrick4", xlab = "Year")
+### Add text at top of bars
+text(x = xx, y = peryear$Freq, label = peryear$Freq, pos = 3, cex = 0.8, col = "black")
+### Add x-axis labels 
+axis(1, at=xx, labels=peryear$Var1, tick=FALSE, line=-0.8, cex.axis=0.8)
+rm(xx)
+rm(ylim)
+rm(peryear)
+rm(dat)
+rm(dat_grouped)
+
+## DISTRIBUTION OF PERMITS PER VALUATION
+Working_df.I <- df.I[,]
+Working_df.I$Valuation[Working_df.I$Valuation > 25000] <- 25000
+values <- Working_df.I$Valuation
+peryear <- table(df.I$Year)
+histPercent <- function(x, ...) {
+  H <- hist(x, breaks=c(0, 5000, 10000, 15000, 20000, 25000), plot = FALSE)
+  H$density <- with(H, 100 * density* diff(breaks)[1])
+  labs <- paste(round(H$density, 1), "%", sep="")
+  plot(H, freq = FALSE, xaxt="n", ylab= "Percentage", xlab= "Dollars", labels = labs, ylim=c(0, 1.08*max(H$density)),...)
+  axis(1, at=c(0, 5000, 10000, 15000, 20000, 25000), labels=c("0", "5000", "10000", "15000", "20000", "25000+"), pos=0)
+}
+par(mar=c(5,3,2,3)+0.1)
+histPercent(values, main= "Distribution of Permits per Total Amount",
+col="firebrick4")
+rm(histPercent)
+rm(values)
+rm(Working_df.I)
+
+#PLOTTING INSTALLATIONS AND REPAIRS
+dat <- tbl_df(df.I@data)
+GroupedbyCT <- group_by(dat, Tract)
+FinalTable <- summarise(GroupedbyCT,
+                        NumbOfPermits = n(),
+                        TotalAmount = sum(Valuation, na.rm = TRUE))
+shapes1 <- merge(shapes, FinalTable, by= "Tract", all.x=TRUE)
+shapes1$NumbOfPermits[is.na(shapes1$NumbOfPermits)] <- 0
+shapes1$TotalAmount[is.na(shapes1$TotalAmount)] <- 0
+# ranking function
+rankingf <- function(x, lower = 0, upper, by = 10,
+                     sep = "-", above.char = "+") {
+  labs <- c(paste(seq(lower, upper - by, by = by),
+                  seq(lower + by - 1, upper - 1, by = by),
+                  sep = sep),
+            paste(upper, above.char, sep = ""))
+  
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf),
+      right = FALSE, labels = labs)
+}
+# get colors for labeling the points
+plotvar <- shapes1$TotalAmount / 1000 # pick a variable to plot
+nclr <- 6 # number of colors
+color.function <- colorRampPalette( c("steel blue","light gray","firebrick4"))
+col.ramp <- color.function(nclr)
+colornum <- rankingf(plotvar, lower = 0, upper=5000, by=1000)
+colcode <- col.ramp[colornum] # assign color
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot(shapes1, 
+     main="Aggregate Value of Installations and Repairs Projects per Census Tract, 2012-2016",
+     border="grey80",
+     col= colcode
+     )
+legend.text <- c("$0 - $0.9M", "$1M - $1.9M", "$2M - $2.9M", "$3M - $3.9M", "$4M - $4.9M", "$5M+")
+legend( "bottomright",
+        pch=19, pt.cex=1.5, cex=0.8,
+        legend=legend.text, bg="white",
+        col=col.ramp, box.col="white",
+        title="Aggregate Value" )
+rm(col.ramp)
+rm(colcode)
+rm(colornum)
+rm(nclr)
+rm(plotvar)
+rm(legend.text)
+rm(color.function)
+rm(rankingf)
+rm(GroupedbyCT)
+rm(FinalTable)
+rm(shapes1)
+rm(df.I)
+```
