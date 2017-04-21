@@ -92,6 +92,48 @@ colnames( npo_years_sum )[1] <- "GEOID10"
 
 # Bind the Totals row to the npos_years dataframe
 npos_years <- rbind( npos_years, npo_years_sum )
+
+
+npo_years_sum <- as.data.frame( is.matrix ( table( npos$npos_yr) ) )
+npo_years_sum <- cast( npo_years_sum, Var1 ~ Freq )
+ncol( npos_years )
+ncol( npo_years_sum )
+npos_years <- rbind( npos_years, npo_years_sum )
+
+
+data.frame(lapply(arg0, function(npo_years_sum) t(data.frame(npo_years_sum))))
+
+class(npos_years)
+npos_years <- as.data.frame( npos_years )
+
+npos_years <- as.data.frame( rbind( table( npos$GEOID10 , npos$npos_yr ), table( npos$npos_yr ) ) )
+
+
+# Test with code from:  Joshua Ulrich, https://stackoverflow.com/questions/4946873/how-do-i-add-a-row-to-a-data-frame-with-totals
+rbind(npos_years, data.frame(GEOID10="Total",t(colSums(npos_years[-1,]))))
+
+
+# Test with code from: G. Grothendieck, https://stackoverflow.com/questions/4946873/how-do-i-add-a-row-to-a-data-frame-with-totals
+rownames(x) <- unique( npos$GEOID10 )
+Total <- sum
+npo_years_sum <- addmargins(as.table(as.matrix(npos_years[-1])), 1, FUN = Total)
+data.frame(Language = rownames(npo_years_sum), as.matrix(npo_years_sum[]), row.names = NULL)
+
+
+
+
+npos_years <- as.data.frame( npos_years, optional = TRUE )
+#row_nums <- 1:53
+#test <- cbind( table(npos$GEOID10), npos_years)
+
+#######################################################################
+# need to fix this such that it returns a matrix with one column IDs, and every other column year
+# look up how to replicate pivot tables in R
+
+# These should be the column headers
+names( npos_years ) <- c( "GEOID10", "2002", "2006", "2011", "2013", "2014", "2015", "2016" )
+
+
 ```
 
 **Second**, we will create a dataframe that breaks down the nonprofits per census tract by subsector. The subsectors of nonprofits identified in the variable NTMAJ12 are:
@@ -114,31 +156,23 @@ npos_geoids <- unique( npos$GEOID10 )
 length( npos_geoids)
 
 # Create a dataframe of the number of NPOs in each census tract by category
-npos_sector <- as.data.frame( table( npos$GEOID10 , npos$ntmaj12 ) )
+npos_sector <- as.data.frame( table( npos$GEOID10, npos$ntmaj12 ) )
+names( npos_sector ) <- c( "GEOID10", "Arts_Culture", "Education_Higher", "Education", "Hospitals", "Environment", "Health", "Human Services", "International", "Mutual_Benefit", "Public_Societal_Benefit", "Religion", "Unknown" )
 
-# Rename the columns
-names( npos_sector ) <- c( "GEOID10", "SECTOR", "FREQ")
+for( i in 1:length( npos_geoids ) )
 
-# Cast the data such that the number of nonprofits per geoID is broken out by year
-npos_sector <- cast( npos_sector, GEOID10 ~ SECTOR )
 
-# Create a dataframe of the summed number of nonprofits per year, transposing the values to be horizontal rather than vertical. This is key to bind with the original npos_sector dataframe
-npo_sector_sum <- as.data.frame( t( colSums( npos_sector ) ) )
+function ( ) {
+  
+  
+}
 
-# Give this sum row the geoID of "Total
-npo_sector_sum <- cbind( "Total", npo_sector_sum)
-
-# Rename the column containing "Total" to match the appropriate column in the original npos_sector dataframe
-colnames( npo_sector_sum )[1] <- "GEOID10"
-
-# Bind the Totals row to the npos_sector dataframe
-npos_sector <- rbind( npos_sector, npo_sector_sum )
-
-# Rename the columns such that they match the full names of the subsectors
-names( npos_sector ) <- c( "GEOID10", "Arts_Culture", "Education_Higher", "Education", "Hospitals", "Environment", "Health", "Human Services", "International", "Mutual_Benefit", "Public_Societal_Benefit", "Religion" )
+#################################################
+# SAME ISSUE AS ABOVE
+# Need a matrix with a column of geoIDs, and 1 column per category
 
 ```
-Please note that, because there are no NPOs with a value of "UN" for ntmaj12, we do not have a column with that value, so we are dropping "Unknown" from the column renaming in the last line of code above.
+
 
 
 **Finally**, let's take these two modified NPO datasets and write them to .CSV files, so that we can use it later as needed.
@@ -149,4 +183,5 @@ write.csv( npos_years, "NPO_Data_final_by_year.csv", row.names=F )
 
 # Generate a .CSV file that breaks down the number of NPOs by census tract and subsector.
 write.csv( npos_sector, "NPO_Data_final_by_subsector.csv", row.names=F )
+
 ```
