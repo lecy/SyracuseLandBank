@@ -37,7 +37,7 @@ library( tools )
 Set your working directory as appropriate, then download the .CSV file containing the census tract information.
 ```{r}
 # Set your working directory
-setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/FINAL_DATA")
+setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA")
 
 # Load the geocoded data from GitHub
 npos <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors=FALSE )
@@ -61,7 +61,7 @@ names( npos_tract ) <- c( "GEOID10", "NPOS_ACROSS_YEARS" )
 
 ```{r}
 # Generate a .CSV file that contains census tract information.
-write.csv( npos_tract, "NPO_Data_final_across_years.csv", row.names=F )
+write.csv( npos_tract, "NPO_Data_aggregated_across_years.csv", row.names=F )
 ```
 
 **Please be aware that this dataset aggregates the number of nonprofits across years.** Investigation into the year variable generated in part 2 of step "02_Aggregate the NPO Data" shows us that there is a wide arrange of years. To be cautious, we should also generate a dataset that breaks out NPOs across years.  Let's generate a third that breaks out cumulative NPOs across the key subsectors. We will do both of these things in part 3. 
@@ -145,8 +145,8 @@ Please note that, because there are no NPOs with a value of "UN" for ntmaj12, we
 
 ```{r}
 # Generate a .CSV file that breaks down the number of NPOs by census tract and year.
-write.csv( npos_years, "NPO_Data_final_by_year.csv", row.names=F )
+write.csv( npos_years, "NPO_Data_aggregated_by_year.csv", row.names=F )
 
 # Generate a .CSV file that breaks down the number of NPOs by census tract and subsector.
-write.csv( npos_sector, "NPO_Data_final_by_subsector.csv", row.names=F )
+write.csv( npos_sector, "NPO_Data_aggregated_by_subsector.csv", row.names=F )
 ```
