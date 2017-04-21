@@ -385,12 +385,10 @@ points(school.diffs.2015$lon, school.diffs.2015$lat, col=color.vector.school.dif
 
 }, 
 
-movie.name = "movie_name.gif",   # name of your gif
+movie.name = "movie_name1.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
 ```
 
     ## [1] TRUE
-
-![movie\_name.gif](/Users/beelerenator/Downloads/gifs1/movie_name.gif)
