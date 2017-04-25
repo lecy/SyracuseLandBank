@@ -155,6 +155,7 @@ fullFrame <- rbind(a, b)
 fullFrame <- rbind(fullFrame, c)
 fullFrame <- rbind(fullFrame, d)
 
+fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
 
 ```
 
