@@ -1,0 +1,153 @@
+---
+title: "Aggregate the NPO Data"
+author: "Francisco Santamarina"
+date: "April 20, 2017"
+output:
+  html_document:
+    df_print: paged
+    keep_md: true
+      
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set( message=F, warning=F )
+```
+
+In part 2 of step "02_Aggregate the NPO Data", we identified the census tract information of nonprofits located in Syracuse, New York that are contained in the NCCS data set. We will be using this census tract information to see the number of nonprofits per census tract over a multi-year basis. 
+
+## 1. Load the geocoded NPO Data and shapefiles
+
+Load the packages that you will need during this process
+```{r}
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( reshape )  # This is key in part 3, from: https://www.r-bloggers.com/pivot-tables-in-r/
+library( sp )
+library( tools )
+
+```
+
+
+Set your working directory as appropriate, then download the .CSV file containing the census tract information.
+```{r}
+# Set your working directory
+setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA")
+
+# Load the geocoded data from GitHub
+npos <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors=FALSE )
+
+###### Remove this line below from final version:
+npos <- read.csv( "~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors=FALSE )
+
+```
+
+
+## 2. Generate the base aggregated file of NPOs per census tract
+
+**First**, we will create a dataframe of a table version of the FIPS ID, or geographical identifier, of the nonprofits. This will provide us with a summarized, unique listing of the various IDs.
+```{r}
+# Create a dataframe of NPOs per census tract that is agnostic to year
+npos_tract <- as.data.frame( table( npos$GEOID10 ) )
+names( npos_tract ) <- c( "GEOID10", "NPOS_ACROSS_YEARS" )
+```
+
+**Second**, let's take the finalized NPO dataset and write it to a .CSV file, so that we can use it later as needed.
+
+```{r}
+# Generate a .CSV file that contains census tract information.
+write.csv( npos_tract, "NPO_Data_aggregated_across_years.csv", row.names=F )
+```
+
+**Please be aware that this dataset aggregates the number of nonprofits across years.** Investigation into the year variable generated in part 2 of step "02_Aggregate the NPO Data" shows us that there is a wide arrange of years. To be cautious, we should also generate a dataset that breaks out NPOs across years.  Let's generate a third that breaks out cumulative NPOs across the key subsectors. We will do both of these things in part 3. 
+
+## 3. Generate files for NPOs per census tract across years and by type
+
+**First**, we will create a dataframe that counts the number of nonprofits across years, broken down by census tract. 
+```{r}
+# Create a dataframe of NPOs by census tract and year
+npos_years <- as.data.frame( table( npos$GEOID10 , npos$npos_yr ) )
+
+
+# Rename the columns
+names( npos_years ) <- c( "GEOID10", "YEAR", "FREQ")
+
+# Cast the data such that the number of nonprofits per geoID is broken out by year
+npos_years <- cast( npos_years, GEOID10 ~ YEAR )
+
+
+# Create a dataframe of the summed number of nonprofits per year, transposing the values to be horizontal rather than vertical. This is key to bind with the original npos_years dataframe
+npo_years_sum <- as.data.frame( t( colSums( npos_years ) ) )
+
+# Give this sum row the geoID of "Total
+npo_years_sum <- cbind( "Total", npo_years_sum)
+
+# Rename the column containing "Total" to match the appropriate column in the original npos_years dataframe
+colnames( npo_years_sum )[1] <- "GEOID10"
+
+# Bind the Totals row to the npos_years dataframe
+npos_years <- rbind( npos_years, npo_years_sum )
+```
+
+**Second**, we will create a dataframe that breaks down the nonprofits per census tract by subsector. The subsectors of nonprofits identified in the variable NTMAJ12 are:<br><br>
+
+•	AR	Arts, culture, and humanities<br>
+•	BH	Education, higher<br>
+•	ED	Education<br>
+•	EH	Hospitals<br>
+•	EN	Environment<br>
+•	HE	Health<br>
+•	HU	Human services<br>
+•	IN	International<br>
+•	MU	Mutual benefit<br>
+•	PU	Public and societal benefit<br>
+•	RE	Religion<br>
+•	UN	Unknown
+
+```{r}
+# Create a vector of unique geoIDs
+npos_geoids <- unique( npos$GEOID10 )
+length( npos_geoids)
+
+# Create a dataframe of the number of NPOs in each census tract by category
+npos_sector <- as.data.frame( table( npos$GEOID10 , npos$ntmaj12 ) )
+
+# Rename the columns
+names( npos_sector ) <- c( "GEOID10", "SECTOR", "FREQ")
+
+# Cast the data such that the number of nonprofits per geoID is broken out by year
+npos_sector <- cast( npos_sector, GEOID10 ~ SECTOR )
+
+# Create a dataframe of the summed number of nonprofits per year, transposing the values to be horizontal rather than vertical. This is key to bind with the original npos_sector dataframe
+npo_sector_sum <- as.data.frame( t( colSums( npos_sector ) ) )
+
+# Give this sum row the geoID of "Total
+npo_sector_sum <- cbind( "Total", npo_sector_sum)
+
+# Rename the column containing "Total" to match the appropriate column in the original npos_sector dataframe
+colnames( npo_sector_sum )[1] <- "GEOID10"
+
+# Bind the Totals row to the npos_sector dataframe
+npos_sector <- rbind( npos_sector, npo_sector_sum )
+
+# Rename the columns such that they match the full names of the subsectors
+names( npos_sector ) <- c( "GEOID10", "Arts_Culture", "Education_Higher", "Education", "Hospitals", "Environment", "Health", "Human Services", "International", "Mutual_Benefit", "Public_Societal_Benefit", "Religion" )
+
+```
+Please note that, because there are no NPOs with a value of "UN" for ntmaj12, we do not have a column with that value, so we are dropping "Unknown" from the column renaming in the last line of code above.
+
+
+**Finally**, let's take these two modified NPO datasets and write them to .CSV files, so that we can use it later as needed.
+
+```{r}
+# Generate a .CSV file that breaks down the number of NPOs by census tract and year.
+write.csv( npos_years, "NPO_Data_aggregated_by_year.csv", row.names=F )
+
+# Generate a .CSV file that breaks down the number of NPOs by census tract and subsector.
+write.csv( npos_sector, "NPO_Data_aggregated_by_subsector.csv", row.names=F )
+```

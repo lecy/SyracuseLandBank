@@ -27,7 +27,7 @@ library( pander )
 
 ```{r}
 # read in raw data with csv file
-NMTC.full.dat <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/2014_NMTC_FINANCES.csv", header=TRUE)
+NMTC.full.dat <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/NMTC_raw.csv", header=TRUE)
 # select only the rows for the city of Syracuse
 NMTC.syr <- subset (NMTC.full.dat, City == "Syracuse")
 
@@ -48,9 +48,9 @@ NMTC.syr.year.dol
 NMTC.ct.group<- group_by(NMTC.syr.year.dol, X2010.Census.Tract, Origination.Year, QLICI.Amount)
 NMTC.ct.group
 NMTC.agg <-aggregate(NMTC.ct.group$QLICI.Amount, by=list(NMTC.ct.group$X2010.Census.Tract, NMTC.ct.group$Origination.Year), FUN=sum, na.rm=TRUE)
-colnames(NMTC.agg) <- c("Tract","Year","NMTC Dollars")
-NMTC.agg$Tract <-as.numeric(as.character(NMTC.agg$Tract))
-NMTC.agg$Tract <- (NMTC.agg$Tract/100)
+colnames(NMTC.agg) <- c("TRACT","YEAR","NMTC_Dollars")
+NMTC.agg$TRACT <-as.numeric(as.character(NMTC.agg$TRACT))
+NMTC.agg$TRACT <- (NMTC.agg$TRACT/100)
 NMTC.agg
 
 ```
@@ -59,7 +59,7 @@ NMTC.agg
 
 # Generate a .CSV file 
 
-setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
-write.csv( NMTC.agg, "NMTC.data.csv", row.names=F )
+setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+write.csv( NMTC.agg, "NMTC_aggregated.csv", row.names=F )
 
 ```

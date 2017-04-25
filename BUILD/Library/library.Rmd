@@ -1,5 +1,5 @@
 ---
-title: "library_processed"
+title: "library"
 author: "Christine Brown"
 date: "April 19, 2017"
 output: github_document
@@ -22,9 +22,6 @@ library( rgdal )
 library( rgeos )
 library( sp )
 
-#Prepare Working Directory
-setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/PROCESSED_DATA" )
-
 ```
 
 
@@ -40,10 +37,20 @@ syr_parcels <- spTransform( syr_parcels, CRS( "+proj=longlat +datum=WGS84" ) )
 library_sp <- syr_parcels[ syr_parcels$LUCODE == 611, ]
 library_centroid <- gCentroid( library_sp, byid=TRUE )
 library <- cbind( as.data.frame( library_sp ), as.data.frame( library_centroid ) )
-library <- mutate( library, GEOID10=( as.numeric( as.character( CensusTrac ) ) )*100+36067000000 )
-library <- library[ , c( "GEOID10", "x", "y" ) ]
-names( library ) <- c( "GEOID10", "LON", "LAT" )
+library <- mutate( library, TRACT=( as.numeric( as.character( CensusTrac ) ) )/100 )
+library <- library[ , c( "CensusTrac", "x", "y" ) ]
+names( library ) <- c( "TRACT", "LON", "LAT" )
 
-#Export to CSV
+#Export Processed to CSV
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/PROCESSED_DATA" )
 write.csv( library, file = "library_processed.csv", row.names=FALSE )
+
+#Aggregate
+library_tract <- as.data.frame( table( library$TRACT ) )
+library_tract$YEAR <- 2017
+names( library_tract ) <- c( "TRACT", "LIBRARY", "YEAR" )
+
+#Export Aggregate to CSV
+setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+write.csv( library_tract, file = "library_aggregated.csv", row.names=FALSE )
 ```

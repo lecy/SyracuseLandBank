@@ -25,7 +25,7 @@ library( pander )
 
 ```{r}
 # read in raw data with csv file
-LIHTC.dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/LIHTCPUB.csv", header=TRUE)
+LIHTC.dat <- read.csv("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/LIHTC_raw.csv", header=TRUE)
 # select only the rows for Syracuse, NY
 LIHTC.syr <- subset (LIHTC.dat, Proj_St == "NY" & Proj_Cty == "SYRACUSE")
 # select only the rows for years 2005-2015
@@ -45,7 +45,7 @@ LIHTC.ct.group.counted <-count(LIHTC.ct.group, TRCT2010, Yr_Alloc)
 
 LIHTC.data<-as.data.frame(LIHTC.ct.group.counted)
 
-colnames(LIHTC.data) <- c("Tract","Year","LIHTC")
+colnames(LIHTC.data) <- c("TRACT","YEAR","LIHTC")
 
 LIHTC.data
 
@@ -60,8 +60,8 @@ LIHTC.ctdat
 
 # Generate a .CSV file 
 
-setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/PROCESSED_DATA" )
-write.csv( LIHTC.ctdat, "LIHTC.data.csv", row.names=F )
+setwd( "C:/Users/powel/Documents/Data 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+write.csv( LIHTC.ctdat, "LIHTC_aggregated.csv", row.names=F )
 
 ```
 
