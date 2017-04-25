@@ -41,9 +41,6 @@ setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA")
 # Load the geocoded data from GitHub
 npos <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/NPO_Data_geocoded.csv", stringsAsFactors=FALSE )
 
-###### Remove this line below from final version:
-npos <- read.csv( "~/GitHub/DDM-II/SyracuseLandBank/DATA/RAW_DATA/NPO_Data_geocoded.csv", stringsAsFactors=FALSE )
-
 # Remove any NPOs that do not have coordinates. These failed the geocode, and so we cannot identify their census tract number
 npos <- filter( npos, !is.na( lon ) )
 npos <- filter( npos, !is.na( lat ) )
