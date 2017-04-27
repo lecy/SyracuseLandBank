@@ -32,7 +32,6 @@ Note the key findings
 
 Description of the process
 
-
 ### Grocery Store Data  
 
 Some description here.
@@ -40,6 +39,16 @@ Some description here.
 ### [New Market Tax Credits](Compile-Datasets.html)  
 
 Some description here.
+
+### Permits
+Permits issued by the City. Relevant variables of the data include: Type, Value and Location. 
+Permit locations were geocodedand aggregated by Census Tract. This allows to show the total number of permits and their value per Census Tract. Subsets can be made according to the type of permits. For example: Residential and/or Commercial new constructions and remodelations, installations, etc.
+
+#### [Permits geocoding and formating process](Permits_Wrangling.html)  
+This is a description of the geocoding process and the formatting of the dataframes.
+
+#### [Descriptives](Permits_Descriptives.html)
+Some descriptives of the Census Tract aggregated variables.
 
 ### [Analysis](Compile-Datasets.html)  
 
