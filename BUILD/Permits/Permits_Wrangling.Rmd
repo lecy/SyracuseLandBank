@@ -616,7 +616,7 @@ dat[,c("Antenna...Dish","SBL.")] <- NULL
 First we divide the permits types that we want to use from the ingored ones creating two subsets.
 
 ```{r, eval=FALSE}
-dat <- read.csv("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/DATA/AGGREGATED_DATA/Permits_processed.csv", stringsAsFactors = F)
+dat <- read.csv("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/DATA/PROCESSED_DATA/Permits_processed.csv", stringsAsFactors = F)
 
 #Creating two subsets: dat and df.Ign
 
