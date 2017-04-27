@@ -1,6 +1,4 @@
-# CensusData
-Chris Davis  
-3/23/2017  
+# Extracting Data from Census
 
 
 
@@ -180,7 +178,7 @@ write.csv(fullFrame, file = "../../DATA/AGGREGATED_DATA/censusDataFromChris.csv"
 #setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA")
 #myList<- lapply(list.files(pattern = ".csv")[1:4], read.csv)
 #thisWork <-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
-#thisWork<- Reduce(function(...) merge(..., all = T, by = c("TRACT", "YEAR")), myList)
+#thisWork<- Reduce(function(...) merge(..., all = T, by.x= c("TRACT", "YEAR"), by.y = c("TRACT", "YEAR"), myList)
 ```
 
 

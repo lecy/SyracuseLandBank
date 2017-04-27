@@ -1,11 +1,14 @@
 ---
-title: "CensusData"
-author: "Chris Davis"
-date: "3/23/2017"
-output: 
-    html_document:
-      df_print: paged
-      keep_md: true
+title: "Extracting Data from Census"
+output:
+  html_document:
+    keep_md: true
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_float: yes
+    code_fold: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -188,7 +191,7 @@ write.csv(fullFrame, file = "../../DATA/AGGREGATED_DATA/censusDataFromChris.csv"
 #setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA")
 #myList<- lapply(list.files(pattern = ".csv")[1:4], read.csv)
 #thisWork <-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
-#thisWork<- Reduce(function(...) merge(..., all = T, by = c("TRACT", "YEAR")), myList)
+#thisWork<- Reduce(function(...) merge(..., all = T, by.x= c("TRACT", "YEAR"), by.y = c("TRACT", "YEAR"), myList)
 
 
 ```
