@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, message= F, warning = F, fig.width = 10, fig.
 ```
 
 ```{r}
+
 library(censusapi)
 library(dplyr)
 censuskey <- "b431c35dad89e2863681311677d12581e8f24c24"
@@ -77,14 +78,18 @@ census2010 <- getCensus(name = "sf1", vintage = 2010,
                         region = "tract:*", 
                         regionin = "state: 36 + county:067")
 census2010$YEAR <- 2010
+census2010 <- tbl_df(census2010)
+GEOID <- paste0(census2010$state, census2010$county, census2010$tract)
+census2010 <- mutate(census2010, GEOID)
 
 names(census2010) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
-                       "totalHousingUnits", "less18", "year"))
-census2010 <- tbl_df(census2010)
+                       "totalHousingUnits", "less18", "year", "geoid"))
+
+
 census2010<- filter(census2010, as.numeric(TRACT)<10000)
 
 census2000 <- getCensus(name = "sf1", vintage = 2000, 
@@ -97,12 +102,16 @@ census2000 <- getCensus(name = "sf1", vintage = 2000,
                         region = "tract:*", 
                         regionin = "state: 36 + county:067")
 census2000$YEAR <- 2000
+
+GEOID <- paste0(census2000$state, census2000$county, census2000$tract)
+census2000 <- mutate(census2000, GEOID)
+
 names(census2000) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", 
                        "forSaleVacant", "households", 
-                       "ownerOccupied", "renterOccupied", "totalHousingUnits", "year"))
+                       "ownerOccupied", "renterOccupied", "totalHousingUnits", "year", "geoid"))
 
 census2000 <- tbl_df(census2000)
 census2000<- filter(census2000, as.numeric(TRACT)<10000)
@@ -115,18 +124,24 @@ moreCensus2000<- getCensus(name = "sf3", vintage = 2000,
                                     "H047003", "H050003", "P130003", "P038010", "H076001"), 
                            region = "tract:*", regionin = "state: 36 + county:067")
 moreCensus2000$year <- 2000
+moreCensus2000 <- tbl_df(moreCensus2000)
+
+GEOID <- paste0(moreCensus2000$state, moreCensus2000$county, moreCensus2000$tract)
+moreCensus2000 <- mutate(moreCensus2000, GEOID)
+
+
 names(moreCensus2000) <- toupper(c("name", "state", "county", "tract", 
                            "medianHouseIncome", "medianFamIncome", "maleUnemployed",
                            "femaleUnemployed", "maleLaborForce", "femaleLaborForce", 
                            "poverty", "totalForPoverty", "lackingPlumbing",
                            "lackingKitchenFacilities", "aggregateTravelTimeToWork",
-                           "enrolledInSchool", "housingValues", "year"))
+                           "enrolledInSchool", "housingValues", "year", "geoid"))
 
-moreCensus2000 <- tbl_df(moreCensus2000)
+
 moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
 
 
-
+totalCensus2000 <- merge(census2000, moreCensus2000)
 #availablevars <- listCensusMetadata(name="sf1", vintage=2010)
 
 #poverty_possible_vars <- subset(availablevars, 
@@ -138,39 +153,42 @@ moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
 ```{r}
 
 all <- names(syrCensus)
-all <- c(all, names(census2000))
-all <- c(all, names(moreCensus2000))
+all <- c(all, names(totalCensus2000))
 all <- c(all, names(census2010))
 all <- unique(all)
 
-df = data.frame(matrix(vector(), 1, 42,
+df = data.frame(matrix(vector(), 0, 42,
                 dimnames=list(c(), all)),
                 stringsAsFactors=F)
 
 a <- merge(df, syrCensus, all = T)
-b <- merge(df, census2000, all = T)
-c <- merge(df, moreCensus2000, all = T)
-d <- merge(df, census2010, all = T)
+b <- merge(df, totalCensus2000, all = T)
+c <- merge(df, census2010, all = T)
 
 fullFrame <- rbind(a, b)
 fullFrame <- rbind(fullFrame, c)
-fullFrame <- rbind(fullFrame, d)
+
 
 fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
 
+
+names(fullFrame)[names(fullFrame)=="TRACT"] <- "TRACT1"
+names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
+
 ```
 
 ```{r}
-write.csv(fullFrame, file = "censusDataFromChris.csv")
+#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
+setwd("./BUILD/Chris's census stuff")
+fullFrame <- arrange(fullFrame, YEAR, TRACT)
+write.csv(fullFrame, file = "../../DATA/AGGREGATED_DATA/censusDataFromChris.csv")
 ```
 
 ```{r}
-setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA")
-myList<- lapply(list.files(pattern = ".csv")[1:4], read.csv)
-thisWork <-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
-
-
-#thisWork<- Reduce(function(...) merge(..., all = T, by = c("TRACT, YEAR")), myList)
+#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA")
+#myList<- lapply(list.files(pattern = ".csv")[1:4], read.csv)
+#thisWork <-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
+#thisWork<- Reduce(function(...) merge(..., all = T, by = c("TRACT", "YEAR")), myList)
 
 
 ```

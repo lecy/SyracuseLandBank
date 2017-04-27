@@ -188,14 +188,19 @@ census2010 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2010,
                                  &quot;H0040004&quot;, &quot;H00010001&quot;, &quot;P0160002&quot;),
                         region = &quot;tract:*&quot;, 
                         regionin = &quot;state: 36 + county:067&quot;)
+census2010$YEAR &lt;- 2010
+census2010 &lt;- tbl_df(census2010)
+GEOID &lt;- paste0(census2010$state, census2010$county, census2010$tract)
+census2010 &lt;- mutate(census2010, GEOID)
 
 names(census2010) &lt;- toupper(c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
                        &quot;total&quot;, &quot;white&quot;, &quot;black&quot;, &quot;asian&quot;, 
                        &quot;hispanic&quot;, &quot;vacant&quot;, &quot;otherVacant&quot;, 
                        &quot;vacantForRent&quot;, &quot;seasonalVacant&quot;, &quot;forSaleVacant&quot;,
                        &quot;households&quot;, &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, 
-                       &quot;totalHousingUnits&quot;, &quot;less18&quot;))
-census2010 &lt;- tbl_df(census2010)
+                       &quot;totalHousingUnits&quot;, &quot;less18&quot;, &quot;year&quot;, &quot;geoid&quot;))
+
+
 census2010&lt;- filter(census2010, as.numeric(TRACT)&lt;10000)
 
 census2000 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2000, 
@@ -207,13 +212,17 @@ census2000 &lt;- getCensus(name = &quot;sf1&quot;, vintage = 2000,
                                  &quot;H004002&quot;, &quot;H004003&quot;,&quot;H001001&quot;), 
                         region = &quot;tract:*&quot;, 
                         regionin = &quot;state: 36 + county:067&quot;)
+census2000$YEAR &lt;- 2000
+
+GEOID &lt;- paste0(census2000$state, census2000$county, census2000$tract)
+census2000 &lt;- mutate(census2000, GEOID)
 
 names(census2000) &lt;- toupper(c(&quot;name&quot;,&quot;state&quot;, &quot;county&quot;, &quot;tract&quot;,
                        &quot;total&quot;, &quot;white&quot;, &quot;black&quot;, &quot;asian&quot;, 
                        &quot;hispanic&quot;, &quot;vacant&quot;, &quot;otherVacant&quot;, 
                        &quot;vacantForRent&quot;, &quot;seasonalVacant&quot;, 
                        &quot;forSaleVacant&quot;, &quot;households&quot;, 
-                       &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, &quot;totalHousingUnits&quot;))
+                       &quot;ownerOccupied&quot;, &quot;renterOccupied&quot;, &quot;totalHousingUnits&quot;, &quot;year&quot;, &quot;geoid&quot;))
 
 census2000 &lt;- tbl_df(census2000)
 census2000&lt;- filter(census2000, as.numeric(TRACT)&lt;10000)
@@ -225,43 +234,60 @@ moreCensus2000&lt;- getCensus(name = &quot;sf3&quot;, vintage = 2000,
                                     &quot;P043010&quot;, &quot;P087002&quot;, &quot;P087001&quot;, 
                                     &quot;H047003&quot;, &quot;H050003&quot;, &quot;P130003&quot;, &quot;P038010&quot;, &quot;H076001&quot;), 
                            region = &quot;tract:*&quot;, regionin = &quot;state: 36 + county:067&quot;)
+moreCensus2000$year &lt;- 2000
+moreCensus2000 &lt;- tbl_df(moreCensus2000)
+
+GEOID &lt;- paste0(moreCensus2000$state, moreCensus2000$county, moreCensus2000$tract)
+moreCensus2000 &lt;- mutate(moreCensus2000, GEOID)
+
 
 names(moreCensus2000) &lt;- toupper(c(&quot;name&quot;, &quot;state&quot;, &quot;county&quot;, &quot;tract&quot;, 
                            &quot;medianHouseIncome&quot;, &quot;medianFamIncome&quot;, &quot;maleUnemployed&quot;,
                            &quot;femaleUnemployed&quot;, &quot;maleLaborForce&quot;, &quot;femaleLaborForce&quot;, 
                            &quot;poverty&quot;, &quot;totalForPoverty&quot;, &quot;lackingPlumbing&quot;,
                            &quot;lackingKitchenFacilities&quot;, &quot;aggregateTravelTimeToWork&quot;,
-                           &quot;enrolledInSchool&quot;, &quot;housingValues&quot;))
+                           &quot;enrolledInSchool&quot;, &quot;housingValues&quot;, &quot;year&quot;, &quot;geoid&quot;))
 
-moreCensus2000 &lt;- tbl_df(moreCensus2000)
+
 moreCensus2000&lt;- filter(moreCensus2000, as.numeric(TRACT)&lt;10000)
 
 
-
+totalCensus2000 &lt;- merge(census2000, moreCensus2000)
 #availablevars &lt;- listCensusMetadata(name=&quot;sf1&quot;, vintage=2010)
 
 #poverty_possible_vars &lt;- subset(availablevars, 
   #grepl(&quot;value&quot;, availablevars$label, 
   #ignore.case = TRUE))</code></pre>
 <pre class="r"><code>all &lt;- names(syrCensus)
-all &lt;- c(all, names(census2000))
-all &lt;- c(all, names(moreCensus2000))
+all &lt;- c(all, names(totalCensus2000))
 all &lt;- c(all, names(census2010))
 all &lt;- unique(all)
 
-df = data.frame(matrix(vector(), 1, 42,
+df = data.frame(matrix(vector(), 0, 42,
                 dimnames=list(c(), all)),
                 stringsAsFactors=F)
 
 a &lt;- merge(df, syrCensus, all = T)
-b &lt;- merge(df, census2000, all = T)
-c &lt;- merge(df, moreCensus2000, all = T)
-d &lt;- merge(df, census2010, all = T)
+b &lt;- merge(df, totalCensus2000, all = T)
+c &lt;- merge(df, census2010, all = T)
 
 fullFrame &lt;- rbind(a, b)
 fullFrame &lt;- rbind(fullFrame, c)
-fullFrame &lt;- rbind(fullFrame, d)</code></pre>
-<pre class="r"><code>write.csv(fullFrame, file = &quot;censusDataFromChris.csv&quot;)</code></pre>
+
+
+fullFrame$TRACT&lt;- as.numeric(fullFrame$TRACT)/100
+
+
+names(fullFrame)[names(fullFrame)==&quot;TRACT&quot;] &lt;- &quot;TRACT1&quot;
+names(fullFrame)[names(fullFrame)==&quot;GEOID&quot;] &lt;- &quot;TRACT&quot;</code></pre>
+<pre class="r"><code>setwd(&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1&quot;)
+setwd(&quot;./BUILD/Chris's census stuff&quot;)
+fullFrame &lt;- arrange(fullFrame, YEAR, TRACT)
+write.csv(fullFrame, file = &quot;../../DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;)</code></pre>
+<pre class="r"><code>#setwd(&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA&quot;)
+#myList&lt;- lapply(list.files(pattern = &quot;.csv&quot;)[1:4], read.csv)
+#thisWork &lt;-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
+#thisWork&lt;- Reduce(function(...) merge(..., all = T, by = c(&quot;TRACT&quot;, &quot;YEAR&quot;)), myList)</code></pre>
 
 
 
