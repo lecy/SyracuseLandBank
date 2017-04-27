@@ -2,6 +2,19 @@
 
 Project description...
 
+Team:
+
+Alejandro Alfaro Aco <aalfaroa@syr.edu>,
+Christine Elise Brown <cbrown09@syr.edu>,
+Christopher Davis <cdavis10@syr.edu>,
+Cristian Ernesto Nuno <cenuno@syr.edu>,
+Francisco Javier Santamarina <fjsantam@syr.edu>,
+Ignacio Carlos Pezo Salazar <ipezosal@syr.edu>,
+Jonathan Beeler <jfbeeler@gmail.com>,
+Kyle Robert Crichton <krcricht@syr.edu>,
+Linnea Powell <lipowell@syr.edu>,
+Mengran Gao <mgao05@syr.edu>,
+Stephanie Stevenson Wilcoxen <sswilcox@syr.edu>
 
 
 ### [Literature Review](litreview.md)
