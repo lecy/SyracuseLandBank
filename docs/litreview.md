@@ -8,7 +8,7 @@
 
 ### Determinants of Residential Land Values
 
-[Brigham, E. F. (1965). The determinants of residential land values. Land Economics, 41(4), 325-334.](1965-Brigham.pdf)
+[Brigham, E. F. (1965). The determinants of residential land values. Land Economics, 41(4), 325-334.](LITERATURE/1965-Brigham.pdf)
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas iaculis felis magna, faucibus sagittis orci convallis at. Cras vel ex odio. Vivamus eu tempor orci, vel gravida est. Ut sagittis fermentum magna, quis malesuada nulla. Nulla eleifend tempus rutrum. Sed eget enim leo. Praesent faucibus ex eu sodales sagittis. Morbi non lectus quis arcu tincidunt congue. Vestibulum sed sem nunc. Quisque volutpat sollicitudin mi nec vehicula. Nulla ornare, nunc in pretium convallis, lorem lectus tempus tortor, sit amet interdum turpis nibh at mauris. Pellentesque iaculis sodales massa. Nunc a mollis ex.
 
