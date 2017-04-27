@@ -27,4 +27,4 @@ x <- 1:100
 y <- 2*x
 ```
 
-![alt text](ASSETS/maxwell-mafia.png)
+![alt text](http://research.kraeutli.com/wp-content/uploads/2013/11/artist-bubbles-closeup-1024x573.png)
