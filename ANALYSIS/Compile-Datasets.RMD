@@ -2,8 +2,7 @@
 title: "CompileData"
 output:
   html_document:
-  md_document:
-    variant: markdown_github
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
