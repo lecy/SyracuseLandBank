@@ -13,6 +13,7 @@ Load Packages
 library(maptools)
 library(sp)
 library(geojsonio)
+library(rgeos)
 library(RCurl)
 ```
 
@@ -25,11 +26,10 @@ syr <- spTransform(syr, CRS("+proj=longlat +datum=WGS84"))
 
 Load Yelp Dataset and prep data.
 ```{r, warning=F, message=F }
-my.url <- "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/yelp_processed.csv"
-
-dat.raw <- getURL( my.url, ssl.verifypeer=FALSE )
-
-dat <- read.csv( textConnection(dat.raw), stringsAsFactors=FALSE )
+setwd("..")
+setwd("..")
+setwd("./DATA/PROCESSED_DATA")
+dat <- read.csv( "yelp_processed.csv", stringsAsFactors=FALSE )
 
 dat$RATING[is.na(dat$RATING)] <- 0
 dat$PRICE_HIGH[dat$PRICE_HIGH == 999] <- 90
@@ -44,7 +44,12 @@ Convert to spatial points and perform spatial join to census tract shapefiles.
 ```{r, warning=F, message=F }
 dat$coord <- dat[ ,c("LONGITUDE","LATITUDE")]
 yelp <- SpatialPoints(dat$coord, proj4string=CRS("+proj=longlat +datum=WGS84"))
+```
 
+Subset yelp data to restaurants and bars that are within the city of Syracuse.
+
+```{r, warning=F, message=F }
+yelp.syr <- gIntersection(yelp, syr)
 ```
 
 Plot restaurants and bars across Syracuse.
@@ -73,7 +78,7 @@ Store color ramp to plot aggregated data by census tract.  Ramp scales from low 
 
 ```{r, warning=F, message=F }
 color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
-color.ramp <- color.range( 10 )
+color.ramp <- color.range(10)
 ```
 
 ##Aggregation: Rating
@@ -81,9 +86,10 @@ color.ramp <- color.range( 10 )
 Aggregate by census tract, take average rating of restaurants and bars in area.
 
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$RATING, list(dat$FIPS), FUN="mean")
+temp <- aggregate(dat$RATING[dat$RATING > 0], list(dat$FIPS[dat$RATING > 0]), FUN="mean")
 tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$RATING <- temp$x[tract.order]
+yelp.data$RATING[is.na(yelp.data$RATING)] <- 0
 ```
 
 Break data into levels.
@@ -96,7 +102,7 @@ color.vector <- as.character(color.vector)
 Apply color and plot map.
 
 ```{r, warning=F, message=F }
-color.order <- color.vector[tract.order]
+color.order <- color.vector[yelp.data$TRACT]
 
 par(mar=c(0,0,0,0))
 plot(syr, border="white", col=color.order, main="")
