@@ -1,0 +1,479 @@
+---
+title: "CompileData"
+output:
+  html_document:
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=F, message=F, fig.width=10)
+```
+
+
+```{r}
+library( dplyr )
+library( pander )
+library( geojsonio )
+library( maptools )
+library( sp )
+```
+
+
+
+
+# Create the Dependent Variable
+
+## Get Median Home Value from Census
+
+```{r}
+
+library( censusapi )
+
+
+censuskey <- "b431c35dad89e2863681311677d12581e8f24c24"
+
+
+myvars <- makeVarlist( name="sf3", 
+                       vintage=2000,
+                       find="median", 
+                       varsearch="label",
+                       output="dataframe" )
+
+dat.2000  <- getCensus( name="sf3", 
+                        vintage=2000, 
+                        key=censuskey, 
+                        vars=c("H085001"), 
+                        region="tract:*",
+                        regionin="state:36")
+
+dat.2000$FIPS <- paste( dat.2000$state, dat.2000$county, dat.2000$tract, sep="" )
+
+dat.2000 <- rename( dat.2000, MHV2000 = H085001 )
+
+
+
+
+# B25077_001E Median Home Value ACS5 2010, 2015
+
+dat.2010  <- getCensus( name="acs5", 
+                        vintage=2015, 
+                        key=censuskey, 
+                        vars=c("B25077_001E"), 
+                        region="tract:*",
+                        regionin="state:36")
+
+dat.2010$FIPS <- paste( dat.2010$state, dat.2010$county, dat.2010$tract, sep="" )
+
+dat.2010 <- rename( dat.2010, MHV2010 = B25077_001E )
+
+
+
+
+dat.2015  <- getCensus( name="acs5", 
+                        vintage=2015, 
+                        key=censuskey, 
+                        vars=c("B25077_001E"), 
+                        region="tract:*",
+                        regionin="state:36")
+
+dat.2015$FIPS <- paste( dat.2015$state, dat.2015$county, dat.2015$tract, sep="" )
+
+dat.2015 <- rename( dat.2015, MHV2015 = B25077_001E )
+
+
+
+mhv <- merge( dat.2000, dat.2010 ) 
+
+mhv <- merge( mhv, dat.2015 )
+
+head( mhv ) %>% pander
+
+# Subset by Onondaga County
+
+mhv <- mhv[ mhv$county == "067" , ]
+
+
+```
+
+
+
+## Adjust Prices for Inflation
+
+Let's represent everything in 2015 dollars.
+
+```{r}
+
+# Adjust for Inflation
+
+mhv$MHV2000 <- mhv$MHV2000 * 1.3845
+
+mhv$MHV2010 <- mhv$MHV2010 * 1.0785
+
+mhv$CHANGE <- mhv$MHV2015 - mhv$MHV2000
+
+```
+
+
+## Descriptive Statistics
+
+
+```{r}
+
+summary( mhv$MHV2000 ) %>% pander
+
+summary( mhv$MHV2015 ) %>% pander
+
+summary( mhv$CHANGE ) %>% pander
+
+```
+
+
+
+```{r}
+
+plot( mhv$MHV2000, mhv$MHV2015, bty="n", pch=19, col=gray(0.5,0.5), cex=2,
+      main="Median Home Value in 2000 vs 2015", xlab="Median Home Value in 2000", ylab="Median Home Value in 2015" )
+
+hist( mhv$MHV2015 - mhv$MHV2000, breaks=20, col="darkgray", border="white", main="CHANGE in Median Home Value 2000-2015", xlab="Change in Value")
+
+
+```
+
+
+
+
+## Map Changes in Home Values
+
+```{r}
+
+# library( geojsonio )
+
+url <- "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson"
+
+syr <- geojson_read( url, method="local", what="sp" )
+
+syr <- merge( syr, mhv, by.x="GEOID10", by.y="FIPS" )
+
+              
+
+
+color.function <- colorRampPalette( c( "firebrick4", "light gray", "steel blue" ) )
+
+col.ramp <- color.function( 10 ) # number of groups you desire
+
+col.vec <- cut( syr$MHV2000, breaks=seq( from=0, to=250000, by=25000 ), labels=col.ramp )
+
+col.vec <- as.character( col.vec )
+
+
+par( mfrow=c(1,2), mar=c(0,0,4,0) )
+
+plot( syr, col=col.vec, main="Home Values in 2000" )
+
+
+
+col.vec <- cut( syr$MHV2015, breaks=seq( from=0, to=250000, by=25000 ), labels=col.ramp )
+
+col.vec <- as.character( col.vec )
+
+plot( syr, col=col.vec, main="Home Values in 2015" )
+
+
+```
+
+
+
+
+
+```{r}
+
+col.ramp <- color.function( 7 ) # number of groups you desire
+
+col.vec <- cut( syr$CHANGE, breaks=seq( from=-25000, to=150000, by=25000 ), labels=c("firebrick4","gray80","gray60","steelblue","steelblue","steelblue","blue")  )
+
+col.vec <- as.character( col.vec )
+
+table( col.vec ) %>% pander
+
+
+par( mar=c(0,0,3,0) )
+
+plot( syr, col=col.vec, main="Change in Median Home Values 2000-2015" )
+
+
+```
+
+
+
+
+
+
+
+# Merge Data
+
+
+### Check Files in Directory
+
+```{r}
+
+
+# setwd( "./DATA/AGGREGATED_DATA" )
+
+# dir()
+
+#  [1] "censusDataFromChris.csv"       "codeviolations_aggregated.csv" "firepolice_aggregated.csv"     "grocery_aggregated.csv"       
+#  [5] "hold.csv"                      "library_aggregated.csv"        "LIHTC_aggregated.csv"          "NMTC_aggregated.csv"          
+#  [9] "NPO_Data_processed.csv"        "Permits_aggregated.csv"        "Permits_processed.csv"         "publichousing_aggregated.csv" 
+# [13] "syr__ed_score_per_tract.csv"   "TaxSubsidies_aggregated.csv"   "Yelp_Aggregated.csv"  
+
+
+```
+
+
+
+### Read Aggregated Files
+
+```{r}
+
+setwd( ".." )
+
+d1 <- read.csv( "./DATA/AGGREGATED_DATA/censusDataFromChris.csv", stringsAsFactors = F )
+d2 <- read.csv( "./DATA/AGGREGATED_DATA/codeviolations_aggregated.csv", stringsAsFactors = F )
+d3 <- read.csv( "./DATA/AGGREGATED_DATA/firepolice_aggregated.csv", stringsAsFactors = F )
+d4 <- read.csv( "./DATA/AGGREGATED_DATA/grocery_aggregated.csv", stringsAsFactors = F )
+d5 <- read.csv( "./DATA/AGGREGATED_DATA/library_aggregated.csv", stringsAsFactors = F )
+d6 <- read.csv( "./DATA/AGGREGATED_DATA/LIHTC_aggregated.csv", stringsAsFactors = F )
+d7 <- read.csv( "./DATA/AGGREGATED_DATA/NMTC_aggregated.csv", stringsAsFactors = F )
+d8 <- read.csv( "./DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors = F )
+# d9 <- read.csv( "Permits_aggregated.csv", stringsAsFactors = F )
+d10 <- read.csv( "./DATA/AGGREGATED_DATA/Permits_processed.csv", stringsAsFactors = F )
+d11 <- read.csv( "./DATA/AGGREGATED_DATA/publichousing_aggregated.csv", stringsAsFactors = F )
+d12 <- read.csv( "./DATA/AGGREGATED_DATA/syr__ed_score_per_tract.csv", stringsAsFactors = F )
+d13 <- read.csv( "./DATA/AGGREGATED_DATA/TaxSubsidies_aggregated.csv", stringsAsFactors = F )
+d14 <- read.csv( "./DATA/AGGREGATED_DATA/Yelp_Aggregated.csv", stringsAsFactors = F )
+
+
+
+head( d1 ) %>% pander
+head( d2 ) %>% pander
+head( d3 ) %>% pander
+head( d4 ) %>% pander
+head( d5 ) %>% pander
+head( d6 ) %>% pander
+head( d7 ) %>% pander
+head( d8 ) %>% pander
+head( d10 ) %>% pander
+head( d11 ) %>% pander
+head( d12 ) %>% pander
+head( d13 ) %>% pander
+head( d14 ) %>% pander
+
+
+
+```
+
+
+
+
+# Analysis
+
+
+### Census Variables
+
+
+```{r}
+
+
+### DEFINE VARIABLE
+
+
+d1$POVRATE <- d1$POVERTY / d1$TOTAL
+d1$PBLACK <- d1$BLACK / d1$TOTAL
+d1$PASIAN <- d1$ASIAN / d1$TOTAL
+d1$PUNEMPLOYED <- d1$UNEMPLOYED / d1$TOTAL
+d1$PSNAP <- d1$HOUSEHOLDRECEIVEDSNAP / d1$HOUSEHOLDS
+d1$PVACANT <- d1$VACANTTOTAL / d1$TOTALHOUSINGUNITS
+d1$POWNER <- d1$OWNEROCCUPIED / d1$TOTALHOUSINGUNITS
+
+
+
+```
+
+### Nice Correlation Tables
+
+```{r, results='asis'}
+
+
+# x is a matrix containing the data
+# method : correlation method. "pearson"" or "spearman"" is supported
+# removeTriangle : remove upper or lower triangle
+# results :  if "html" or "latex"
+# the results will be displayed in html or latex format
+corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper", "lower"),
+                    result=c("none", "html", "latex")){
+  #Compute correlation matrix
+  require(Hmisc)
+  x <- as.matrix(x)
+  correlation_matrix<-rcorr(x, type=method[1])
+  R <- correlation_matrix$r # Matrix of correlation coeficients
+  p <- correlation_matrix$P # Matrix of p-value 
+  
+  ## Define notions for significance levels; spacing is important.
+  mystars <- ifelse(p < .001, "****", ifelse(p < .001, "*** ", ifelse(p < .01, "**  ", ifelse(p < .05, "*   ", "    "))))
+  
+  ## trunctuate the correlation matrix to two decimal
+  R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
+  
+  ## build a new matrix that includes the correlations with their apropriate stars
+  Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
+  diag(Rnew) <- paste(diag(R), " ", sep="")
+  rownames(Rnew) <- colnames(x)
+  colnames(Rnew) <- paste(colnames(x), "", sep="")
+  
+  ## remove upper triangle of correlation matrix
+  if(removeTriangle[1]=="upper"){
+    Rnew <- as.matrix(Rnew)
+    Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+    Rnew <- as.data.frame(Rnew)
+  }
+  
+  ## remove lower triangle of correlation matrix
+  else if(removeTriangle[1]=="lower"){
+    Rnew <- as.matrix(Rnew)
+    Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
+    Rnew <- as.data.frame(Rnew)
+  }
+  
+  ## remove last column and return the correlation matrix
+  Rnew <- cbind(Rnew[1:length(Rnew)-1])
+  if (result[1]=="none") return(Rnew)
+  else{
+    if(result[1]=="html") print(xtable(Rnew), type="html")
+    else print(xtable(Rnew), type="latex") 
+  }
+} 
+
+
+
+
+d1.sub <- d1[ c("MEDIANHOUSEINCOME","POVRATE","PBLACK","PASIAN",
+                "PSNAP","PVACANT","POWNER","PUNEMPLOYED") ]
+
+library( xtable )
+
+corstars( d1.sub, result="html" )
+
+```
+
+
+
+
+
+
+```{r, fig.width=10}
+
+d1.sub <- d1[ c("GEOID","MEDIANHOUSEINCOME","POVRATE","PBLACK","PASIAN",
+                "PSNAP","PVACANT","POWNER","PUNEMPLOYED") ]
+
+# d1.2000 <- d1[ d1$YEAR == 2000 , ]
+d1.2015 <- d1[ d1$YEAR == 2015 , ]
+
+dat <- merge( mhv, d1.2015, by.x="FIPS", by.y="GEOID" )
+
+dat.sub <- dat[ c("MHV2000","CHANGE","MEDIANHOUSEINCOME","POVRATE","PBLACK","PASIAN",
+                "PSNAP","PVACANT","POWNER","PUNEMPLOYED") ]
+
+## put (absolute) correlations on the upper panels,
+## with size proportional to the correlations.
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y, use="pairwise.complete.obs"))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+panel.smooth <- function (x, y, col = par("col"), bg = NA, pch = par("pch"), 
+    cex = 1, col.smooth = "red", span = 2/3, iter = 3, ...) 
+{
+    points(x, y, pch=19, col=gray(0.5,0.2), bg=bg, cex=cex )
+    ok <- is.finite(x) & is.finite(y)
+    if (any(ok)) 
+        lines(stats::lowess(x[ok], y[ok], f = span, iter = iter), 
+            col = col.smooth, ...)
+}
+
+pairs( dat.sub, lower.panel = panel.smooth, upper.panel = panel.cor)
+
+```
+
+```{r, fig.height=10}
+
+# examine bivariate relationships
+bivPlot <- function( x1, x2, lab1, lab2 )
+{
+
+	plot( x1, x2,
+	      pch=19, 
+	      col=gray(0.6, alpha = 0.3), 
+	      cex=3.5,  
+	      bty = "n",
+	      xlab=lab1, 
+	      ylab=lab2, cex.lab=1.5 )
+  
+  ok <- is.finite(x1) & is.finite(x2)
+	lines( lowess(x2[ok]~x1[ok]), col="red", lwd=3 )
+
+}
+
+par( mfrow=c(2,2) )
+
+bivPlot( x1=dat.sub$PUNEMPLOYED, x2=dat.sub$CHANGE, lab1="PERCENT UNEMPLOYED", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$PBLACK, x2=dat.sub$CHANGE, lab1="PERCENT BLACK", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$MEDIANHOUSEINCOME, x2=dat.sub$CHANGE, lab1="MEDIAN INCOME", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$PVACANT, x2=dat.sub$CHANGE, lab1="PERCENT VACANT", lab2="CHANGE IN MHV" )
+
+
+
+```
+
+### Outlier Removal
+
+```{r, fig.height=10}
+
+
+dat.sub$CHANGE[ which.max(dat.sub$CHANGE) ] <- NA
+
+par( mfrow=c(2,2) )
+
+bivPlot( x1=dat.sub$PUNEMPLOYED, x2=dat.sub$CHANGE, lab1="PERCENT UNEMPLOYED", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$PBLACK, x2=dat.sub$CHANGE, lab1="PERCENT BLACK", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$MEDIANHOUSEINCOME, x2=dat.sub$CHANGE, lab1="MEDIAN INCOME", lab2="CHANGE IN MHV" )
+bivPlot( x1=dat.sub$PVACANT, x2=dat.sub$CHANGE, lab1="PERCENT VACANT", lab2="CHANGE IN MHV" )
+
+pairs( dat.sub, lower.panel = panel.smooth, upper.panel = panel.cor )
+
+
+```
+
+### Merge Census Files
+
+```{r}
+
+d1.2000 <- d1[ d1$YEAR == 2000 , ]
+# d1.2010 <- d1[ d1$YEAR == 2010 , ]
+# d1.2015 <- d1[ d1$YEAR == 2015 , ]
+
+
+dat <- merge( mhv, d1.2000, by.x="FIPS", by.y="GEOID", all.x=T )
+
+head( dat )
+
+d1$GEOID
+
+```
+

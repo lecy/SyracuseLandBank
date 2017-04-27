@@ -1,4 +1,3 @@
-<<<<<<< HEAD:DATA/PROCESSED_DATA/codeviolations_aggregated.csv
 TRACT,YEAR,Code.Violations
 1,2012,11
 1,2013,8
@@ -446,4 +445,3 @@ NA,"2012",596
 NA,"2013",542
 NA,"2014",670
 NA,"2015",599
->>>>>>> c4a327f6e4487e8d0e38697d940533cae6315076:DATA/AGGREGATED_DATA/codeviolations_aggregated.csv
