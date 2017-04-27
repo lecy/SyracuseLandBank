@@ -1,6 +1,13 @@
-# Landing Page
+# Evaluating Determinants of Land Value
 
-Some text
+Project description...
+
+
+
+Step 01 - Grocery Store Data
+Step 02 - New Market Tax Credits
+[Step 99 - Analysis](Compile-Datasets.html)
+
 
 ```R
 # some code
@@ -8,4 +15,4 @@ x <- 1:100
 y <- 2*x
 ```
 
-[Step 99 - Analysis](Compile-Datasets.html)
+![alt text](http://rffg.org/wp-content/uploads/2013/08/color_maxwell-300x206.png)
