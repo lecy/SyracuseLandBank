@@ -27,4 +27,4 @@ x <- 1:100
 y <- 2*x
 ```
 
-![alt text](http://rffg.org/wp-content/uploads/2013/08/color_maxwell-300x206.png)
+->![alt text](ASSETS/maxwell-mafia.png)<-
