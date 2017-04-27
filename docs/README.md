@@ -4,8 +4,10 @@ https://lecy.github.io/SyracuseLandBank/
 
 Brought to you by:
 
+<br>
+<br>
+<br>
 
 
 
-
-->![alt text](ASSETS/maxwell-mafia.png)<-
+![alt text](ASSETS/maxwell-mafia.png)
