@@ -1,0 +1,115 @@
+---
+title: "Aggregate the NPO Data"
+author: "Francisco Santamarina"
+date: "April 20, 2017"
+output:
+  html_document:
+    df_print: paged
+    keep_md: true
+      
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set( message=F, warning=F )
+```
+
+In part 3 of step "01_Download and Clean the NCCS Data", we geocoded the addresses of nonprofits located in Syracuse, New York that are contained in the NCCS data set. We will be using this geocoded data set to aggregate the nonprofits to the census tract level, and at the end be able to see the number of nonprofits per census tract over a multi-year basis. 
+
+## 1. Load the geocoded NPO Data and shapefiles
+
+Load the packages that you will need during this process
+```{r}
+library( dplyr )
+library( geojsonio )
+library( ggmap )
+library( maps )
+library( maptools )
+library( raster )
+library( rgdal )
+library( rgeos )
+library( sp )
+library( tools )
+
+```
+
+
+Set your working directory as appropriate, then download the .CSV file containing the geocoded addresses.
+```{r}
+# Set your working directory
+setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA")
+
+# Load the geocoded data from GitHub
+npos <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/RAW_DATA/NPO_Data_geocoded.csv", stringsAsFactors=FALSE )
+
+# Remove any NPOs that do not have coordinates. These failed the geocode, and so we cannot identify their census tract number
+npos <- filter( npos, !is.na( lon ) )
+npos <- filter( npos, !is.na( lat ) )
+```
+
+
+Next, we will load the Syracuse city shapefile from the GitHub repository. 
+```{r}
+# Shout out to Christine Brown for the code below and in part 2
+
+syr_tracts <- geojson_read( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
+###### Remove this line below from final version:
+syr_tracts <- geojson_read( "~/GitHub/DDM-II/SyracuseLandBank//SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
+
+# We will manually confirm that the Syracuse shapefile uses the same coordinate reference system as our data
+syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
+```
+
+## 2. Get NPO Census Tract Information from the Shapefile
+
+We will overlay the geographic coordinates of the NPOs (points) onto the map layer. By doing so, we will be able to match the points to census tracts. We will combine the census tract information into the dataset, and generate a new CSV containing the file. 
+
+**First**, create a dataframe that contains only the coordinates of each NPO. Then overlay the points.
+*Note*: Because our city filter, in part 2 of step "01_Download and Clean the NCCS Data", used some variants of the city name "Syracuse", it is possible that some NPOs that identify their city as Syracuse may be part of the greater metro area. If this is the case, they will not fall within a census tract designated to be within the city and will need to be removed from the dataset. 
+```{r}
+# Create a vector that just contains coordinates
+npos_coordinates <- npos[ , c( "lon", "lat" ) ]
+
+# Match to Census Tract
+npos_coordinates_SP <- SpatialPoints( npos_coordinates, proj4string=CRS("+proj=longlat +datum=WGS84" ) )
+
+npos_tracts <- over( npos_coordinates_SP, syr_tracts ) 
+# Note that this will only provide information for NPOs in Syracuse census tracts, so some NPOs will have NA as values if they fall out of the Syracuse census areas.
+
+# Column bind the two sets of data back into one
+npos <- cbind( npos, npos_tracts )
+
+# Remove any NPOs that do not fall within the Syracuse census tracts. 
+npos <- filter( npos, !is.na( INTPTLON10 ) )
+
+## Remove unnecessary vectors from the environment:
+rm( npos_tracts )
+```
+
+**Second**, we need to take a moment here to clean up the year data. There is a variable in the dataframe called TAXPER, which reports the period in which the tax was filed. We can use that to represent if a nonprofit was active during that year. To get multiyear data, we need to create a new variable "YEAR" and add it to the data set. We should go ahead and filter out NPOs that do not have tax preparation year data.
+
+```{r}
+# Remove NPOs without tax preparation values from the dataset
+npos <- npos[ !is.na( npos$TAXPER ), ]
+
+# Create a vector that just contains tax preparation periods
+npos_taxper <- npos[ , "TAXPER"]
+
+# Create a new vector that just contains the first 4 characters in the tax period, the year
+npos_yr <- as.numeric( substr( npos_taxper, 1, 4 ) )
+
+# Column bind the two sets of data back into one
+npos <- cbind( npos, npos_yr )
+
+## Remove unnecessary vectors from the environment:
+rm( npos_taxper )
+rm( npos_yr)
+```
+
+
+**Third**, let's take the NPO dataset that now contains census tract information and write it to a .CSV file, so that we can use it later as needed. This will assist us in finalizing an aggregation of the data.
+
+```{r}
+# Generate a .CSV file that contains census tract information.
+write.csv( npos, "NPO_Data_processed.csv", row.names=F )
+```
+

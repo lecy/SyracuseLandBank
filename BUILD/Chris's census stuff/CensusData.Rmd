@@ -76,13 +76,14 @@ census2010 <- getCensus(name = "sf1", vintage = 2010,
                                  "H0040004", "H00010001", "P0160002"),
                         region = "tract:*", 
                         regionin = "state: 36 + county:067")
+census2010$YEAR <- 2010
 
 names(census2010) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
-                       "totalHousingUnits", "less18"))
+                       "totalHousingUnits", "less18", "year"))
 census2010 <- tbl_df(census2010)
 census2010<- filter(census2010, as.numeric(TRACT)<10000)
 
@@ -95,13 +96,13 @@ census2000 <- getCensus(name = "sf1", vintage = 2000,
                                  "H004002", "H004003","H001001"), 
                         region = "tract:*", 
                         regionin = "state: 36 + county:067")
-
+census2000$YEAR <- 2000
 names(census2000) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", 
                        "forSaleVacant", "households", 
-                       "ownerOccupied", "renterOccupied", "totalHousingUnits"))
+                       "ownerOccupied", "renterOccupied", "totalHousingUnits", "year"))
 
 census2000 <- tbl_df(census2000)
 census2000<- filter(census2000, as.numeric(TRACT)<10000)
@@ -113,13 +114,13 @@ moreCensus2000<- getCensus(name = "sf3", vintage = 2000,
                                     "P043010", "P087002", "P087001", 
                                     "H047003", "H050003", "P130003", "P038010", "H076001"), 
                            region = "tract:*", regionin = "state: 36 + county:067")
-
+moreCensus2000$year <- 2000
 names(moreCensus2000) <- toupper(c("name", "state", "county", "tract", 
                            "medianHouseIncome", "medianFamIncome", "maleUnemployed",
                            "femaleUnemployed", "maleLaborForce", "femaleLaborForce", 
                            "poverty", "totalForPoverty", "lackingPlumbing",
                            "lackingKitchenFacilities", "aggregateTravelTimeToWork",
-                           "enrolledInSchool", "housingValues"))
+                           "enrolledInSchool", "housingValues", "year"))
 
 moreCensus2000 <- tbl_df(moreCensus2000)
 moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
@@ -155,6 +156,7 @@ fullFrame <- rbind(a, b)
 fullFrame <- rbind(fullFrame, c)
 fullFrame <- rbind(fullFrame, d)
 
+fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
 
 ```
 

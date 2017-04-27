@@ -132,7 +132,7 @@ dat <- cbind( dat, lat.long )
 rm( addresses )
 ```
 
-**Finally**, let's take the NPO dataset that contains longitude-latitude coordinates and write it to a .CSV file, so that we can use it later as needed. This will be assist in processing data.
+**Finally**, let's take the NPO dataset that contains longitude-latitude coordinates and write it to a .CSV file, so that we can use it later as needed. This will assist us in processing the data.
 
 ```{r}
 # Generate a .CSV file that contains geocoded coordinates.

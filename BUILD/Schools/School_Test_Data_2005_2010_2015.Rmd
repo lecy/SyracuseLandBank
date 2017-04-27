@@ -26,6 +26,7 @@ library(jsonlite)
 library(rgeos)
 library( rgdal )
 library( geojsonio)
+library(animation)
 
 ```
 
@@ -147,6 +148,7 @@ census.matched.to.points <- over(school.lat.long2, census.syr )
 
 #bind census tracts to schools
 school.w.census <- cbind( school.test.avgd, census.matched.to.points)
+school.w.census <- na.omit(school.w.census)
 
 #write csv for school point desgregated data 
 #write.csv(school.w.census, file = "syr_avg_school_score_desaggregated.csv")
@@ -191,13 +193,13 @@ AWATER10=unique(AWATER10),
 INTPTLAT10=unique(INTPTLAT10), 
 INTPTLON10=unique(INTPTLON10))
 
-#rename variable "Year" name for merge with other datasets
-#census.score.year <- plyr::rename(census.score.year, c("Test.Year"="Year"))
-
+# Subset for merge and rename variables for merge
+census.score.year.subset <- dplyr::select(census.score.year, Test.Year, NAME10, Avg.Score)
+census.score.year.subset <- plyr::rename(census.score.year.subset, c("Test.Year"="YEAR", "NAME10" = "TRACT", "Avg.Score" = "SCHOOL_SCORE"))
 
 
 #write csv to be uploaded to github
-#write.csv(census.score.year, file = "syr__ed_score_per_tract.csv")
+#write.csv(census.score.year.subset, file = "syr__ed_score_per_tract.csv")
 
 
 ```
@@ -215,13 +217,13 @@ allschool.data.2005 <- filter(school.tests, Test.Year == 2005)
 Group.allschool.test <-group_by(school.tests, Test.Year)
 Avg.scoretests <- summarise(Group.allschool.test, Avg.score=mean(percent.score, na.rm=T))
 
-par(mar=c(5,4,4,2) +.1)
+
 par(family="Georgia")
 barplot(Avg.scoretests$Avg.score, 
         main="Average Test Score by Year", 
   	xlab="Year", ylab = "Percent", 
-  	names.arg=Avg.scoretests$Test.Year, 
-  	col= c("steelblue", "light gray", "firebrick4")
+  	names.arg=Avg.scoretests$Test.Year, space=0,
+  	col= c("light gray", "light gray", "light gray")
 )
 
 
@@ -300,3 +302,121 @@ points(school.data.2015$lon, school.data.2015$lat, col=color.vector.sc, pch=20, 
       # )
 
 ```
+
+Map of Schools by Change in Test Scores from 2010-2015
+
+```{r}
+
+school.w.census.grp <- group_by(school.w.census, Accountability.School)
+
+school.diffs <- mutate(school.w.census.grp, Score_Diff = c(0, diff(Score)))
+
+school.diffs.2015 <- filter(school.diffs, Test.Year == 2015)
+                
+color.function <- colorRampPalette( c("firebrick4","light gray","steelblue" ) )
+
+col.ramp.school.diff15 <- color.function( 5 ) # number of groups you desire
+
+color.vector.school.diff15 <- cut( rank(school.diffs.2015$Score_Diff), breaks=5, labels=col.ramp.school.diff15 )
+
+color.vector.school.diff15 <- as.character( color.vector.school.diff15 )
+
+#this.order <- match( dat.census.syr$TRACTCE10, ed.data.2015$TRACTCE10 )
+#color.vec.ordered <- color.vector[ this.order ]
+
+par(family="Georgia")
+plot(census.syr, main="Change in Test Scores by Schools from 2010 to 2015")
+points(school.diffs.2015$lon, school.diffs.2015$lat, col=color.vector.school.diff15, pch=20, cex=3)
+
+#fix legend
+#map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
+#legend.text=c(" $8,943-$30,560"," $31,353-$46,458"," $48,611-$62,708","$63,013-$75,357","$75,702-$125,724")
+#legend( "bottomright", bg="white",
+ #       pch=19, pt.cex=1.5, cex=0.7,
+  #      legend=legend.text, 
+   #     col=col.ramp, 
+    #    box.col="white",
+     #   title="Median Family Income" 
+      # )
+
+```
+
+Map of Schools by Change in Test Scores from 2010-2015
+
+```{r}
+
+school.diffs.2010 <- filter(school.diffs, Test.Year == 2010)
+                
+color.function <- colorRampPalette( c("firebrick4","light gray","steelblue" ) )
+
+col.ramp.school.diff10 <- color.function( 5 ) # number of groups you desire
+
+color.vector.school.diff10 <- cut( rank(school.diffs.2010$Score_Diff), breaks=5, labels=col.ramp.school.diff10 )
+
+color.vector.school.diff10 <- as.character( color.vector.school.diff10 )
+
+#this.order <- match( dat.census.syr$TRACTCE10, ed.data.2015$TRACTCE10 )
+#color.vec.ordered <- color.vector[ this.order ]
+
+par(family="Georgia")
+plot(census.syr, main="Change in Test Scores by Schools from 2005 to 2010")
+points(school.diffs.2010$lon, school.diffs.2010$lat, col=color.vector.school.diff10, pch=20, cex=3)
+
+#fix legend
+#map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
+#legend.text=c(" $8,943-$30,560"," $31,353-$46,458"," $48,611-$62,708","$63,013-$75,357","$75,702-$125,724")
+#legend( "bottomright", bg="white",
+ #       pch=19, pt.cex=1.5, cex=0.7,
+  #      legend=legend.text, 
+   #     col=col.ramp, 
+    #    box.col="white",
+     #   title="Median Family Income" 
+      # )
+
+```
+
+```{r}
+#Do a group by avg for change in test score by school. Drop 0
+allschool.data.2015 <- filter(school.tests, Test.Year == 2015)
+allschool.data.2010 <- filter(school.tests, Test.Year == 2010)
+allschool.data.2005 <- filter(school.tests, Test.Year == 2005)
+
+Group.allschool.test <-group_by(school.tests, Test.Year)
+Avg.scoretests <- summarise(Group.allschool.test, Avg.score=mean(percent.score, na.rm=T))
+
+
+
+
+
+
+saveGIF({
+
+
+{
+par(family="Georgia") 
+  plot(census.syr, main="Change in Test Scores by Schools from 2005 to 2010")
+points(school.diffs.2010$lon, school.diffs.2010$lat, col=color.vector.school.diff10, pch=20, cex=3)
+
+par(family="Georgia")
+plot(census.syr, main="Change in Test Scores by Schools from 2010 to 2015")
+points(school.diffs.2015$lon, school.diffs.2015$lat, col=color.vector.school.diff15, pch=20, cex=3)
+
+  
+  
+  }
+
+
+}, 
+
+movie.name = "movie_name1.gif",   # name of your gif
+interval = 1.5,                  # controls the animation speed
+ani.width = 800,                 # size of the gif in pixels
+ani.height = 800 )               # size of the git in pixels
+```
+![movie_name.gif](gifs/movie_name1.gif)
+
+
+
+
+
+
