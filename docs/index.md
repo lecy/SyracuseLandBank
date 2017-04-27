@@ -4,10 +4,17 @@ Project description...
 
 
 
-Step 01 - Grocery Store Data  
-Step 02 - New Market Tax Credits  
-[Step 99 - Analysis](Compile-Datasets.html)  
+### Step 01 - Grocery Store Data  
 
+Some description here.
+
+### Step 02 - New Market Tax Credits  
+
+Some description here.
+
+### [Step 99 - Analysis](Compile-Datasets.html)  
+
+Some description here.
 
 ```R
 # some code
