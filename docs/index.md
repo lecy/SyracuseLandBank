@@ -27,4 +27,4 @@ x <- 1:100
 y <- 2*x
 ```
 
-->![alt text](ASSETS/maxwell-mafia.png)<-
+![alt text](ASSETS/maxwell-mafia.png)
