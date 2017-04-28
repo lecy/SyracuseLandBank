@@ -36,10 +36,10 @@ library( tools )
 Set your working directory as appropriate, then download the .CSV file containing the census tract information.
 ```{r}
 # Set your working directory
-setwd("~/GitHub/DDM-II/SyracuseLandBank/DATA/AGGREGATED_DATA")
+setwd("DATA/AGGREGATED_DATA")
 
 # Load the geocoded data from GitHub
-npos <- read.csv( "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors=FALSE )
+npos <- read.csv( "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/DATA/AGGREGATED_DATA/NPO_Data_processed.csv", stringsAsFactors=FALSE )
 
 ```
 
