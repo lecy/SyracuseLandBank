@@ -9,5 +9,10 @@ Brought to you by:
 <br>
 
 
+<p>
 
-![alt text](ASSETS/maxwell-mafia.png)
+<h2>Spectacular Mountain</h2>
+<img src="ASSETS/maxwell-mafia.png" alt="Maxwell Mafia" align="middle" style="width:50px">
+
+</p>
+
