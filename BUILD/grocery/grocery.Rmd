@@ -74,4 +74,21 @@ names( grocery ) <- c( "TRACT", "GROCERY", "YEAR" )
 setwd( "C:/Users/brown/Documents/Grad School/Fall 16/DDMII/SyracuseLandBank/DATA/AGGREGATED_DATA" )
 write.csv( grocery, file = "grocery_aggregated.csv", row.names=FALSE )
 
+#Create Buffers
+syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )
+buff_half <- gBuffer( grocery_coordinates_SP, width=.0095, byid=F )
+buff_half_clipped <- gIntersection(syr_outline, buff_half, byid=TRUE, drop_lower_td=T)
+buff_one <- gBuffer( grocery_coordinates_SP, width=.019, byid=F)
+buff_one_clipped <- gIntersection(syr_outline, buff_one, byid=TRUE, drop_lower_td=T)
+
+#Plot Buffers
+par(mar=c(0,0,0,0))
+plot(syr_tracts, col="gray80")
+plot(buff_one_clipped, col=rgb( 49, 109, 206, 60, maxColorValue=255), border=F, add=T)
+plot(buff_half_clipped, col=rgb( 60, 120, 230, 80, maxColorValue=255), border=F, add=T)
+points(grocery_coordinates, pch=19, col="white")
+map.scale( x=-76.19555, y=43.00157, metric=F, ratio=F, relwidth = 0.1, cex=1 )
+
+
+
 ```

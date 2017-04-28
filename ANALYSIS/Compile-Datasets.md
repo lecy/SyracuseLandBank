@@ -1,4 +1,4 @@
-# CompileData
+# Compile Data
 
 
 
@@ -1068,7 +1068,7 @@ corstars( d1.sub, result="html" )
 ```
 
 <!-- html table generated in R 3.3.2 by xtable 1.8-2 package -->
-<!-- Thu Apr 27 10:55:11 2017 -->
+<!-- Thu Apr 27 21:20:36 2017 -->
 <table border=1>
 <tr> <th>  </th> <th> MEDIANHOUSEINCOME </th> <th> POVRATE </th> <th> PBLACK </th> <th> PASIAN </th> <th> PSNAP </th> <th> PVACANT </th> <th> POWNER </th>  </tr>
   <tr> <td align="right"> MEDIANHOUSEINCOME </td> <td>  </td> <td>  </td> <td>  </td> <td>  </td> <td>  </td> <td>  </td> <td>  </td> </tr>
@@ -1192,85 +1192,11 @@ dat <- merge( mhv, d1.2000, by.x="FIPS", by.y="GEOID", all.x=T )
 head( dat )
 ```
 
-```
-##          FIPS state county  tract   MHV2000  MHV2010 MHV2015    CHANGE  X
-## 1 36067000100    36    067 000100 136096.35       NA      NA        NA NA
-## 2 36067000200    36    067 000200  81823.95 92643.15   85900   4076.05 NA
-## 3 36067000300    36    067 000300  91930.80 94476.60   87600  -4330.80 NA
-## 4 36067000400    36    067 000400  96915.00 90809.70   84200 -12715.00 NA
-## 5 36067000600    36    067 000600  76562.85 69131.85   64100 -12462.85 NA
-## 6 36067000700    36    067 000700  78916.50 71288.85   66100 -12816.50 NA
-##   NAME STATE COUNTY TRACT TOTAL MEDIANHOUSEINCOME MEDIANFAMINCOME BLACK
-## 1 <NA>    NA     NA    NA    NA                NA              NA    NA
-## 2 <NA>    NA     NA    NA    NA                NA              NA    NA
-## 3 <NA>    NA     NA    NA    NA                NA              NA    NA
-## 4 <NA>    NA     NA    NA    NA                NA              NA    NA
-## 5 <NA>    NA     NA    NA    NA                NA              NA    NA
-## 6 <NA>    NA     NA    NA    NA                NA              NA    NA
-##   ASIAN HISPANIC WHITE EMPLOYED UNEMPLOYED INLABORFORCE POVERTY
-## 1    NA       NA    NA       NA         NA           NA      NA
-## 2    NA       NA    NA       NA         NA           NA      NA
-## 3    NA       NA    NA       NA         NA           NA      NA
-## 4    NA       NA    NA       NA         NA           NA      NA
-## 5    NA       NA    NA       NA         NA           NA      NA
-## 6    NA       NA    NA       NA         NA           NA      NA
-##   VACANTTOTAL OTHERVACANT VACANTFORRENT SEASONALVACANT FORSALEVACANT
-## 1          NA          NA            NA             NA            NA
-## 2          NA          NA            NA             NA            NA
-## 3          NA          NA            NA             NA            NA
-## 4          NA          NA            NA             NA            NA
-## 5          NA          NA            NA             NA            NA
-## 6          NA          NA            NA             NA            NA
-##   HOUSEHOLDRECEIVEDSNAP HOUSEHOLDS OWNEROCCUPIED RENTEROCCUPIED
-## 1                    NA         NA            NA             NA
-## 2                    NA         NA            NA             NA
-## 3                    NA         NA            NA             NA
-## 4                    NA         NA            NA             NA
-## 5                    NA         NA            NA             NA
-## 6                    NA         NA            NA             NA
-##   TOTALHOUSINGUNITS LACKINGKITCHENFACILITIES LACKINGPLUMBING
-## 1                NA                       NA              NA
-## 2                NA                       NA              NA
-## 3                NA                       NA              NA
-## 4                NA                       NA              NA
-## 5                NA                       NA              NA
-## 6                NA                       NA              NA
-##   MEDIANMONTHLYHOUSINGCOSTS LESS18 SINGLEMOTHERBELOWPOVERTY
-## 1                        NA     NA                       NA
-## 2                        NA     NA                       NA
-## 3                        NA     NA                       NA
-## 4                        NA     NA                       NA
-## 5                        NA     NA                       NA
-## 6                        NA     NA                       NA
-##   TRAVELTIMETOWORKMIN ENROLLEDINSCHOOL YEAR VACANT MALEUNEMPLOYED
-## 1                  NA               NA   NA     NA             NA
-## 2                  NA               NA   NA     NA             NA
-## 3                  NA               NA   NA     NA             NA
-## 4                  NA               NA   NA     NA             NA
-## 5                  NA               NA   NA     NA             NA
-## 6                  NA               NA   NA     NA             NA
-##   FEMALEUNEMPLOYED MALELABORFORCE FEMALELABORFORCE TOTALFORPOVERTY
-## 1               NA             NA               NA              NA
-## 2               NA             NA               NA              NA
-## 3               NA             NA               NA              NA
-## 4               NA             NA               NA              NA
-## 5               NA             NA               NA              NA
-## 6               NA             NA               NA              NA
-##   AGGREGATETRAVELTIMETOWORK HOUSINGVALUES POVRATE PBLACK PASIAN
-## 1                        NA            NA      NA     NA     NA
-## 2                        NA            NA      NA     NA     NA
-## 3                        NA            NA      NA     NA     NA
-## 4                        NA            NA      NA     NA     NA
-## 5                        NA            NA      NA     NA     NA
-## 6                        NA            NA      NA     NA     NA
-##   PUNEMPLOYED PSNAP PVACANT POWNER
-## 1          NA    NA      NA     NA
-## 2          NA    NA      NA     NA
-## 3          NA    NA      NA     NA
-## 4          NA    NA      NA     NA
-## 5          NA    NA      NA     NA
-## 6          NA    NA      NA     NA
-```
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["FIPS"],"name":[1],"type":["chr"],"align":["left"]},{"label":["state"],"name":[2],"type":["chr"],"align":["left"]},{"label":["county"],"name":[3],"type":["chr"],"align":["left"]},{"label":["tract"],"name":[4],"type":["chr"],"align":["left"]},{"label":["MHV2000"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["MHV2010"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["MHV2015"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["CHANGE"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["X"],"name":[9],"type":["int"],"align":["right"]},{"label":["NAME"],"name":[10],"type":["chr"],"align":["left"]},{"label":["STATE"],"name":[11],"type":["int"],"align":["right"]},{"label":["COUNTY"],"name":[12],"type":["int"],"align":["right"]},{"label":["TRACT"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["TOTAL"],"name":[14],"type":["int"],"align":["right"]},{"label":["MEDIANHOUSEINCOME"],"name":[15],"type":["int"],"align":["right"]},{"label":["MEDIANFAMINCOME"],"name":[16],"type":["int"],"align":["right"]},{"label":["BLACK"],"name":[17],"type":["int"],"align":["right"]},{"label":["ASIAN"],"name":[18],"type":["int"],"align":["right"]},{"label":["HISPANIC"],"name":[19],"type":["int"],"align":["right"]},{"label":["WHITE"],"name":[20],"type":["int"],"align":["right"]},{"label":["EMPLOYED"],"name":[21],"type":["int"],"align":["right"]},{"label":["UNEMPLOYED"],"name":[22],"type":["int"],"align":["right"]},{"label":["INLABORFORCE"],"name":[23],"type":["int"],"align":["right"]},{"label":["POVERTY"],"name":[24],"type":["int"],"align":["right"]},{"label":["VACANTTOTAL"],"name":[25],"type":["int"],"align":["right"]},{"label":["OTHERVACANT"],"name":[26],"type":["int"],"align":["right"]},{"label":["VACANTFORRENT"],"name":[27],"type":["int"],"align":["right"]},{"label":["SEASONALVACANT"],"name":[28],"type":["int"],"align":["right"]},{"label":["FORSALEVACANT"],"name":[29],"type":["int"],"align":["right"]},{"label":["HOUSEHOLDRECEIVEDSNAP"],"name":[30],"type":["int"],"align":["right"]},{"label":["HOUSEHOLDS"],"name":[31],"type":["int"],"align":["right"]},{"label":["OWNEROCCUPIED"],"name":[32],"type":["int"],"align":["right"]},{"label":["RENTEROCCUPIED"],"name":[33],"type":["int"],"align":["right"]},{"label":["TOTALHOUSINGUNITS"],"name":[34],"type":["int"],"align":["right"]},{"label":["LACKINGKITCHENFACILITIES"],"name":[35],"type":["int"],"align":["right"]},{"label":["LACKINGPLUMBING"],"name":[36],"type":["int"],"align":["right"]},{"label":["MEDIANMONTHLYHOUSINGCOSTS"],"name":[37],"type":["int"],"align":["right"]},{"label":["LESS18"],"name":[38],"type":["int"],"align":["right"]},{"label":["SINGLEMOTHERBELOWPOVERTY"],"name":[39],"type":["int"],"align":["right"]},{"label":["TRAVELTIMETOWORKMIN"],"name":[40],"type":["int"],"align":["right"]},{"label":["ENROLLEDINSCHOOL"],"name":[41],"type":["int"],"align":["right"]},{"label":["YEAR"],"name":[42],"type":["int"],"align":["right"]},{"label":["VACANT"],"name":[43],"type":["int"],"align":["right"]},{"label":["MALEUNEMPLOYED"],"name":[44],"type":["int"],"align":["right"]},{"label":["FEMALEUNEMPLOYED"],"name":[45],"type":["int"],"align":["right"]},{"label":["MALELABORFORCE"],"name":[46],"type":["int"],"align":["right"]},{"label":["FEMALELABORFORCE"],"name":[47],"type":["int"],"align":["right"]},{"label":["TOTALFORPOVERTY"],"name":[48],"type":["int"],"align":["right"]},{"label":["AGGREGATETRAVELTIMETOWORK"],"name":[49],"type":["int"],"align":["right"]},{"label":["HOUSINGVALUES"],"name":[50],"type":["int"],"align":["right"]},{"label":["POVRATE"],"name":[51],"type":["dbl"],"align":["right"]},{"label":["PBLACK"],"name":[52],"type":["dbl"],"align":["right"]},{"label":["PASIAN"],"name":[53],"type":["dbl"],"align":["right"]},{"label":["PUNEMPLOYED"],"name":[54],"type":["dbl"],"align":["right"]},{"label":["PSNAP"],"name":[55],"type":["dbl"],"align":["right"]},{"label":["PVACANT"],"name":[56],"type":["dbl"],"align":["right"]},{"label":["POWNER"],"name":[57],"type":["dbl"],"align":["right"]}],"data":[{"1":"36067000100","2":"36","3":"067","4":"000100","5":"136096.35","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"},{"1":"36067000200","2":"36","3":"067","4":"000200","5":"81823.95","6":"92643.15","7":"85900","8":"4076.05","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"},{"1":"36067000300","2":"36","3":"067","4":"000300","5":"91930.80","6":"94476.60","7":"87600","8":"-4330.80","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"},{"1":"36067000400","2":"36","3":"067","4":"000400","5":"96915.00","6":"90809.70","7":"84200","8":"-12715.00","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"},{"1":"36067000600","2":"36","3":"067","4":"000600","5":"76562.85","6":"69131.85","7":"64100","8":"-12462.85","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"},{"1":"36067000700","2":"36","3":"067","4":"000700","5":"78916.50","6":"71288.85","7":"66100","8":"-12816.50","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 
 ```r
 d1$GEOID

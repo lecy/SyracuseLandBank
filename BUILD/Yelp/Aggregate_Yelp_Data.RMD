@@ -12,29 +12,28 @@ Load Packages
 ```{r, warning=F, message=F }
 library(maptools)
 library(sp)
+library(geojsonio)
+library(RCurl)
 ```
 
-Dowloads zip of census track shapefiles, unzips and removes zipped file.
+Reads in geojson shapefiles for syracuse census tracts.
 
 ```{r, warning=F, message=F }
-download.file("ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_36067_tract10.zip", "Support Files/onondaga census tracts.zip")
-
-unzip("Support Files/onondaga census tracts.zip", exdir = "Support Files/CensusTracks")
-
-file.remove("Support Files/onondaga census tracts.zip")
-```
-
-Loads shapefiles for census tracks.
-
-```{r, warning=F, message=F }
-syr <- readShapePoly(fn="Support Files/CensusTracks/tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84"))
+syr <- geojson_read("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp")
+syr <- spTransform(syr, CRS("+proj=longlat +datum=WGS84"))
 ```
 
 Load Yelp Dataset and prep data.
 ```{r, warning=F, message=F }
-dat <- read.csv( "Yelp_Data.csv", stringsAsFactors=FALSE )
+my.url <- "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/PROCESSED_DATA/yelp_processed.csv"
+
+dat.raw <- getURL( my.url, ssl.verifypeer=FALSE )
+
+dat <- read.csv( textConnection(dat.raw), stringsAsFactors=FALSE )
+
 dat$RATING[is.na(dat$RATING)] <- 0
 dat$PRICE_HIGH[dat$PRICE_HIGH == 999] <- 90
+
 head(dat)
 ```
 
@@ -67,10 +66,19 @@ dat$COUNT <- rep.int(1, 932)
 Create a new data frame to store aggregate information.  
 
 ```{r, warning=F, message=F }
-yelp.data <- data.frame("TRACT" = syr$GEOID10, "YEAR" = rep.int(2017, 140))
+yelp.data <- data.frame("TRACT" = syr$GEOID10, "YEAR" = rep.int(2017, 55))
 ```
 
-Aggregation: Rating
+Store color ramp to plot aggregated data by census tract.  Ramp scales from low to high (Blue -> Grey -> Red)
+
+```{r, warning=F, message=F }
+color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
+color.ramp <- color.range( 10 )
+```
+
+##Aggregation: Rating
+
+Aggregate by census tract, take average rating of restaurants and bars in area.
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$RATING, list(dat$FIPS), FUN="mean")
@@ -78,7 +86,27 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$RATING <- temp$x[tract.order]
 ```
 
-Aggregation: Reviews
+Break data into levels.
+
+```{r, warning=F, message=F }
+color.vector <- cut(rank(yelp.data$RATING), breaks=10, labels=color.ramp)
+color.vector <- as.character(color.vector)
+```
+
+Apply color and plot map.
+
+```{r, warning=F, message=F }
+color.order <- color.vector[tract.order]
+
+par(mar=c(0,0,0,0))
+plot(syr, border="white", col=color.order, main="")
+
+legend.ranges <- c("10020 - 12752 min","12753 - 15484 min","15485 - 18216 min","18217 - 20948 min","20949 - 23680 min")
+
+legend("bottomright", bg="white", pch=19, pt.cex=1.5, cex=0.7, legend=legend.ranges, col=color.ramp)
+```
+
+##Aggregation: Reviews
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$REVIEWS, list(dat$FIPS), FUN="mean")
@@ -86,7 +114,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$REVIEWS <- temp$x[tract.order]
 ```
 
-Aggregation: Price
+##Aggregation: Price
 
 ```{r, warning=F, message=F }
 temp <- aggregate((dat$PRICE_HIGH - dat$PRICE_LOW)/2, list(dat$FIPS), FUN="mean")
@@ -94,7 +122,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$PRICE <- temp$x[tract.order]
 ```
 
-Aggregation: Establishments
+##Aggregation: Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT, list(dat$FIPS), FUN="sum")
@@ -102,7 +130,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$ESTABLISHMENTS <- temp$x[tract.order]
 ```
 
-Aggregation: Bars
+##Aggregation: Bars
 
 ```{r, warning=F, message=F }
 bars <- c("Bars", "Beer Bars", "Gay Bars", "Dive Bars", "Beer, Wine & Spirits
@@ -112,7 +140,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$BARS <- temp$x[tract.order]
 ```
 
-Aggregation: Restaurants
+##Aggregation: Restaurants
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[!(dat$SUBTYPE1 %in% bars)], list(dat$FIPS[!(dat$SUBTYPE1 %in% bars)]), FUN="sum")
@@ -120,7 +148,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$RESTAURANTS <- temp$x[tract.order]
 ```
 
-Aggregation: 4-5 Star Establishments
+##Aggregation: 4-5 Star Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[dat$RATING >= 4], list(dat$FIPS[dat$RATING >= 4]), FUN="sum")
@@ -128,7 +156,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$STARS_4_5 <- temp$x[tract.order]
 ```
 
-Aggregation: 3-4 Star Establishments
+##Aggregation: 3-4 Star Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[dat$RATING >= 3 & dat$RATING < 4], list(dat$FIPS[dat$RATING >= 3 & dat$RATING < 4]), FUN="sum")
@@ -136,7 +164,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$STARS_3_4 <- temp$x[tract.order]
 ```
 
-Aggregation: 2-3 Star Establishments
+##Aggregation: 2-3 Star Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[dat$RATING >= 2 & dat$RATING < 3], list(dat$FIPS[dat$RATING >= 2 & dat$RATING < 3]), FUN="sum")
@@ -144,7 +172,7 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$STARS_2_3 <- temp$x[tract.order]
 ```
 
-Aggregation: 1-2 Star Establishments
+##Aggregation: 1-2 Star Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[dat$RATING >= 1 & dat$RATING < 2], list(dat$FIPS[dat$RATING >= 1 & dat$RATING < 2]), FUN="sum")
@@ -152,13 +180,15 @@ tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$STARS_1_2 <- temp$x[tract.order]
 ```
 
-Aggregation: 0-1 Star Establishments
+##Aggregation: 0-1 Star Establishments
 
 ```{r, warning=F, message=F }
 temp <- aggregate(dat$COUNT[dat$RATING < 1], list(dat$FIPS[dat$RATING < 1]), FUN="sum")
 tract.order <- match(yelp.data$TRACT, temp$Group.1)
 yelp.data$STARS_0_1 <- temp$x[tract.order]
 ```
+
+#Finalize and Create Output File
 
 Display sample of the Data Frame
 
@@ -169,5 +199,5 @@ head(yelp.data)
 Create output csv file
 
 ```{r, warning=F, message=F }
-write.csv(yelp.data, file = "Yelp_Aggregated.csv")
+write.csv(yelp.data, file = "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/yelp_aggregated.csv")
 ```
