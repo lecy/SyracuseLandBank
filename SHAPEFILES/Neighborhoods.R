@@ -50,7 +50,7 @@ library( geojsonio )
 library( sp )
 library( rgdal )
 
-url <- "https://raw.githubusercontent.com/lecy/geojson/master/syr_parcels.geojson"
+url <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_neighborhoods.geojson"
 syr <- geojson_read( url, method="local", what="sp" )
 
 plot( syr, border="light gray" )
