@@ -11,8 +11,7 @@ Brought to you by:
 
 <p>
 
-<h2>Spectacular Mountain</h2>
-<img src="ASSETS/maxwell-mafia.png" alt="Maxwell Mafia" align="middle" style="width:50px">
+<img src="ASSETS/maxwell-mafia.png" alt="Maxwell Mafia" align="middle" style="width:50">
 
 </p>
 
