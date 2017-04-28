@@ -1,8 +1,14 @@
 ---
-title: "CompileData"
+title: "Compile Data"
 output:
   html_document:
     keep_md: true
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_float: yes
+    code_fold: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -370,7 +376,7 @@ corstars( d1.sub, result="html" )
 
 
 
-```{r, fig.width=10}
+```{r, fig.height=10}
 
 d1.sub <- d1[ c("GEOID","MEDIANHOUSEINCOME","POVRATE","PBLACK","PASIAN",
                 "PSNAP","PVACANT","POWNER","PUNEMPLOYED") ]
