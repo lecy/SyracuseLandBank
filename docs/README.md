@@ -11,6 +11,6 @@ Brought to you by:
 
 
 
-<img src="ASSETS/maxwell-mafia.png" align="middle" style="width:50">
+<img src="ASSETS/maxwell-mafia.png" align="middle" width="50">
 
 
