@@ -9,9 +9,8 @@ Brought to you by:
 <br>
 
 
-<p>
 
-<img src="ASSETS/maxwell-mafia.png" alt="Maxwell Mafia" align="middle" style="width:50">
 
-</p>
+<img src="ASSETS/maxwell-mafia.png" align="middle" style="width:50">
+
 
