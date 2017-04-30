@@ -1,5 +1,5 @@
 ---
-title: "Aggregate_Yelp_Data"
+title: "Restaurants and Bars in Syracuse"
 output:
   html_document:
     keep_md: true
@@ -11,6 +11,38 @@ output:
     code_fold: hide
 ---
 
+#Introduction
+
+Restaurants and bars play a significant role in shaping neighborhoods within a city.  In many cases these establishments can shape the environment and reputation that a neighborhood has.  A new, popular restaurant and a unruly, noisy bar can each affect its surrounding area for better or for worse.  This page analyzes data regarding the distribution of restaurants and bars around the city of Syracuse, aggregating key indicators to the census tract level.
+
+##Overview
+
+The page is comprised of six sections.  First, the introduction which contains an overview of the data and how to modify it.  Second, the setup required to conduct the analysis.  This includes loading the original yelp dataset and census tract shapefiles.  Third, a couple of reusable functions are defined in order to minimize the amount of code and the number of changes required for future modifications.  Fourth, the data is aggregated to the census tract level.  The focus of the analysis is on key indicators (rating, reviews, concentration of establishments) but there are numerous other indicators in the original dataset that could be explored in the future.  Fifth, a sample of the output is displayed before generating the output file. Sixth, the appendix which contains information regarding the source data.
+
+##Future Enhancements
+
+In order to expand upon this analysis, additional columns can be added to the aggregated output data.  This can be done by copying an existing aggregation section, prefixed with "Aggregation:" and modifying the two sections of code in the following way:
+
+In the first code section, the original data stored in the "dat" data frame and creates a new column in teh output aggregated data frame enttitled "yelp.data".  To modify, follow these steps:
+
+1. Change the name of the column in the yelp.data data frame from "RATING" to a new name.
+2. In the aggregate.tract function change the column you want to aggregate in the source data frame entititled "dat".  
+3. Conditions can be added to subset the original data frame as is done in the example below.  However, the dat$FIPS condition must match.
+
+```{r, warning=F, message=F, eval=F}
+yelp.data$RATING <- aggregate.tract(dat$RATING[dat$RATING > 0], dat$FIPS[dat$RATING > 0], "mean", yelp.data$TRACT, 0)
+```
+
+In this code section, the data is plotted in a map by census tract.  To modify, follow these steps:
+
+1. In the plot.census function call, change the first argument to use the new column name that was created in the above section.
+2. Optionally, modify the fifth argument (integer value) to change the number of decimals in the legend.
+3. Optionally, rename the title of the plot, last argument, to a more applicable name.
+
+```{r, warning=F, message=F, eval=F}
+plot.census(yelp.data$RATING, yelp.data$TRACT, color.slice, color.ramp, 1, "Average Rating by Census Tract")
+```
+
 #Setup
 
 Load Packages
@@ -19,7 +51,6 @@ Load Packages
 library(maptools)
 library(sp)
 library(geojsonio)
-library(rgeos)
 library(RCurl)
 ```
 
@@ -36,12 +67,10 @@ color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
 
 #Number of buckets data will be sliced into
 color.slice <- 10
-```
 
-Specify Functions
-
-```{r, warning=F, message=F }
-
+#Categories of establishments considered bars or nightlife
+bars <- c("Bars", "Beer Bars", "Gay Bars", "Dive Bars", "Beer, Wine & Spirits
+", "Pubs", "Breweries", "Sports Bars", "Lounges", "Wine Bars", "Nightlife", "Music Venues", "Dance Clubs", "Pool Halls")
 ```
 
 Reads in geojson shapefiles for syracuse census tracts.
@@ -64,6 +93,56 @@ dat$PRICE_HIGH[dat$PRICE_HIGH == 999] <- 90
 head(dat)
 ```
 
+#Specify Functions
+
+Function to aggregate data
+
+```{r, warning=F, message=F }
+aggregate.tract <- function(dat.agg, dat.groupby, agg.fun, dat.tract, dat.default){
+  temp <- aggregate(dat.agg, list(dat.groupby), FUN=agg.fun)
+  tract.order <- match(dat.tract, temp$Group.1)
+  agg.result <- data.frame("TRACT" = dat.tract, "DAT" = rep.int(dat.default, 55))
+  agg.result$DAT <- temp$x[tract.order]
+  agg.result$DAT[is.na(agg.result$DAT)] <- dat.default
+  return (agg.result$DAT)
+}
+```
+
+Function to plot aggregated data across census tracts
+
+```{r, warning=F, message=F }
+plot.census <- function(dat.agg, dat.tract, slices, rcolor, places, title){
+  color.vector <- cut(rank(dat.agg), breaks=slices, labels=rcolor)
+  color.vector <- as.character(color.vector)
+  color.order <- color.vector[dat.tract]
+
+  plot(syr, border="white", col=color.order, main=title)
+
+  legend.ranges <- get.legend(dat.agg, slices, places)
+  legend("bottomright", bg="white", pch=19, pt.cex=1.5, cex=0.7, legend=legend.ranges, col=rcolor)
+}
+```
+
+Function to generate labels for the legend on each of the plots
+
+```{r, warning=F, message=F }
+get.legend <- function(agg.dat, slices, places){
+  dat.max <- max(agg.dat)
+  dat.min <- min(agg.dat)
+  dat.range <- (dat.max-dat.min)/slices
+  dat.last <- dat.min
+  legend.ranges <- vector(mode="numeric", length = slices)
+  
+  for( i in 1:slices ){
+    range.min <- dat.last
+    range.max <- dat.last + dat.range
+    legend.ranges[i] <- paste(round(range.min, places),"-",round(range.max, places))
+    dat.last <- range.max
+  }
+  return(legend.ranges)
+}
+```
+
 # Aggregate Data
 
 Convert to spatial points and perform spatial join to census tract shapefiles.
@@ -71,12 +150,6 @@ Convert to spatial points and perform spatial join to census tract shapefiles.
 ```{r, warning=F, message=F }
 dat$coord <- dat[ ,c("LONGITUDE","LATITUDE")]
 yelp <- SpatialPoints(dat$coord, proj4string=CRS("+proj=longlat +datum=WGS84"))
-```
-
-Subset yelp data to restaurants and bars that are within the city of Syracuse.
-
-```{r, warning=F, message=F }
-yelp.syr <- gIntersection(yelp, syr)
 ```
 
 Plot restaurants and bars across Syracuse.
@@ -101,7 +174,7 @@ Create a new data frame to store aggregate information.
 yelp.data <- data.frame("TRACT" = syr$GEOID10, "YEAR" = rep.int(2017, 55))
 ```
 
-Store color ramp to plot aggregated data by census tract.  Ramp scales from low to high (Blue -> Grey -> Red)
+Store color ramp to plot aggregated data by census tract.  Ramp scales from low to high based on parameterized color range and number of slices.
 
 ```{r, warning=F, message=F }
 color.ramp <- color.range(color.slice)
@@ -109,122 +182,156 @@ color.ramp <- color.range(color.slice)
 
 ##Aggregation: Rating
 
-Aggregate by census tract, take average rating of restaurants and bars in area.
+Aggregate by census tract, take average rating of restaurants and bars in a given area.
 
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$RATING[dat$RATING > 0], list(dat$FIPS[dat$RATING > 0]), FUN="mean")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$RATING <- temp$x[tract.order]
-yelp.data$RATING[is.na(yelp.data$RATING)] <- 0
+yelp.data$RATING <- aggregate.tract(dat$RATING[dat$RATING > 0], dat$FIPS[dat$RATING > 0], "mean", yelp.data$TRACT, 0)
 ```
 
-Break data into levels.
+Plot aggregated data across census tracts.
 
 ```{r, warning=F, message=F }
-color.vector <- cut(rank(yelp.data$RATING), breaks=10, labels=color.ramp)
-color.vector <- as.character(color.vector)
-```
-
-Apply color and plot map.
-
-```{r, warning=F, message=F }
-color.order <- color.vector[yelp.data$TRACT]
-
-plot(syr, border="white", col=color.order, main="Average Rating by Census Tract")
-
-legend.ranges <- c("10020 - 12752 min","12753 - 15484 min","15485 - 18216 min","18217 - 20948 min","20949 - 23680 min")
-
-legend("bottomright", bg="white", pch=19, pt.cex=1.5, cex=0.7, legend=legend.ranges, col=color.ramp)
-```
-
-```{r, warning=F, message=F }
-get.legend <- function(agg.dat,slices){
-  dat.max <- max(agg.dat)
-  dat.min <- min(agg.dat)
-  
-}
+plot.census(yelp.data$RATING, yelp.data$TRACT, color.slice, color.ramp, 1, "Average Rating by Census Tract")
 ```
 
 ##Aggregation: Reviews
 
+Aggregate by census tract, take the sum of the number of reviews of restaurants and bars in a given area.  This is an indicator of relative popularity and/or longevity of establishments in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$REVIEWS, list(dat$FIPS), FUN="mean")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$REVIEWS <- temp$x[tract.order]
+yelp.data$REVIEWS <- aggregate.tract(dat$REVIEWS, dat$FIPS, "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$REVIEWS, yelp.data$TRACT, color.slice, color.ramp, 0, "Number of Reviews by Census Tract")
 ```
 
 ##Aggregation: Price
 
+Aggregate by census tract, take the average price of establishments in a given area.  This is an indicator of how upscale a given area is.
+
 ```{r, warning=F, message=F }
-temp <- aggregate((dat$PRICE_HIGH - dat$PRICE_LOW)/2, list(dat$FIPS), FUN="mean")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$PRICE <- temp$x[tract.order]
+yelp.data$PRICE <- aggregate.tract((dat$PRICE_HIGH[dat$PRICE_HIGH > 0] - dat$PRICE_LOW[dat$PRICE_HIGH > 0])/2, dat$FIPS[dat$PRICE_HIGH > 0], "mean", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$PRICE, yelp.data$TRACT, color.slice, color.ramp, 2, "Average Price by Census Tract")
 ```
 
 ##Aggregation: Establishments
 
+Aggregate by census tract, take the sum of the number of restaurants and bars in a given area.  
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT, list(dat$FIPS), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$ESTABLISHMENTS <- temp$x[tract.order]
+yelp.data$ESTABLISHMENTS <- aggregate.tract(dat$COUNT, dat$FIPS, "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$ESTABLISHMENTS, yelp.data$TRACT, color.slice, color.ramp, 0, "Total Establishments by Census Tract")
 ```
 
 ##Aggregation: Bars
 
+Aggregate by census tract, take the sum of the number bars in a given area.  This could be a positive aspect for walkability or a negative factor due to noise or disorderly conduct.
+
 ```{r, warning=F, message=F }
-bars <- c("Bars", "Beer Bars", "Gay Bars", "Dive Bars", "Beer, Wine & Spirits
-", "Pubs", "Breweries", "Sports Bars", "Lounges", "Wine Bars", "Nightlife", "Music Venues", "Dance Clubs", "Pool Halls")
-temp <- aggregate(dat$REVIEWS[dat$SUBTYPE1 %in% bars], list(dat$FIPS[dat$SUBTYPE1 %in% bars]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$BARS <- temp$x[tract.order]
+yelp.data$BARS <- aggregate.tract(dat$COUNT[dat$SUBTYPE1 %in% bars], dat$FIPS[dat$SUBTYPE1 %in% bars], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$BARS, yelp.data$TRACT, color.slice, color.ramp, 0, "Bars by Census Tract")
 ```
 
 ##Aggregation: Restaurants
 
+Aggregate by census tract, take the sum of the number restaurants in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[!(dat$SUBTYPE1 %in% bars)], list(dat$FIPS[!(dat$SUBTYPE1 %in% bars)]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$RESTAURANTS <- temp$x[tract.order]
+yelp.data$RESTAURANTS <- aggregate.tract(dat$COUNT[!(dat$SUBTYPE1 %in% bars)], dat$FIPS[!(dat$SUBTYPE1 %in% bars)], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$RESTAURANTS, yelp.data$TRACT, color.slice, color.ramp, 0, "Restaurants by Census Tract")
 ```
 
 ##Aggregation: 4-5 Star Establishments
 
+Aggregate by census tract, take the sum of the number establishements with at least 4 stars in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[dat$RATING >= 4], list(dat$FIPS[dat$RATING >= 4]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$STARS_4_5 <- temp$x[tract.order]
+yelp.data$STARS_4_5 <- aggregate.tract(dat$COUNT[dat$RATING >= 4], dat$FIPS[dat$RATING >= 4], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$STARS_4_5, yelp.data$TRACT, color.slice, color.ramp, 0, "4-5 Star Establishments by Census Tract")
 ```
 
 ##Aggregation: 3-4 Star Establishments
 
+Aggregate by census tract, take the sum of the number establishements with 3 to 4 stars in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[dat$RATING >= 3 & dat$RATING < 4], list(dat$FIPS[dat$RATING >= 3 & dat$RATING < 4]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$STARS_3_4 <- temp$x[tract.order]
+yelp.data$STARS_3_4 <- aggregate.tract(dat$COUNT[dat$RATING >= 3 & dat$RATING < 4], dat$FIPS[dat$RATING >= 3 & dat$RATING < 4], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$STARS_3_4, yelp.data$TRACT, color.slice, color.ramp, 0, "3-4 Star Establishments by Census Tract")
 ```
 
 ##Aggregation: 2-3 Star Establishments
 
+Aggregate by census tract, take the sum of the number establishements with 2 to 3 stars in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[dat$RATING >= 2 & dat$RATING < 3], list(dat$FIPS[dat$RATING >= 2 & dat$RATING < 3]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$STARS_2_3 <- temp$x[tract.order]
+yelp.data$STARS_2_3 <- aggregate.tract(dat$COUNT[dat$RATING >= 2 & dat$RATING < 3], dat$FIPS[dat$RATING >= 2 & dat$RATING < 3], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$STARS_2_3, yelp.data$TRACT, color.slice, color.ramp, 0, "2-3 Star Establishments by Census Tract")
 ```
 
 ##Aggregation: 1-2 Star Establishments
 
+Aggregate by census tract, take the sum of the number establishements with 1 to 2 stars in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[dat$RATING >= 1 & dat$RATING < 2], list(dat$FIPS[dat$RATING >= 1 & dat$RATING < 2]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$STARS_1_2 <- temp$x[tract.order]
+yelp.data$STARS_1_2 <- aggregate.tract(dat$COUNT[dat$RATING >= 1 & dat$RATING < 2], dat$FIPS[dat$RATING >= 1 & dat$RATING < 2], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$STARS_1_2, yelp.data$TRACT, color.slice, color.ramp, 1, "1-2 Star Establishments by Census Tract")
 ```
 
 ##Aggregation: 0-1 Star Establishments
 
+Aggregate by census tract, take the sum of the number establishements with less than 1 star or are not rated in a given area.
+
 ```{r, warning=F, message=F }
-temp <- aggregate(dat$COUNT[dat$RATING < 1], list(dat$FIPS[dat$RATING < 1]), FUN="sum")
-tract.order <- match(yelp.data$TRACT, temp$Group.1)
-yelp.data$STARS_0_1 <- temp$x[tract.order]
+yelp.data$STARS_0_1 <- aggregate.tract(dat$COUNT[dat$RATING >= 0 & dat$RATING < 1], dat$FIPS[dat$RATING >= 0 & dat$RATING < 1], "sum", yelp.data$TRACT, 0)
+```
+
+Plot aggregated data across census tracts.
+
+```{r, warning=F, message=F }
+plot.census(yelp.data$STARS_0_1, yelp.data$TRACT, color.slice, color.ramp, 0, "1 Star Establishments by Census Tract")
 ```
 
 #Finalize and Create Output File
@@ -243,3 +350,82 @@ setwd("..")
 setwd("./DATA/AGGREGATED_DATA")
 write.csv(yelp.data, file = "yelp_aggregated.csv")
 ```
+
+#Appendix
+
+Below is a description of each of the columns in the source dataset.
+
+Column Name             |Datatype |Description
+------------------------|---------|-------------------------------------
+DATA_ID                 |Integer  |Surrogate ID used to identify establishment
+NAME                    |String   |Name of the establishment
+TYPE                    |String   |Type of business
+SUBTYPE1                |String   |Category of restaurant/bar
+SUBTYPE2                |String   |Category of restaurant/bar
+SUBTYPE3                |String   |Category of restaurant/bar
+RATING                  |Decimal  |Yelp Rating
+REVIEWS                 |Integer  |Number of reviews by users
+PRICE_HIGH              |Integer  |High end of price range
+PRICE_LOW               |Integer  |Low end of price range
+ADDRESS                 |String   |Full address including street, city, state and zip
+STREET                  |String   |Street address
+CITY                    |String   |City/town the establishment resides in
+STATE                   |String   |State the establishement resides in
+ZIPCODE                 |Integer  |Zipcode
+LATITUDE                |Decimal  |Geocoded lattitude
+LONGITUDE               |Decimal  |Geocoded longitude
+TELEPHONE               |String   |Telephone number
+WEBSITE                 |String   |Listed website
+RESERVATIONS            |String   |Takes reservations (yes/no)
+DELIVERY                |String   |Provides delivery services (yes/no)
+TAKEOUT                 |String   |Allows for takout (yes/no)
+ACCEPTS_CREDIT          |String   |Accepted credit cards (yes/no)
+ACCEPTS_APPLE_PAY       |String   |Accepts apple pay (yes/no)
+ACCEPTS_ANDROID_PAY     |String   |Accepts android pay (yes/no)
+ACCEPTS_BITCOIN         |String   |Accepts bitcoin (yes/no)
+GOOD_FOR                |String   |What meal the establishement is good for
+PARKING                 |String   |Type of parking available
+BIKE_PARKING            |String   |Bike parking is available (yes/no)
+WHEELCHAIR_ACCESSIBLE   |String   |Is wheelchair accessible (yes/no)
+GOOD_FOR_KIDS           |String   |Good for children (yes/no)
+GOOD_FOR_GROUPS         |String   |Good for large groups (yes/no)
+ATTIRE                  |String   |Type of attire required
+AMBIENCE                |String   |Ambience inside the establishment
+NOISE_LEVEL             |String   |Noise level of the establishment
+ALCOHOL                 |String   |Full bar, beer & wine or none
+OUTDOOR_SEATING         |String   |Outdoor seating available (yes/no)
+WIFI                    |String   |WiFi provided (yes/no)
+HAS_TV                  |String   |Has a TV in the establishment (yes/no)
+WAITER_SERVICE          |String   |Has waiter service (yes/no)
+CATERS                  |String   |Caters (yes/no)
+COAT_CHECK              |String   |Has a coat check (yes/no)
+DOGS_ALLOWED            |String   |Allows dogs (yes/no)
+HAS_POOL_TABLE          |String   |Has a pool table (yes/no)
+GOOD_FOR_DANCING        |String   |Is good for dancing (yes/no)
+HAPPY_HOUR              |String   |Has happy hour specials (yes/no)
+BEST_NIGHTS             |String   |Best night(s) of the week to go
+SMOKING                 |String   |Smoking is allowed (yes/no)
+GOOD_FOR_WORKING        |String   |Good for getting work done (yes/no)
+GENDER_NEUTRAL_RESTROOM |String   |Has gender neutral restrooms (yes/no)
+MUSIC                   |String   |Music inside venue (DJ, jukebox, etc)
+MILITARY_DISCOUNT       |String   |Has a military discount (yes/no)
+DRIVE_THRU              |String   |Has a drive thru (yes/no)
+MON_OPEN                |String   |Opening time on Monday
+MON_CLOSE               |String   |Closing time on Monday
+TUE_OPEN                |String   |Opening time on Tuesday
+TUE_CLOSE               |String   |Closing time on Tuesday
+WED_OPEN                |String   |Opening time on Wednesday
+WED_CLOSE               |String   |Closing time on Wednesday
+THU_OPEN                |String   |Opening time on Thursday
+THU_CLOSE               |String   |Closing time on Thursday
+FRI_OPEN                |String   |Opening time on Friday
+FRI_CLOSE               |String   |Closing time on Friday
+SAT_OPEN                |String   |Opening time on Saturday
+SAT_CLOSE               |String   |Closing time on Saturday
+SUN_OPEN                |String   |Opening time on Sunday
+SUN_CLOSE               |String   |Closing time on Sunday
+RATING_5                |Integer  |Number of 5-star reviews
+RATING_4                |Integer  |Number of 4-star reviews
+RATING_3                |Integer  |Number of 3-star reviews
+RATING_2                |Integer  |Number of 2-star reviews
+RATING_1                |Integer  |Number of 1-star reviews
