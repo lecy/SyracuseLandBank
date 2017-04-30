@@ -62,3 +62,25 @@ names( firepolice_tract ) <- c( "TRACT", "FIREPOLICE", "YEAR" )
 #Export Aggregate to CSV
 write.csv( firepolice_tract, file = "../../DATA/AGGREGATED_DATA/firepolice_aggregated.csv", row.names=FALSE )
 ```
+
+# Data Visualization
+The visualization below shows the location of the Syracuse police and fire stations.  The interstates are included for spatial context.
+```{r}
+#Load road data for context
+roads <- geojson_read( "../../SHAPEFILES/roads.geojson", method="local", what="sp" )
+roads <- spTransform( roads, CRS( "+proj=longlat +datum=WGS84" ) )
+
+#Subset Interstates
+interstate <- roads[ roads$RTTYP == "I" , ]
+
+#Clip Roads
+syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )
+interstate_clipped <- gIntersection(syr_outline, interstate, byid = TRUE, drop_lower_td = TRUE)
+
+#Plot
+par(mar=c(0,0,1,0))
+plot(syr_tracts, main="Police and Fire Stations")
+plot(interstate_clipped, col = "#dd7804", lwd=1.75, add=T)
+points(firepolice_centroid, pch=19, col="#316dce", cex=1.5)
+map.scale( x=-76.22, y=42.994, metric=F, ratio=F, relwidth = 0.1, cex=1 )
+```

@@ -80,9 +80,20 @@ names( grocery_agg ) <- c( "TRACT", "GROCERY", "YEAR" )
 write.csv( grocery_agg, file = "../../DATA/AGGREGATED_DATA/grocery_aggregated.csv", row.names=FALSE )
 ```
 
-# Visualize Data
-One of the more interesting metrics for food is food access, which is often measured at the 1/2 and 1 mile markers.  Tracts with more than 1/3 of residents living more than 1/2 or 1 mile from a grocery store are considered low food
+# Data Visualization
+One of the more interesting metrics for food is food access, which is often measured at the 1/2 and 1 mile markers.  Tracts with more than 1/3 of residents living more than 1/2 or 1 mile from a grocery store are considered low food.
 ```{r}
+#Load road data for context
+roads <- geojson_read( "../../SHAPEFILES/roads.geojson", method="local", what="sp" )
+roads <- spTransform( roads, CRS( "+proj=longlat +datum=WGS84" ) )
+
+#Subset Interstates
+interstate <- roads[ roads$RTTYP == "I" , ]
+
+#Clip Roads
+syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )
+interstate_clipped <- gIntersection(syr_outline, interstate, byid = TRUE, drop_lower_td = TRUE)
+
 #Create Buffers
 syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )
 buff_half <- gBuffer( grocery_coordinates_SP, width=.0095, byid=F )
