@@ -94,9 +94,17 @@ head(dat)
   </script>
 </div>
 
-#Specify Functions
+#Functions
 
-Function to aggregate data
+Function to aggregate data.  
+
+Arguments:
+
+1. dat.agg - vector of data to aggregate
+2. dat.groupby - vector of data to group dat.agg by (vector length must be the same)
+3. agg.fun - function to be applied in aggregation (sum, mean, etc)
+4. dat.tract - vector of FIPS codes for census tracts in Syracuse
+5. dat.default - default value to apply to census tracts with no data available
 
 
 ```r
@@ -110,7 +118,16 @@ aggregate.tract <- function(dat.agg, dat.groupby, agg.fun, dat.tract, dat.defaul
 }
 ```
 
-Function to plot aggregated data across census tracts
+Function to plot aggregated data across census tracts.
+
+Arguments:
+
+1. dat.agg - vector of aggregated data to plot
+2. dat.tract - vector of FIPS codes for census tracts in Syracuse
+3. slices - the number of buckets to group data for colors
+4. rcolor - color ramp to apply to the buckets of data
+5. places - number of decimal points to round legend to
+6. title - title of the plot
 
 
 ```r
@@ -126,7 +143,13 @@ plot.census <- function(dat.agg, dat.tract, slices, rcolor, places, title){
 }
 ```
 
-Function to generate labels for the legend on each of the plots
+Function to generate labels for the legend on each of the plots.  Note: this is only called from the plot.census function defined above. 
+
+Arguments:
+
+1. agg.dat - vector of aggregated data
+2. slices - number of buckets that the data is split into for plotting
+3. places - number of decimals to round the legend to
 
 
 ```r
@@ -147,7 +170,7 @@ get.legend <- function(agg.dat, slices, places){
 }
 ```
 
-# Aggregate Data
+# Data Aggregation
 
 Convert to spatial points and perform spatial join to census tract shapefiles.
 
@@ -389,7 +412,7 @@ plot.census(yelp.data$STARS_0_1, yelp.data$TRACT, color.slice, color.ramp, 0, "1
 
 ![](Aggregate_Yelp_Data_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
 
-#Finalize and Create Output File
+#Output
 
 Display sample of the Data Frame
 
