@@ -65,7 +65,7 @@ The author found that property values surrounding greened lots did increase usin
 
 
 ### Home Prices Trends Near the Atlanta Beltline
-Immergluck, D. and Balan, T. (2017). An Analysis of Home Price Trends Near the Atlanta Beltline, 2011 to 2015. Retrieved from https://www.scribd.com/document/339233269/An-Analysis-of-Home-Price-Trends-Near-the-Atlanta-Beltline-2011-to-2015
+[Immergluck, D. and Balan, T. (2017). An Analysis of Home Price Trends Near the Atlanta Beltline, 2011 to 2015. Retrieved from https://www.scribd.com/document/339233269/An-Analysis-of-Home-Price-Trends-Near-the-Atlanta-Beltline-2011-to-2015](LITERATURE/ImmergluckD.2017.pdf)
 
 This is similar to a study published by Immergluck in 2007, The Beltline and Rising Home Prices: Residential Appreciation Near the Beltline Tax Allocation District and Policy Recommendations to Minimize Displacement. This article focused on home value trends during the preceding period, before the 2007-2010 housing crisis and completion of the now-heavily portioned of the trail (as indicated by the partial opening of a nearby commercial center, Ponce City Market, in 2012 and the full opening in 2015; http://www.poncecitymarket.com/our-story/history/). The analysis of 2011 to 2015 is particularly important because the project was seen as truly viable to the population of Atlanta, as indicated by the increase in median sale price of all homes within a half-mile of the Beltline (regions NE, SE, NW, and SW; Immergluck and Balan, pg. 6).
 
