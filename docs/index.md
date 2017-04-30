@@ -60,7 +60,8 @@ Some descriptives of the Census Tract aggregated variables.
 
 Some description here.
 
-
+### [Restaurants & Bars] (Aggregate_Yelp_Data.html)
+This dataset contains restraunt and bar information from establishments in the city of Syracuse.  The data was mined from Yelp and includes ratings, reviews, prices and numerous other attributes as of April 2017.  The distribution of establishments across the city, especially those of with higher ratings and prices, shows dramatic differences between neighborhoods north and south of Interstate 690 including pockets of high and low activity in both. 
 
 ## Using the Research Database
 
