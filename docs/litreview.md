@@ -1,0 +1,189 @@
+# Literature Review
+
+
+
+
+### Instructions
+
+1. Add a PDF of the study you reviwed to this folder.
+2. Add your one-page report to the markdown file called "litreview.md".
+3. Include the following format:
+
+### Short Title
+
+Full citation and link to PDF. You can link by:  (/LITERATURE/title.pdf)
+
+
+```
+*[Brigham, E. F. (1965). The determinants of residential land values. Land Economics, 41(4), 325-334.](LITERATURE/1965-Brigham.pdf)*
+```
+
+*[Brigham, E. F. (1965). The determinants of residential land values. Land Economics, 41(4), 325-334.](LITERATURE/1965-Brigham.pdf)*
+
+Your text here....
+
+
+### Determinants of Residential Land Values
+
+[Brigham, E. F. (1965). The determinants of residential land values. Land Economics, 41(4), 325-334.](LITERATURE/1965-Brigham.pdf)
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas iaculis felis magna, faucibus sagittis orci convallis at. Cras vel ex odio. Vivamus eu tempor orci, vel gravida est. Ut sagittis fermentum magna, quis malesuada nulla. Nulla eleifend tempus rutrum. Sed eget enim leo. Praesent faucibus ex eu sodales sagittis. Morbi non lectus quis arcu tincidunt congue. Vestibulum sed sem nunc. Quisque volutpat sollicitudin mi nec vehicula. Nulla ornare, nunc in pretium convallis, lorem lectus tempus tortor, sit amet interdum turpis nibh at mauris. Pellentesque iaculis sodales massa. Nunc a mollis ex.
+
+Aliquam egestas ex nulla, eu tristique justo luctus non. Phasellus a purus quam. Suspendisse in neque eu urna lacinia blandit a non leo. Fusce ut justo in ex finibus gravida a et nulla. Suspendisse ut est sed est vulputate accumsan lobortis vel lorem. Mauris quis congue velit, et maximus nibh. Praesent finibus ex mollis luctus maximus. Curabitur lacinia, eros a eleifend mattis, nisl dui tincidunt eros, nec mattis magna metus nec augue. Ut suscipit sed nulla vitae malesuada.
+
+
+## Community Associations
+
+### Home Values within Residential Community Associations
+Groves, J. (2008). Finding the Missing Premium: An Explanation of Home Values within Residential Community Associations. Land Economics, May 2008, 84 (2).
+
+Residential Community Associations (RCAs) are a type of homeowner’s associations, in which a board, made up of residents who own homes within the given residential development, maintain and manage common areas and elements, and enforce the deed restrictions tied to the parcels that make up the community. Many communities are considering RCA type institutions as a mean for urban renewal or provision of public goods, as they allow homeowners to differentiate their product by varying the rules governing the development and services offered by the RCA. Supporters also argue that RCAs also result in an increase in property values.
+
+The data used in this study includes all single family, detached homes sold in Saint Louis County, Missouri, between 1992 and 2001 and uses the home as the unit of analysis. The house characteristics and sales data are taken from the Saint Louis County Department of Revenue's 2002 Integrated Assessment System (IAS) database (the final observation count was 124,878). Moreover, to determine whether a home is located within an RCA, the author looked at the individual Covenants, Conditions & Restrictions (CC&Rs) of all subdivisions containing at least 10 units and constructed their own database of RCAs.
+
+This study uses a correlational research design aimed at explaining the relationship – or association – between RCA membership and home prices, with non-RCA homes serving as the control group.  A comparison of the mean sale prices seems to support the claim and expectation that RCA homes will demand higher prices given the $36,000 difference in sale prices between RCA and non-RCA homes. Once home characteristics and spatial concerns are controlled for in the model, the results show that living in an RCA increases the value of a home by almost nothing. Further research showed that the benefit received from residing in an RCA is dependent on the style and size of home located within the RCA. Also, results seem to indicate that while RCA homes do sell for higher prices, if they were allowed to differ in design more than they currently are, they could possible sell for even more.
+
+
+## Gardens, Parks, and Open Spaces
+
+### Impact of Parks on Property Values
+[Crompton, John L. The impact of parks on property values: empirical evidence from the past two decades in the United States. Managing Leisure, 10(4), 203-218.](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+This article looks at what effect a park has for property value in the US. Through a literature review, there are findings about what would be the key element in whether a park would raise the property value in US.  This paper reviews empirical evidence in the literature relating to whether parks and open spaces contribute to increasing property values (the proximate principle), the magnitude of this effect, and how distance effects the proximate principle. 
+
+The results of approximately 30 studies which have empirically investigated the extent and legitimacy of the proximate principle are reported, starting with Frederick Law Olmsted's study of the impact of New York's Central Park. Only five studies were not supportive of the proximate principle, and analysis of them suggested these atypical results may be attributable to methodological deficiencies. 
+
+The article starts with the finding that the real estate market consistently demonstrates that many people are willing to pay a larger amount for a property located close to a park than for a house that does not offer this amenity. The higher value of these residences means that their owners pay higher property taxes.
+
+In many instances, if the incremental amount of taxes paid by each property which is attributable to the presence of a nearby park is aggregated, it is sufficient to pay the annual debt charges required to retire the bonds used to acquire and develop the park. This process of capitalization of park land into the value of nearby properties is termed the "proximate principle." 
+
+The approach used to determine whether there is a significant effect is a good topic to investigate. There are comparative data of property values in different studies that show the difference of assessed property value change in areas adjacent to the park, the rest of the same taxing district, and the adjacent taxing district. This is a good way to look at the effect of property changes caused by parks because it involves only reasonable comparative groups.
+
+Another article used another approach of measuring the effect of park to property value by size of parks and distance to residence. There is also an interesting review about a theory of how to get maximum benefit from parks in an article called “Greenways for America. Baltimore: John Hopkins University Press.”
+
+A determining factor of the magnitude of a park's impact on the property tax base is the extent of the park's circumference or edge (Little, 1990). If a 100-acre park is circular in shape, then it has a relatively small circumference. If the 100 acres is distributed more linearly, then the amount of edge increases substantially. The principle is illustrated by the calculations in Figure 3. The increased amount of edge means that more property can be sited adjacent to the park and the aggregate enhancement value of the property tax base is likely to be larger. A circular park that is 100 acres in area will have a radius of 1,177.8 feet. Given that the circumference of a circle is two times pi, times the radius (2(pi)r), the amount of edge will be 7,396.7 feet.  Assume this park is unpeeled into a long strip of green which is one square acre wide (209 feet)-in effect, laying one acre next to another in a line. To find the length of the edge of 100 acres in this configuration 209 feet is multiplied by 100 times two, since there are two sides to this strip. The result is 41,800 linear feet, 5.65 times as much edge compared with a circular park of the same number of acres. That is the edge effect.
+
+It is a new way of thinking about urban planning since for most sites we only do design based on the land or open space we have. If it is a square, we make a square-shaped park, and if it is linear, we make a linear park. After learning the effect parks with different shape would have, the shape of a park should be created to benefit more people. 
+
+
+### Open Spaces and Housing Values
+[Geoghegan, J., Lynch, L., & Bucholtz, S. (2003). Capitalization of open spaces into housing values and the residential property tax revenue impacts of agricultural easement programs. Agricultural and Resource Economics Review, 32(1), 33-45.](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+The article “Capitalization of Open Spaces into Housing Values and the Residential Property Tax Revenue Impacts of Agricultural Easement Programs” by Jaqueline Geoghegan, Lori Lynch, and Shawn Bucholz examines the added value of open spaces preserved through easements. Further, it considers whether or not the increased property tax revenue from that added value can be used to effectively offset the cost of the easement purchases. Property values are expected to increase with easements because of the public goods that open spaces produce; the article sites “aesthetic, recreation, and biodiversity values” as well as undeveloped land’s ecosystem services of “flood control and water purification.” This article argues that the government does not have the money to meet the demand for open space preservation so it must pick policies that maximize the added benefits of open space and are cost effective. 
+
+The article was written in 2003 but uses data from 10,135 transactions occurring between 1993 to 1996. The data covers three counties in Maryland that have high levels of preserved farmland. It includes information on parcel characteristics, parcel location and neighborhood, and land use. The land use variables include designations for “permanent” versus “developable” open space; the authors hypothesize that not only will open space provide a boost to surrounding property values, but that this increase will be higher for areas near permanent open spaces rather than developable ones. The authors focus on the potential benefits of open space to adjacent homeowners. To determine proximity to open space they considered a 100-meter buffer around the center of each parcel (which they claim represents the “view” of that parcel), and a 1,600-meter buffer (which they claim to represent a “20-minute walk”). The study employs a hedonic model of market transactions and estimates using OLS and a spatial model, which have similar findings. 
+
+The results of the study were mixed in regards to the authors’ hypothesis that open space increases property values. In one county, the coefficient for a large permanent open space was statistically significant, in another county both small and large permanent open space were statistically significant, in the last county neither were. The authors posit that this last county had more open land currently available, so residents were less willing to pay a premium to be near it. The authors did not find a positive statistically significant relationship between proximity to developable agricultural land and land values, which does follow with their hypothesis that permanent open space should have a larger effect on land value than developable open space, though they initially thought both would have some positive effect.
+
+For the two counties that did have a statistically significant relationship between permanent open space and property value the authors calculated how land value might increase property tax yields. Specifically, they calculated how much land could be preserved through further easements with the additional tax revenue garnered by the additional land value generated by a 1% increase in agricultural easements. In one county 88 acres could be preserved in a year and 2,640 acres in 30 years, in the second county110 acres could be preserved in a year and 3,300 in 30 years. In both counties about 60% of the additional open space necessary for the 1% increase could be preserved with the revenue from that increase.
+
+
+### Effect of Greening Vacant Land on Property Values
+[Heckert, M. (2015). “A Spatial Difference-in-Differences Approach to Studying the Effect of Greening Vacant Land on Property Values.” Cityscape, 17(1), 51-59](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+Philadelphia LandCare (PLC) utilized a greening approach on vacant lots in Philadelphia that removed trash and debris, planted new grass and a couple trees, and erected a fence to prevent dumping and give the lot a more managed look. The lots are chosen in areas that have many vacant lots (poorer areas). Lots are also chosen by loose criteria designed to identify lots with most potential effect, like large collections of lots near schools or commercial corridors.  For this study, the author looked at Philadelphia vacant lots, property values, and neighborhoods between 1999 and 2006 and in 2010.  The unit of analysis is property values based on proximity to vacant lots
+
+The author used 4 main sources of data:
+1.	Data on lots treated as part of the PLC program: points at the center of each of 747 contiguous groups of lots that were greened together between 1999 and 2006
+2.	Data on vacant lots in Philadelphia in 2010
+3.	A set of points representing all Philadelphia residential real estate sales valued at more than $1,000 between the years 1999 and 2007
+4.	Boundaries for neighborhood planning districts, breaking the city into seven regions
+
+A difference-in-difference design was used to examine the treatment groups versus the control group. To examine whether or not the effect varied by region, the study used a GWR model, which calculates a separate regression equation for each observation in the dataset by calculating coefficients using only a subset of "nearby" observations, which are weighted based on proximity so that nearer observations have higher weights than those that are farther away.
+
+Selection of lots is not random, so the selection of control lots cannot just be a random sample of all vacant lots. Therefore, to make controls more like the treatment group, lots within 500 feet of a school or commercial corridor were used for the control group. Also, the final selection of controls matched each treated lot to three randomly selected controls from the pool, with the controls matching the treated lot in both the section of the city and the real estate typology score for the block group of the lot. 
+
+The author found that property values surrounding greened lots did increase using the global regression. However, using neighborhood specific models, only three of seven neighborhoods showed the pattern of increased property values surrounding greened lots. These areas corresponded to places with a large number of lots treated. 
+
+
+### Home Prices Trends Near the Atlanta Beltline
+[Immergluck, D. and Balan, T. (2017). An Analysis of Home Price Trends Near the Atlanta Beltline, 2011 to 2015. Retrieved from https://www.scribd.com/document/339233269/An-Analysis-of-Home-Price-Trends-Near-the-Atlanta-Beltline-2011-to-2015](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+This is similar to a study published by Immergluck in 2007, The Beltline and Rising Home Prices: Residential Appreciation Near the Beltline Tax Allocation District and Policy Recommendations to Minimize Displacement. This article focused on home value trends during the preceding period, before the 2007-2010 housing crisis and completion of the now-heavily portioned of the trail (as indicated by the partial opening of a nearby commercial center, Ponce City Market, in 2012 and the full opening in 2015; http://www.poncecitymarket.com/our-story/history/). The analysis of 2011 to 2015 is particularly important because the project was seen as truly viable to the population of Atlanta, as indicated by the increase in median sale price of all homes within a half-mile of the Beltline (regions NE, SE, NW, and SW; Immergluck and Balan, pg. 6).
+
+The Atlanta Beltline is a major re-development project focusing on converting a 22-mile ring of former railroad tracks that is being converted into mixed-use spaces, primarily parks and trails with development projects (homes, shopping, restaurants) either attached or easily accessible via connecting pathways. The initial project had a goal of creating 5,600 units of affordable housing units over the life of the tax allocation district, but as of early 2017 (and almost halfway through the project construction timelines), less than 1,000 such units have been created (Immergluck and Balan, pg. 1). The article aims to explore why this may be and the implications for policymakers in regards to establishing affordable housing in communities around the Beltline, one of the major selling points of the project to those communities (Immergluck and Balan, pg. 2).
+
+The study focuses on a construction region in the heart of Atlanta that was previously a railroad and is being transformed into a walking space. This region is circular in nature around the heart of Atlanta. In addition, the study uses a buffer area spreading out a half-mile in both directions of the construction; the authors identify home sale prices in the area from 2011 through 2015 to compare against comparable (baseline) prices in the city of Atlanta. The data was obtained from the Fulton County Tax Assessor, American Community Survey, and Neighborhood Nexus, and the authors created numerous proxy variables to assist the analysis, including distances to major job centers and time (Immergluck and Balan, pg. 2).
+
+Standard errors are clustered at the census-tract level, but the primary unit of analysis is housing units (Immergluck and Balan, pg. A-2,3). The authors used a hedonic analysis, controlling for many attributes on property values sold (house properties, key values, etc.), and leveraging approximately 58 variables.
+
+
+### The Effect of Community Gardens on Neighboring Property Values
+[Voicu, I. & Been, V. (2008), The Effect of Community Gardens on Neighboring Property Values. Real Estate Economics, 36(2). 241–283.](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+The article “The Effect of Community Gardens on Neighboring Property Value” by Ioan Voicu and Vicki Been discusses the impact that community gardens and small parks have on property values within a given community. The authors discuss that there have been few studies that research the effect of community gardens on property values within high-density spaces—an area of research which should be studied more given the significant benefits that a community garden can have on a neighborhood. The article argues community gardens have a statistically significant positive effect on property values within 1,000 feet of a garden.  The study evidences that the positive effect increases with time and that high-quality gardens have a larger positive effect on neighboring property values than lower-quality gardens. Moreover, community gardens within lower-income neighborhoods have an even greater impact on neighborhood property values—up to 9.4 property value percentage points within five years of the creation of a community garden. 
+
+The study is specific to New York City.  Garden data is from the Council on the Environment, totaling 636 gardens between 1977 and 2000.  Property value data was retrieved from NYC Department of Finance; neighborhood demographic data was from the U.S. Census; and information related to public housing was obtained from HUD, NYCHA and HPD. The study used a difference-in-difference regression model in which property sales prices within 1000 feet of a garden were compared with sales prices of similar properties outside the 1000 feet radius, but still within the same neighborhood.  The researchers then measured this difference prior and post opening of the community garden to see the effect of green space on property values. With the intention of influencing policy decisions regarding investing in community gardens, the article makes several argues regarding net benefits of gardens including that city tax revenues could be increased by $500,000 per garden over the course of 20 years.  
+
+
+## Historic Districts
+
+### The Impact of Historic Districts on Residential Property Values
+[Coffin, D. A. (1989).  The Impact of Historic Districts on Residential Property Values. Eastern Economic Journal, 15(3). 221-228.](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+This study looked at the designation of historic districts through city ordinance as a way of neighborhood revival by increasing demand for housing in those districts and thus increasing home values. Such a designation is considered a way of getting more interest in inner-city homes from more wealthy families (i.e. gentrification) and can lead to renovation or rehab of properties within these districts. This designation could decrease demand for residential properties within that district because it puts restrictions on property changes and can increase costs of improvements in a way that could reduce the value for potential buyers. It could also increase demand because it highlights the significance of structures in the district and puts restrictions on property changes that could create net positive neighborhood effects. One challenge of studying this designation is the question of causation. An older area may start attracting more high-income residents who then champion creating a historic district as a way to protect their property, so the historical designation could be the result of an earlier change in demand for housing rather than a cause of it. 
+
+This study focuses on two cities in the western Chicago suburbs. One city, Aurora, established an ordinance governing land use within its historic district, while the other, Elgin, did not.  The historic districts were established in 1984 and 1985, respectively. Aurora’s ordinance established a historic residential district with increased regulation of property and limitations on alterations to property within the district. Elgin created a local historic district without a local ordinance. The data sets consist of sales prices and housing characteristics taken from the Board of Realtors for sales in 1985-1986 in Elgin and 1984-1987 in Aurora. The years differ based on what data was available. The data follows 120 units in Elgin, 47 of which are in the historic district and 243 units in Aurora, 62 of which are in the historic district. The sample was restricted to older housing to avoid a potential split in the housing market between people who prefer older housing and those who favor newer housing.
+
+The authors of the study said he ideally would have done a difference-in-difference study where they looked at housing values before and after the designation, but they did not have the long-term data necessary to do so.  Instead they set up a hedonic price model for demand for households and identified housing attributes like location within an historic district to see if the shadow price of location within an historic district would be positive. They found the creation of historic districts had a modest effect on housing prices in these cities, around 6-7%, and this effect was statistically significant in Aurora but not quite in Elgin. 
+
+The author added a few qualifications to the findings. First, the increase in demand for housing in the district will raise housing values and cause many current residents to move out. Second, unless the overall demand for housing in the city increases as well (by attracting new residents), the higher prices in historic districts will mean lower prices for housing areas outside the district with lower demand. Overall, the creation of historic districts appears to have a positive value to potential buyers by making it more desirable, and this can then stimulate neighborhood revitalization. 
+
+
+## Neighborhood Revitalization
+
+### Targeting Investments for Neighborhood Revitalization
+[Galster, G., Tatian, P. A., & Accordino, John. (2006). Targeting Investments for Neighborhood Revitalization. Journal of the American Planning Association, 72(4), 457-474](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+“Neighborhoods in Bloom” (NiB) was a joint effort between the city of Richmond, Virginia and Local Initiatives Support Coalition (LISC).  The city channeled Community Development Block Grants (CDBG) and Home Investment Partnership (HOME) funds to a few blocks in each of seven neighborhoods to stimulate and concentrate private market activity.  LISC invested funds into community development corporations (CDCs) working in these same neighborhoods.
+
+NiB was implemented in seven neighborhoods of Richmond, Virginia: Blackwell, Carver/Newtowne West, Church Hill Central, Highland Park Southern Tip, Jackson Ward, Oregon Hill, and Southern Barton Heights.  These neighborhoods were selected by a team from the city who evaluated all 49 neighborhoods in the city using a set of indicators.  After determining the target neighborhoods, the program was implemented at two scales: impact areas, which were smaller and received CDBG and HOME funds, and target areas, which were larger and received priority for some city services.
+
+For each neighborhood, Richmond’s Community Development Department gathered a team of key stakeholders composed of representatives from the neighborhood, CDCs, and the Richmond Redevelopment and Housing Authority.  These teams reviewed existing development plans, identified the exact boundaries of the impact area, and crafted two-year work plans and budgets, which specified buildings to be acquired, actions required for acquired buildings, and the location of new housing.  The teams continued beyond the planning stages, monitoring progress and hearing from residents of the community and city staff.
+
+Between July 1999 and February 2004, the city invested approximately $16.6 million in the target areas.  Of that $16.6 million, $13.9 was used for four purposes: acquisition (27%), clearance and demolition (2%), new construction (25%), and rehabilitation of dilapidated housing (46%).  Over this same period LISC invested $7.5 million in Richmond, $4.7 million of which went to the NiB target areas.
+
+Using data from the city of Richmond, Virginia from between 1990 and 2003, with parcels serving as the unit of analysis, the authors sought to answer two questions: (1) does the observed pattern of neighborhood change (measured by single-family home prices) support the hypothesis that the NiB program significantly altered trajectories of the target neighborhoods from what they would have been in the absence of interventions and (2) is there any evidence of a nonlinear relationship between home prices and dollars invested in individual blocks in NiB impact areas, suggesting the existence of a public investment threshold?
+
+Using property tax records, the researchers developed a dataset including individual sale records with property characteristics for single family homes.  Researchers geocoded street addresses and census block centroids and added census block identifiers to determine if homes fell within NiB target areas.  The final data set includes 15,889 single family home sales, of which 623 occurred during the study period.  Additionally, data on investments made between 1998 and 2003 were gathered from the City of Richmond and LISC.  These data were geocoded to determine total investments made inside and outside of the target areas.
+
+The authors employed an adjusted interrupted time series approach which compares interruptions in time trends between multiple sets of geographic areas and adjusts for changes in city-wide trends coincident with the intervention. The control group for this study consisted of all Richmond census tracts with a median owner-occupied housing value of less than $69,000, excluding blocks that had been part of NiB.
+
+The authors found that no statistically significant changes in city-wide home value took place between 1993 and 1997. Prices increased from 1997 to 2003, at which time homes were selling for 86.7% more than in 1996.
+
+At the start of the study and before NiB was implemented, prices in the target areas were 35.5% below the city-wide average. Beginning in 1998, prices in the target areas began to increase 10.85% per year faster than other comparable homes the city.  Prices in the target areas reached the city-wide average for comparable homes in 2002, suggesting a highly positive impact of the program on home prices in the target areas.
+
+Homes in the control group were valued 22.5% lower than comparable homes elsewhere in the city (excluding NiB).  After NiB began, there was no statistically significant difference between home values in the control areas and home values in the non-NiB areas of the city, which indicates that NiB areas performed better than other distressed and non-distressed areas.  Additionally, the authors note that the trajectory of the home values of the control groups did not change after the introduction of NiB, and they suggest that this indicates that residents and resources did not move from other distressed neighborhoods into NiB areas, but that the program yielded net gains for the city.
+
+
+
+### The Impact of Community Development Corporations on Neighborhood Housing Markets.
+[Smith, Brent. (2003). The Impact of Community Development Corporations on Neighborhood Housing Markets. Modeling Appreciation. URBAN AFFAIRS REVIEW, 39(2), 181-204](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+The paper studies the effect of housing development by nonprofit Community Development Corporations (CDCs) in the sale prices of houses. The study uses a quasi-experimental design to analyze the rate of appreciation in residential property values in two different spatial units: a treatment area, serviced by a CDC and a control area, both in the Center Township in Indianapolis, Indiana. The study collects information of price index changes between 1987 and 2000 and uses a model developed to assess the influence of CDC presence on the rate of appreciation of residential real estate in Center Township in Indianapolis, Indiana. The data set includes 1,375 residential sales from 1987 and from the second quarter of 1999 through the second quarter of 2000. The study period is relevant as it encompasses the decade of the 1990s, a period of rapid expansion of CDC activities in Indianapolis.
+
+Indianapolis CDCs focus on producing and rehabilitating residential properties and offering those properties as affordable housing in the form of rental and/or market-grade owner occupancy properties. Because CDCs operate in depressed neighborhoods; they tend to be the only investor/developer serving the community.
+
+Despite the negative factors associated with CDC zone neighborhoods, the presence and activities of CDCs enhance the return opportunities that stimulate private investment. As a result, CDC neighborhoods show a higher appreciation of sale prices when compared to those neighborhoods in the city not represented by CDCs. Initially, the groups (treatment and control), show a nearly identical appreciation during the study period (62.42% and 64.87% respectively) appreciation over the study period. However, when adjusted for the differences in starting prices (1987) between the two groups (CDC neighborhoods had a 7.79% lower price than the control group), it is concluded that the appreciation rate of the treatment area between 1987 and 2000 was higher than in the comparison area.
+
+Although the findings from this analysis are enlightening, the authors point out that it is very difficult to imply any sort of causality inference. This happens because CDCs are but a single unit in a garrison of public and nongovernmental entities working to combat urban decay in Indianapolis’s more degraded areas. Controlling for the involvement of other organizations in a parsimonious model would be a daunting proposal and would likely dilute the value of the findings. Many alternative support units (neighborhood community organizations, church groups, small-business enhancement programs, and urban enterprise zones) conduct activities outside as well as inside CDC boundaries. Implicitly, one would expect the activities of such groups to influence community well-being and property values in a similar manner whether in or outside of CDC boundaries.
+
+Finally, two points must be made about the study: (1) there is no discussion about the cost-effectiveness of the policy; and (2) the study fails to address that CDC investment happens in specific locations within the designated area (the unit of analysis of the study). This means that the effects of the CDCs activities are not homogeneous in the spatial unit. A micro-level analysis of the effects of clustering housing investment and the influence of distance is suggested by the authors. In addition, a comparison between CDCs based on organizational characteristics would contribute to our understanding of the relationship between nonprofit capacity and performance measurement.
+
+
+## Noise
+
+### Property Prices and Exposure to Multiple Noise Sources
+[Andersson, H., Jonsson, L. & Ögren, M. (2010). Property Prices and Exposure to Multiple Noise Sources: Hedonic Regression with Road and Railway Noise. Environmental and Resource Economics, 45(1), 73–89.](LITERATURE/Smith,B._2003_Community_development_corporations.pdf)
+
+In their 2008 study, Andersson, Jonsson and Ögren examine the impact of rail and road noise on property value. In conducting their research, the group focused exclusively on single family residential homes in the municipality of Lerum, Sweden. The city, which is located along the Vastra stambanan railway line and the major E20 motorway, is home to 36,000 inhabitants making it much smaller than the city of Syracuse (population of 144,000+).
+
+Furthermore, the population density of the city (does it qualify as a city?) is, after some conversion, 357 inhabitants per mi2 as compared to 5,583 per mi2 for the city of Syracuse. This difference alone, may make extrapolating any results to our project invalid however the article also referenced a previous study in the UK conducted by Bateman, Day, Lake and Lovett which may be more applicable. 
+
+The basis for the study rests upon the adjusted sales price of homes between 1996 and 2006 taken from the National Land Survey of Sweden. Data collected on noise in the municipality were derived from a 2004 health study on the impact of noise pollution and supplemented with additional measurements from the majority of residential buildings in the city in 2006. All noise data is measured in A-weighted equivalent sound pressure levels but in the results appear to be converted to decibels allowing for easier comparison to other studies. 
+
+Since the municipality is relatively small, the granularity is at the household level. The research design is based on hedonic regression comparing similar households in Lerum that have high noise levels as compared to those that do not. The study uses individual variables for rail noise and road noise, however it does not elaborate on how these two variables were collected separately. The model also controls for distance to the nearest rail station, of which there are 5, and distance to the closest highway on-ramp under the assumption that these variables are correlated with higher property values from an accessibility perspective. However, when controlling for noise, the study found no statistically significant relationship between this proximity and property value. 
+
+The results of the study found a statistically significant difference in property value for houses with >50 dB of road noise at the 5% confidence level. Statistical significance was only found at the 10% confidence level for rail noise >50 dB but above 55dB rail noise was also significant at the 5% level. The findings determined that road noise had a much higher impact on property value. On average, a 1dB increase in road noise level was associated with a 1.3% decrease in property value. Similarly, a 1 dB increase in rail noise was associated with a 0.4% decrease in property value. The model has an R2 of 0.51 for levels above 50dB and 0.56 for levels above 55dB. 
+
+It is important to note that all households at or above that noise level were found within 100m of the highway, although railway data did not exhibit the same patterns and had greater variability. While this may need to be adjusted for population density in our project, it might serve as a useful reference point.

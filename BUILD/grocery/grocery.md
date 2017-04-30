@@ -1,23 +1,11 @@
----
-title: "Grocery"
-author: "Christine Brown"
-date: "April 19, 2017"
-output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cerulean
-    highlight: haddock
-    toc: yes
-    toc_float: yes
-    code_fold: hide
----
+# Grocery
+Christine Brown  
+April 19, 2017  
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
-```
+
 # Set-Up
-```{r}
+
+```r
 #Load Packages
 library( dplyr )
 library( geojsonio )
@@ -31,8 +19,8 @@ library( sp )
 ```
 
 # Get Data
-```{r}
 
+```r
 #Get Grocery Data from Community Geography
 dir.create("grocery_shape")
 download.file("http://communitygeography.org/wp-content/uploads/2015/08/Supermarkets.shp_.zip", "grocery_shape/supermarkets.zip" )
@@ -45,10 +33,12 @@ grocery <- as.data.frame( grocery, stringsAsFactors=FALSE )
 #Delete Community Geography File because CSV Has All Information
 unlink("grocery_shape", recursive = TRUE)
 ```
-```{r}
+
+```r
 write.csv(grocery, file = "../../DATA/RAW_DATAgrocery_raw.csv", row.names=FALSE)
 ```
-```{r}
+
+```r
 #Clean Data
 grocery$City <- ifelse( is.na( grocery$City ), as.character(grocery$ARC_City_1), as.character(grocery$City) )
 grocery <- mutate( grocery, Address=paste( Location, City, "NY", ZipCode, sep=", " ) )
@@ -58,7 +48,8 @@ grocery <- grocery[ , c( "Supermarke", "Address" ) ]
 grocery_coordinates <- suppressMessages( geocode( grocery$Address, messaging=F ) )
 grocery <- cbind( grocery, grocery_coordinates )
 ```
-```{r}
+
+```r
 #Get Tract Information
 syr_tracts <- geojson_read( "../../SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
 syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
@@ -69,11 +60,13 @@ grocery_tract <- over( grocery_coordinates_SP, syr_tracts )
 grocery <- cbind( grocery, grocery_tract )
 grocery <- filter( grocery, !is.na( INTPTLON10 ) )
 ```
-```{r}
+
+```r
 #Export to CSV
 write.csv( grocery, file = "../../DATA/PROCESSED_DATA/grocery_processed.csv", row.names=FALSE )
 ```
-```{r}
+
+```r
 #Aggregate Data
 grocery_agg <- as.data.frame( table( grocery$GEOID10 ) )
 grocery_agg$YEAR <- 2015
@@ -84,7 +77,8 @@ write.csv( grocery_agg, file = "../../DATA/AGGREGATED_DATA/grocery_aggregated.cs
 ```
 
 # Visualize Data
-```{r}
+
+```r
 #Create Buffers
 syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )
 buff_half <- gBuffer( grocery_coordinates_SP, width=.0095, byid=F )
@@ -100,3 +94,5 @@ plot(buff_half_clipped, col=rgb( 60, 120, 230, 80, maxColorValue=255), border=F,
 points(grocery_coordinates, pch=19, col="white")
 map.scale( x=-76.19555, y=43.00157, metric=F, ratio=F, relwidth = 0.1, cex=1 )
 ```
+
+![](grocery_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
