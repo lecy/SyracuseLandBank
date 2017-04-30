@@ -1,8 +1,14 @@
 ---
 title: "Aggregate_Yelp_Data"
-author: "Kyle Crichton"
-date: "April 19, 2017"
-output: github_document
+output:
+  html_document:
+    keep_md: true
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_float: yes
+    code_fold: hide
 ---
 
 #Setup
@@ -17,10 +23,31 @@ library(rgeos)
 library(RCurl)
 ```
 
+Set Parameters
+
+```{r, warning=F, message=F }
+#URL for census tract shapefiles for the city of Syracuse
+url.shapefile <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson"
+
+#Parameters for plotting aggregated data across census tracts
+
+#Color range from low to high
+color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
+
+#Number of buckets data will be sliced into
+color.slice <- 10
+```
+
+Specify Functions
+
+```{r, warning=F, message=F }
+
+```
+
 Reads in geojson shapefiles for syracuse census tracts.
 
 ```{r, warning=F, message=F }
-syr <- geojson_read("https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp")
+syr <- geojson_read(url.shapefile, method="local", what="sp")
 syr <- spTransform(syr, CRS("+proj=longlat +datum=WGS84"))
 ```
 
@@ -77,8 +104,7 @@ yelp.data <- data.frame("TRACT" = syr$GEOID10, "YEAR" = rep.int(2017, 55))
 Store color ramp to plot aggregated data by census tract.  Ramp scales from low to high (Blue -> Grey -> Red)
 
 ```{r, warning=F, message=F }
-color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
-color.ramp <- color.range(10)
+color.ramp <- color.range(color.slice)
 ```
 
 ##Aggregation: Rating
@@ -104,12 +130,19 @@ Apply color and plot map.
 ```{r, warning=F, message=F }
 color.order <- color.vector[yelp.data$TRACT]
 
-par(mar=c(0,0,0,0))
-plot(syr, border="white", col=color.order, main="")
+plot(syr, border="white", col=color.order, main="Average Rating by Census Tract")
 
 legend.ranges <- c("10020 - 12752 min","12753 - 15484 min","15485 - 18216 min","18217 - 20948 min","20949 - 23680 min")
 
 legend("bottomright", bg="white", pch=19, pt.cex=1.5, cex=0.7, legend=legend.ranges, col=color.ramp)
+```
+
+```{r, warning=F, message=F }
+get.legend <- function(agg.dat,slices){
+  dat.max <- max(agg.dat)
+  dat.min <- min(agg.dat)
+  
+}
 ```
 
 ##Aggregation: Reviews
@@ -205,5 +238,8 @@ head(yelp.data)
 Create output csv file
 
 ```{r, warning=F, message=F }
-write.csv(yelp.data, file = "https://raw.githubusercontent.com/christine-brown/SyracuseLandBank/master/DATA/AGGREGATED_DATA/yelp_aggregated.csv")
+setwd("..")
+setwd("..")
+setwd("./DATA/AGGREGATED_DATA")
+write.csv(yelp.data, file = "yelp_aggregated.csv")
 ```
