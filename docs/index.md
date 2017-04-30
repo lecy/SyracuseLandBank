@@ -10,8 +10,8 @@ Abstract here
 
 Please list the parts of the project that you contributed to.
 
-Alejandro Alfaro Aco [email](mailto:aalfaroa@syr.edu)  
-Christine Elise Brown [email](mailto:cbrown09@syr.edu>)  
+Alejandro Alfaro Aco <aalfaroa@syr.edu>,
+Christine Elise Brown <cbrown09@syr.edu>,
 Christopher Davis <cdavis10@syr.edu>,  
 Cristian Ernesto Nuno <cenuno@syr.edu>,  
 Francisco Javier Santamarina <fjsantam@syr.edu>,  
@@ -32,9 +32,15 @@ Note the key findings
 
 Description of the process
 
-### Grocery Store Data  
+### [Fire and Police Stations](firepolice.html)
+
+Add description here.
+
+### Grocery Stores
 
 Some description here.
+
+### Libraries
 
 ### [New Market Tax Credits](Compile-Datasets.html)  
 
