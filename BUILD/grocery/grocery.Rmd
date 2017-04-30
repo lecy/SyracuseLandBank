@@ -17,6 +17,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
 ```
 # Set-Up
+Load required packages for working with the grocery data.
 ```{r}
 #Load Packages
 library( dplyr )
@@ -30,9 +31,9 @@ library( rgeos )
 library( sp )
 ```
 
-# Get Data
+# Get and Clean Data
+Syracuse University's Geography Department has a collection of data from which the grocery data used here is pulled.  Once accessed, it must be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
 ```{r}
-
 #Get Grocery Data from Community Geography
 dir.create("grocery_shape")
 download.file("http://communitygeography.org/wp-content/uploads/2015/08/Supermarkets.shp_.zip", "grocery_shape/supermarkets.zip" )
@@ -44,11 +45,10 @@ grocery <- as.data.frame( grocery, stringsAsFactors=FALSE )
 
 #Delete Community Geography File because CSV Has All Information
 unlink("grocery_shape", recursive = TRUE)
-```
-```{r}
+
+#Write data as a CSV for future access
 write.csv(grocery, file = "../../DATA/RAW_DATAgrocery_raw.csv", row.names=FALSE)
-```
-```{r}
+
 #Clean Data
 grocery$City <- ifelse( is.na( grocery$City ), as.character(grocery$ARC_City_1), as.character(grocery$City) )
 grocery <- mutate( grocery, Address=paste( Location, City, "NY", ZipCode, sep=", " ) )
@@ -57,8 +57,7 @@ grocery <- grocery[ , c( "Supermarke", "Address" ) ]
 #Geocode
 grocery_coordinates <- suppressMessages( geocode( grocery$Address, messaging=F ) )
 grocery <- cbind( grocery, grocery_coordinates )
-```
-```{r}
+
 #Get Tract Information
 syr_tracts <- geojson_read( "../../SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
 syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
@@ -68,12 +67,10 @@ grocery_coordinates_SP <- SpatialPoints( grocery_coordinates, proj4string=CRS("+
 grocery_tract <- over( grocery_coordinates_SP, syr_tracts )
 grocery <- cbind( grocery, grocery_tract )
 grocery <- filter( grocery, !is.na( INTPTLON10 ) )
-```
-```{r}
+
 #Export to CSV
 write.csv( grocery, file = "../../DATA/PROCESSED_DATA/grocery_processed.csv", row.names=FALSE )
-```
-```{r}
+
 #Aggregate Data
 grocery_agg <- as.data.frame( table( grocery$GEOID10 ) )
 grocery_agg$YEAR <- 2015
@@ -84,6 +81,7 @@ write.csv( grocery_agg, file = "../../DATA/AGGREGATED_DATA/grocery_aggregated.cs
 ```
 
 # Visualize Data
+One of the more interesting metrics for food is food access, which is often measured at the 1/2 and 1 mile markers.  Tracts with more than 1/3 of residents living more than 1/2 or 1 mile from a grocery store are considered low food
 ```{r}
 #Create Buffers
 syr_outline <- gBuffer( syr_tracts, width=.000, byid=F )

@@ -1,23 +1,11 @@
----
-title: "Fire and Police Station Locations"
-output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cerulean
-    highlight: haddock
-    toc: yes
-    toc_float: yes
-    code_fold: hide
----
+# Fire and Police Station Locations
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
-```
+
 
 #Set-Up
 Load required packages for working with the fire and police data.
-```{r}
+
+```r
 #Load Packages
 library( dplyr )
 library( geojsonio )
@@ -32,7 +20,8 @@ library( sp )
 
 # Get and Clean Data
 The parcel spatial data notes land use which includes a category for "Police and Fire Protection, Electrical Signal."  Once accessed, it must be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
-```{r}
+
+```r
 #Load Shapefiles
 syr_tracts <- geojson_read( "../../SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
 syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
