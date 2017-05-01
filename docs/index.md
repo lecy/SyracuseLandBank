@@ -10,8 +10,8 @@ Abstract here
 
 Please list the parts of the project that you contributed to.
 
-Alejandro Alfaro Aco <aalfaroa@syr.edu>,
-Christine Elise Brown <cbrown09@syr.edu>,
+Alejandro Alfaro Aco <aalfaroa@syr.edu>,  
+Christine Elise Brown <cbrown09@syr.edu>,  
 Christopher Davis <cdavis10@syr.edu>,  
 Cristian Ernesto Nuno <cenuno@syr.edu>,  
 Francisco Javier Santamarina <fjsantam@syr.edu>,  
@@ -43,7 +43,7 @@ Add description here.
 
 Some description here.
 
-### Libraries
+### [Libraries](library.html)
 
 ### [New Market Tax Credits](Compile-Datasets.html)  
 
