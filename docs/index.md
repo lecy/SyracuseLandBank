@@ -23,7 +23,6 @@ Mengran Gao <mgao05@syr.edu>,
 Stephanie Stevenson Wilcoxen <sswilcox@syr.edu>  
 
 
-
 ### [Literature Review](litreview.md)
 
 Note the key findings
@@ -31,6 +30,10 @@ Note the key findings
 ## Building a Research Database
 
 Description of the process
+
+### [Analysis](Compile-Datasets.html)  
+
+Some description here.
 
 ### [Fire and Police Stations](firepolice.html)
 
@@ -52,12 +55,8 @@ This dataset includes permits issued by the City of Syracuse. For better analysi
 #### [Permits geocoding and formating process](Permits_Wrangling.html)  
 This is a description of the geocoding process and the formatting of the dataframes.
 
-#### [Descriptives](Permits_Descriptives.html)
-Some descriptives of the Census Tract aggregated variables.
-
-### [Analysis](Compile-Datasets.html)  
-
-Some description here.
+#### [Descriptives](Permits_Descriptive_Statistics.html)
+This files shows some descriptive statistics of permits in the City of Syracuse.
 
 ### [Restaurants & Bars](Aggregate_Yelp_Data.html)
 This dataset contains restraunt and bar information from establishments in the city of Syracuse.  The data was mined from Yelp and includes ratings, reviews, prices and numerous other attributes as of April 2017.  The distribution of establishments across the city, especially those of with higher ratings and prices, shows dramatic differences between neighborhoods north and south of Interstate 690 including pockets of high and low activity in both. 
