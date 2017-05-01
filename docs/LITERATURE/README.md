@@ -1,6 +1,6 @@
 # Instructions
 
-1. Add a PDF of the study you reviwed to this folder.
+1. Add a PDF of the study you reviewed to this folder.
 2. Add your one-page report to the markdown file called "litreview.md".
 3. Include the following format:
 
