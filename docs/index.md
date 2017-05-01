@@ -45,9 +45,9 @@ Some description here.
 
 ### [Libraries](library.html)
 
-### [New Market Tax Credits](Compile-Datasets.html)  
+### [New Market Tax Credits](NMTC_data.html)  
 
-Some description here.
+This dataset contains the number and dollar amounts of New Markets Tax Credits in Syracuse from 2003 to 2014.
 
 ### Permits
 This dataset includes permits issued by the City of Syracuse. For better analysis, we have grouped the data in four large categories: 1) Residential Properties, 2) Commercial Properties, 3) Demolitions and 4) Installations and Repairs. Relevant variables of the data include: Type, value and location of permits. 
