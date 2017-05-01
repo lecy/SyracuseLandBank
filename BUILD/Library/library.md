@@ -1,23 +1,11 @@
----
-title: "Libraries"
-output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cerulean
-    highlight: haddock
-    toc: yes
-    toc_float: yes
-    code_fold: hide
----
+# Libraries
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set( echo = T ,  warning = F , message = F )
-```
+
 
 ### Data Acquisition and Preparation
 This section of the project draws on the parcel spatial data set. The data set includes a land use variable that has a category for "Libraries." Once acquired, it must be cleaned and aggregated in order to be included in the analysis of all variables collected for this project. 
-```{r}
+
+```r
 #Load Packages
 library( dplyr )
 library( geojsonio )
@@ -64,7 +52,8 @@ write.csv( libraries_tract , file = "../../DATA/AGGREGATED_DATA/libraries_aggreg
 
 ### Data Visualization
 The visualization below shows the location of the Syracuse libraries represented by red dots.  The interstates are included for spatial context.
-```{r}
+
+```r
 #Load road data
 roads <- geojson_read( "../../SHAPEFILES/roads.geojson" , method = "local" , what = "sp" )
 roads <- spTransform( roads , CRS( "+proj=longlat +datum=WGS84" ) )
@@ -83,3 +72,5 @@ plot( interstate_clipped , col = "#dd7804" , lwd = 1.75 , add = T )
 points( libraries_centroid , pch = 19 , col = "#93071d" , cex = 1.5 )
 map.scale( x = -76.22 , y = 42.994 , metric = F , ratio = F , relwidth = 0.1 , cex = 1 )
 ```
+
+![](library_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
