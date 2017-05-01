@@ -47,8 +47,7 @@ Some description here.
 Some description here.
 
 ### Permits
-Permits issued by the City. Relevant variables of the data include: Type, Value and Location. 
-Permit locations were geocodedand aggregated by Census Tract. This allows to show the total number of permits and their value per Census Tract. Subsets can be made according to the type of permits. For example: Residential and/or Commercial new constructions and remodelations, installations, etc.
+This dataset includes permits issued by the City of Syracuse. For better analysis, we have grouped the data in four large categories: 1) Residential Properties, 2) Commercial Properties, 3) Demolitions and 4) Installations and Repairs. Relevant variables of the data include: Type, value and location of permits. 
 
 #### [Permits geocoding and formating process](Permits_Wrangling.html)  
 This is a description of the geocoding process and the formatting of the dataframes.
