@@ -159,6 +159,7 @@ It is important to note that all households at or above that noise level were fo
 ## Open Space
 
 ### Impacts of Agricultural Easement Programs
+[Geoghegan, J., Lynch, L., & Bucholtz, S. (2003).  Capitalization of Open Spaces into Housing Values and the Residential Property Tax Revenue Impacts of Agricultural Easement Programs. Agricultural and Resource Economics Review, 32(1). 33-45.](LITERATURE/GeogheganJ.2003.pdf)
 
 The article: “Capitalization of Open Spaces into Housing Values and the Residential Property Tax Revenue Impacts of Agricultural Easement Programs” by Jaqueline Geoghegan, Lori Lynch, and Shawn Bucholz, examines the added value of open spaces preserved through easements. Further, it considers whether or not the increased property tax revenue from that added value can be used to effectively offset the cost of the easement purchases. Property values are expected to increase with easements because of the public goods that open spaces produce; the article cites “aesthetic, recreation, and biodiversity values” as well as undeveloped land’s ecosystem services of “flood control and water purification.” This article argues that the government does not have the money to meet the demand for open space preservation so it must pick policies that maximize the added benefits of open space and are cost effective. 
 
