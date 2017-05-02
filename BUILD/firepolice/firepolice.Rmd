@@ -63,7 +63,7 @@ write.csv( firepolice_tract , file = "../../DATA/AGGREGATED_DATA/firepolice_aggr
 ```
 
 ### Data Visualization
-The visualization below shows the location of the Syracuse police and fire stations represented by blue dots.  The interstates are included for spatial context.
+The visualization below shows the location of the Syracuse police and fire stations represented by blue dots.  The interstates are included in orange for spatial context.
 ```{r}
 #Load road data
 roads <- geojson_read( "../../SHAPEFILES/roads.geojson" , method = "local" , what = "sp" )
