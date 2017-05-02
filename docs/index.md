@@ -16,7 +16,7 @@ Christopher Davis <cdavis10@syr.edu>,
 Cristian Ernesto Nuno <cenuno@syr.edu>,  
 Francisco Javier Santamarina <fjsantam@syr.edu>,  
 Ignacio Carlos Pezo Salazar <ipezosal@syr.edu>,  
-Jonathan Beeler <jfbeeler@gmail.com>,  
+Jonathan Beeler <jfbeeler@syr.edu>,  
 Kyle Robert Crichton <krcricht@syr.edu>,  
 Linnea Powell <lipowell@syr.edu>,  
 Mengran Gao <mgao05@syr.edu>,  
@@ -65,6 +65,9 @@ This dataset contains restraunt and bar information from establishments in the c
 
 ### [Tax Subsidies](TaxSubsidies_SYR.html)
 This dataset contains all local government tax breaks given to corporations in the City of Syracuse from 2003 to 2014. Our analysis uses information compiled by the Good Jobs First Center and includes tax breaks given by national, state and local government agencies.
+
+### [Schools](Schools.html)
+This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
 ## Using the Research Database
 
