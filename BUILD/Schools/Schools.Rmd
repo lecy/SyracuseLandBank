@@ -486,6 +486,7 @@ interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
 ```
+![movie_name.gif](gifs/movie_name3.gif)
 
 
 
