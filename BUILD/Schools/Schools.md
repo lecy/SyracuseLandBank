@@ -439,7 +439,7 @@ legend( "bottomright", bg="white",
 
 }, 
 
-movie.name = "movie_name2.gif",   # name of your gif
+movie.name = "movie_name3.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
@@ -448,8 +448,6 @@ ani.height = 800 )               # size of the git in pixels
 ```
 ## [1] TRUE
 ```
-
-
 
 
 
