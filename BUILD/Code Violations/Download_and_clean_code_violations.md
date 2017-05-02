@@ -90,7 +90,7 @@ Add new data frame to Processed Data folder on Github
 
 
 ```r
-setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
+setwd( "../../DATA/AGGREGATED_DATA" )
 write.csv( violations, "codeviolations_aggregated.csv", row.names=F )
 ```
 
@@ -201,3 +201,4 @@ ani.height = 800 )               # size of the git in pixels
 ```
 ## [1] TRUE
 ```
+![]( ../../BUILD/Code Violations/code_violations.gif )
