@@ -1,2 +1,5 @@
 theme: jekyll-theme-cayman
+includes: 
+   css: styles.css
+   
 
