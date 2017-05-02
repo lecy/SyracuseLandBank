@@ -280,4 +280,4 @@ ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
 
 ```
-![]( ../../BUILD/Public Housing/public_housing.gif )
+![]( gifs/public_housing.gif )

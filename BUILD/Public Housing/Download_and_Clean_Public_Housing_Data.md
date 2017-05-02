@@ -258,4 +258,4 @@ ani.height = 800 )               # size of the git in pixels
 ```
 ## [1] TRUE
 ```
-![]( ../../BUILD/Public Housing/public_housing.gif )
+![]( gifs/public_housing.gif )
