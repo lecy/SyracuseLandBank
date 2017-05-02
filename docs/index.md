@@ -77,6 +77,9 @@ This dataset contains test averages for all schools of the Syracuse City School 
 ### [Code Violations](Download_and_clean_code_violations.html)
 This dataset contains information on frequency of code violations by census tract from 2012-2015.   
 
+### [Public Housing](Download_and_Clean_Public_Housing_Data.html)
+This dataset contains information on the number of subsidized housing units available by census tract from 2010-2015.   
+
 ## Using the Research Database
 
 ## Results
