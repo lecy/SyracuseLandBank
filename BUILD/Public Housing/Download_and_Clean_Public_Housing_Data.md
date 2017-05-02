@@ -2,13 +2,13 @@
 
 
 
-## Public Housing Data
+### Public Housing Data
 
 To examine the effects of public housing availability on home values we will use data on the number of subsidized units available in each census tract every year between 2010 and 2015. This data was obtained from HUD (https://www.huduser.gov/portal/datasets/assthsg.html#2009-2016_query).
 
-## 1. Load Data
+### 1. Load Data
 
-Load data on public housing and Syracuse shapefile. Public housing data from each year is stored in its own csv. We'll first read in each csv and then will combine them and clean the data.
+The step loads the data on public housing and the Syracuse shapefile. Public housing data from each year is stored in its own csv. We'll first read in each csv and then will combine them and clean the data.
 
 
 ```r
@@ -34,9 +34,9 @@ pubhous.2015 <- read.csv("https://raw.githubusercontent.com/lecy/SyracuseLandBan
 syr <- geojson_read("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
 ```
 
-## 2.  Wrangle Data
+### 2.  Wrangle Data
 
-Create a data set with the number of subsidized units available in each census tract from 2010-2015.
+This step creates a data set that reports the number of subsidized units available in each census tract from 2010-2015. To create this data set, the data must first be filtered to present only data from the city of Syracuse as it was obtained for all of New York state.
 
 
 ```r
@@ -58,7 +58,7 @@ pubhous.2015.1 <- mutate( pubhous.2015 , year = "2015")
 
 
 ```r
-###The same general steps are followed for each year: drop unnecessary columns, filter the data to include only Onondaga county, and create a new column with a numeric variable for census tract. Different years varied slightly in formatting in the original data so these steps are done for specific years before all the data is combined.
+###The same general steps are followed for each year: drop unnecessary columns and filter the data to include only Onondaga county. 
 
 
 #Rename 2010 census tracts
@@ -133,11 +133,19 @@ public.housing <- pubhous.4[ , c("year","Code", "Subsidized.units.available") ]
 colnames(public.housing)[1] <- "YEAR"
 
 colnames(public.housing)[2] <- "TRACT"
+
+public.housing
 ```
 
-## 3. Add data to GitHub
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["YEAR"],"name":[1],"type":["chr"],"align":["left"]},{"label":["TRACT"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Subsidized.units.available"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"2010","2":"36067000200","3":"34"},{"1":"2010","2":"36067000600","3":"139"},{"1":"2010","2":"36067001600","3":"175"},{"1":"2010","2":"36067002900","3":"11"},{"1":"2010","2":"36067003000","3":"500"},{"1":"2010","2":"36067003900","3":"6"},{"1":"2010","2":"36067004000","3":"43"},{"1":"2010","2":"36067004200","3":"771"},{"1":"2010","2":"36067004300","3":"480"},{"1":"2010","2":"36067005200","3":"8"},{"1":"2010","2":"36067005300","3":"89"},{"1":"2010","2":"36067005400","3":"2"},{"1":"2010","2":"36067005500","3":"61"},{"1":"2010","2":"36067005602","3":"1"},{"1":"2011","2":"36067000200","3":"31"},{"1":"2011","2":"36067000600","3":"131"},{"1":"2011","2":"36067001600","3":"170"},{"1":"2011","2":"36067002900","3":"7"},{"1":"2011","2":"36067003000","3":"451"},{"1":"2011","2":"36067003900","3":"5"},{"1":"2011","2":"36067004000","3":"45"},{"1":"2011","2":"36067004200","3":"842"},{"1":"2011","2":"36067004300","3":"471"},{"1":"2011","2":"36067005200","3":"11"},{"1":"2011","2":"36067005300","3":"92"},{"1":"2011","2":"36067005400","3":"2"},{"1":"2011","2":"36067005500","3":"60"},{"1":"2011","2":"36067005602","3":"1"},{"1":"2012","2":"36067000200","3":"31"},{"1":"2012","2":"36067000600","3":"143"},{"1":"2012","2":"36067001600","3":"163"},{"1":"2012","2":"36067002901","3":"8"},{"1":"2012","2":"36067003000","3":"486"},{"1":"2012","2":"36067003900","3":"5"},{"1":"2012","2":"36067004000","3":"41"},{"1":"2012","2":"36067004200","3":"841"},{"1":"2012","2":"36067004301","3":"460"},{"1":"2012","2":"36067005200","3":"9"},{"1":"2012","2":"36067005300","3":"90"},{"1":"2012","2":"36067005400","3":"2"},{"1":"2012","2":"36067005500","3":"58"},{"1":"2012","2":"36067005602","3":"1"},{"1":"2013","2":"36067000200","3":"29"},{"1":"2013","2":"36067000600","3":"155"},{"1":"2013","2":"36067001600","3":"162"},{"1":"2013","2":"36067002101","3":"9"},{"1":"2013","2":"36067003000","3":"487"},{"1":"2013","2":"36067003900","3":"5"},{"1":"2013","2":"36067004000","3":"43"},{"1":"2013","2":"36067004200","3":"835"},{"1":"2013","2":"36067004301","3":"457"},{"1":"2013","2":"36067005200","3":"10"},{"1":"2013","2":"36067005300","3":"88"},{"1":"2013","2":"36067005400","3":"2"},{"1":"2013","2":"36067005500","3":"56"},{"1":"2013","2":"36067005602","3":"1"},{"1":"2014","2":"36067000100","3":"8"},{"1":"2014","2":"36067000200","3":"28"},{"1":"2014","2":"36067000600","3":"159"},{"1":"2014","2":"36067001600","3":"166"},{"1":"2014","2":"36067003000","3":"489"},{"1":"2014","2":"36067003900","3":"5"},{"1":"2014","2":"36067004000","3":"41"},{"1":"2014","2":"36067004200","3":"822"},{"1":"2014","2":"36067004301","3":"459"},{"1":"2014","2":"36067005200","3":"11"},{"1":"2014","2":"36067005300","3":"89"},{"1":"2014","2":"36067005400","3":"2"},{"1":"2014","2":"36067005500","3":"59"},{"1":"2014","2":"36067005602","3":"1"},{"1":"2015","2":"36067000100","3":"9"},{"1":"2015","2":"36067000200","3":"32"},{"1":"2015","2":"36067000600","3":"157"},{"1":"2015","2":"36067001600","3":"165"},{"1":"2015","2":"36067003000","3":"488"},{"1":"2015","2":"36067003900","3":"5"},{"1":"2015","2":"36067004000","3":"42"},{"1":"2015","2":"36067004200","3":"823"},{"1":"2015","2":"36067004301","3":"460"},{"1":"2015","2":"36067005200","3":"9"},{"1":"2015","2":"36067005300","3":"90"},{"1":"2015","2":"36067005400","3":"2"},{"1":"2015","2":"36067005500","3":"57"},{"1":"2015","2":"36067005602","3":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 
-Add data frame to Processed Data folder in Github
+### 3. Add data to GitHub
+
+This step adds the created data frame to the Processed Data folder in Github.
 
 
 ```r
@@ -145,7 +153,7 @@ setwd( "../../DATA/AGGREGATED_DATA" )
 write.csv( public.housing, "publichousing_aggregated.csv", row.names=F )
 ```
 
-## 4. Analysis
+### 4. Analysis
 
 
 ```r
@@ -155,10 +163,10 @@ write.csv( public.housing, "publichousing_aggregated.csv", row.names=F )
 color.function <- colorRampPalette( c("steel blue","light gray", "firebrick4" ) )
 
 #There will be 5 colors between blue and red to demonstrate increasing intensity
-col.ramp <- color.function( 3 )
+col.ramp <- color.function( 5 )
 
 #Group number of units into 5 levels of intensity. 'color.vector' will display the code for the color of the group that each census tract now belongs to 
-color.vector <- cut( rank(public.housing$Subsidized.units.available), breaks=3 , labels=col.ramp )
+color.vector <- cut( rank(public.housing$Subsidized.units.available), breaks=5 , labels=col.ramp )
 
 #Change class from factor to character
 color.vector <- as.character( color.vector )
@@ -178,17 +186,22 @@ color.vector.2 <- as.character(syr.pubhous$color.vector)
 #Plot the map
 plot(syr.pubhous , col= color.vector.2)
 
-#Add a title and legend to the map
-title( main="Amount of Subsidized Housing Units Available 2015")
+#Add a title to the map
+title( main="Number of Subsidized Housing Units Available 2015")
 
-legend.text=c("low level", "medium level", "high level")
+#Creates a vector that lists the break points used to create the quantiles
+breaks.pubhous <-classIntervals(public.housing$Subsidized.units.available, n=5, style="quantile")
 
+#Rounds break points
+breaks.pubhous$brks <- round(breaks.pubhous$brks, 0)
+
+#Add a legend
 legend( "bottomright", bg="white",
         pch=19, pt.cex=1.5, cex=0.7,
-        legend=legend.text, 
+        legend=leglabs(breaks.pubhous$brks), 
         col=col.ramp, 
         box.col="white",
-        title="Amount of Subsidized Housing Units Available" 
+        title="Number of Subsidized Housing Units Available" 
 )
 ```
 
@@ -207,35 +220,75 @@ pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2010" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2010")
+title( main="Number of Subsidized Housing Units Available 2010")
+
+breaks.pubhous <-classIntervals(public.housing$Subsidized.units.available, n=5, style="quantile")
+breaks.pubhous$brks <- round(breaks.pubhous$brks, 0)
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
+
+
 
 #Map of 2011 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2011" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2011")
+title( main="Number of Subsidized Housing Units Available 2011")
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
   
 #Map of 2012 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2012" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2012")
+title( main="Number of Subsidized Housing Units Available 2012")
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
 
 #Map of 2013 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2013" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2013")
+title( main="Number of Subsidized Housing Units Available 2013")
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
 
 #Map of 2014 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2014" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2014")
+title( main="Number of Subsidized Housing Units Available 2014")
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
 
 #Map of 2015 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2015" )
@@ -243,9 +296,17 @@ syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRA
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
 title( main="Amount of Subsidized Housing Units Available 2015")
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=leglabs(breaks.pubhous$brks), 
+        col=col.ramp, 
+        box.col="white",
+        title="Number of Subsidized Housing Units Available" 
+)
 
-  }
 
+}
+  
 
 }, 
 
