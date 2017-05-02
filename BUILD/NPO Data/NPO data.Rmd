@@ -29,6 +29,7 @@ This section will explain how to extract and wrangle the data if you want to exp
 ```{r}
 # Load relevant libraries
 library( dplyr )
+library( DT )
 library( geojsonio )
 library( ggmap )
 library( maps )
@@ -451,8 +452,8 @@ totals_2016[53,2] <- 2016
 totals_2016$TRACT <- as.character( totals_2016$TRACT )
 totals_2016$TRACT[ is.na( totals_2016$TRACT ) ] <- "Total"
 
-pander( cbind( npos_new, totals_2016[3] ) )
-pander( cbind( npos_sector, totals_2016[3] ) )
+datatable( cbind( npos_new, totals_2016[3] ) )
+datatable( cbind( npos_sector, totals_2016[3] ) )
 
 ```
 
