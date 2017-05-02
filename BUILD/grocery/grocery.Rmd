@@ -1,5 +1,5 @@
 ---
-title: "Grocery"
+title: "Grocery Stores"
 output:
   html_document:
     keep_md: true
