@@ -1,29 +1,6 @@
----
-title: "Download and clean the code violations dataset"
-output:
- html_document:
-   keep_md: true
-   df_print: paged
-   theme: cerulean
-   highlight: haddock
-   toc: yes
-   toc_float: yes
-   code_fold: hide
----
+# Download and clean the code violations dataset
 
-```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set( message = F, warning = F)
 
-library(maptools)
-library(sp)
-library(plyr)
-library(dplyr)
-library(pander)
-library(rgdal)
-library(geojsonio)
-library(animation)
-
-```
 
 ## Code Violations Data
 
@@ -35,16 +12,15 @@ To examine the effects of these violations will use data obtained from the city 
 
 Load syracuse shapefiles and data on code violations provided by the city of Syracuse.
 
-```{r}
 
+```r
 #Load shapefiles from Github
 syr <- geojson_read("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", method="local", what="sp" )
-
 ```
 
 
-```{r}
 
+```r
 #Load data on code violations from Githib
 violations.dat <- read.csv("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/DATA/RAW_DATA/codeviolations.csv", header = TRUE)
 
@@ -64,15 +40,14 @@ violations.coordinates <- violations.4[!is.na(violations.4$lon) & !is.na(violati
 
 #There are repeated entries in the data, keep only one copy of each of these
 violations.coordinates.2 <- unique(violations.coordinates)
-
 ```
 
 ## 2. Wrangle Data
 
 Join the violation data and syracuse shapefile, aggregate data up by census tract and year to create a data frame that reports census tract, year, and total number of code violations.
 
-```{r}
 
+```r
 ###Spatial join of violation data and shapefile
 
 #Pull out latitude and longitude from code violations data
@@ -90,12 +65,11 @@ violations.over <- over(violations.spatial , syr.2)
 
 #Combine this linking with the orginal code violations data. We now have a data frame with rows that have code violation information and information about the tract that the violation is located within
 violations.shape <- cbind(violations.coordinates.2, violations.over)
-
 ```
 
 
-```{r}
 
+```r
 ###Aggregate up by census tract and year
 
 #Create a data frame that lists the number of code violations in each census tract by year
@@ -108,19 +82,16 @@ colnames(violations)[3] <- "Code.Violations"
 colnames(violations)[1] <- "TRACT"
 
 colnames(violations)[2] <- "YEAR"
-
-
 ```
 
 ## 3. Add data frame to GitHub
 
 Add new data frame to Processed Data folder on Github 
 
-```{r}
 
+```r
 setwd( "C:/Users/Stephanie/Google Drive/ssw/MPA/DDM 2/SyracuseLandBank/DATA/AGGREGATED_DATA" )
 write.csv( violations, "codeviolations_aggregated.csv", row.names=F )
-
 ```
 
 ## 4. Analysis
@@ -129,8 +100,8 @@ First, create a map of Syracuse with census tracts colored by the frequency of c
 
 Then, Create a gif that shows frequncy of code violations from 2012-2015.
 
-```{r}
 
+```r
 ###Create a map of code violation frequency by census tract in 2015
 
 #Create a color palette to display frequency of code violations on a map: red will represent high values, blue will represnt low
@@ -175,11 +146,12 @@ legend( "bottomright", bg="white",
         box.col="white",
         title="Frequency of Code Violations" 
 )
-
 ```
 
-```{r}
+![](Download_and_clean_code_violations_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
+
+```r
 ###Create gif
 
 saveGIF({
@@ -224,5 +196,8 @@ movie.name = "code_violations.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
+```
 
+```
+## [1] TRUE
 ```
