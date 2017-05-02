@@ -23,7 +23,7 @@ This dataset was provided by the Syracuse School District and contains the follo
 ```r
 #load in data from school district with test scores
 
-setwd("/Users/beelerenator/Documents/Graduate School/MPA Syracuse/DDMII/DDMII Project/BUILD/Schools")
+#setwd("/Users/beelerenator/Documents/Graduate School/MPA Syracuse/DDMII/DDMII Project/BUILD/Schools")
 
 setwd("..")
 setwd("..")
@@ -311,7 +311,7 @@ school.diffs.2010$Score_Diff <- school.diffs.2010$Score_Diff*100
 
 par(family="Georgia") 
 hist(school.diffs.2010$Score_Diff, 
-     main="Distribution for Change in Test Scores by Schools from 2005-2010 ", 
+     main="Distribution for Change in Scores by Schools from 2005-2010 ", 
      xlab="Percent Change of Averaged Test Scores", ylab="Number of Schools", 
      col="dodgerblue4", 
      las=1)
@@ -330,7 +330,7 @@ school.diffs.2015$Score_Diff <- school.diffs.2015$Score_Diff*100
 
 par(family="Georgia") 
 hist(school.diffs.2015$Score_Diff, 
-     main="Distribution for Change in Test Scores by Schools from 2010-2015 ", 
+     main="Distribution for Change in Scores by Schools from 2010-2015 ", 
      xlab="Percent Change of Averaged Test Scores", ylab="Number of Schools", 
      col="dodgerblue4",
      las=1)
@@ -413,7 +413,7 @@ par(family="Georgia")
 points(school.diffs.2010$lon, school.diffs.2010$lat, col=color.vector.school.diff10, pch=20, cex=3)
 
 legend( "bottomright", bg="white",
-        pch=19, pt.cex=1.5, cex=0.7,
+        pch=19, pt.cex=2, cex=1.3,
         legend=capitalize(leglabs(breaks.Score.diff2010$brks)), 
         col=col.ramp.school.diff10, 
         box.col="white",
@@ -425,7 +425,7 @@ plot(census.syr, main="Change in Averaged Test Scores by School from 2010 to 201
 points(school.diffs.2015$lon, school.diffs.2015$lat, col=color.vector.school.diff15, pch=20, cex=3)
 
 legend( "bottomright", bg="white",
-        pch=19, pt.cex=1.5, cex=0.7,
+        pch=19, pt.cex=2, cex=1.3,
         legend=capitalize(leglabs(breaks.Score.diff2015$brks)), 
         col=col.ramp.school.diff15, 
         box.col="white",
@@ -439,7 +439,7 @@ legend( "bottomright", bg="white",
 
 }, 
 
-movie.name = "movie_name3.gif",   # name of your gif
+movie.name = "movie_name4.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
@@ -448,7 +448,7 @@ ani.height = 800 )               # size of the git in pixels
 ```
 ## [1] TRUE
 ```
-![movie_name.gif](gifs/movie_name3.gif)
+![movie_name.gif](gifs/movie_name4.gif)
 
 
 
