@@ -179,7 +179,7 @@ color.vector.2 <- as.character(syr.pubhous$color.vector)
 plot(syr.pubhous , col= color.vector.2)
 
 #Add a title and legend to the map
-title( main="Amount of Subsidied Housing Units Available 2015")
+title( main="Amount of Subsidized Housing Units Available 2015")
 
 legend.text=c("low level", "medium level", "high level")
 
@@ -207,42 +207,42 @@ pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2010" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2010")
+title( main="Amount of Subsidized Housing Units Available 2010")
 
 #Map of 2011 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2011" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2011")
+title( main="Amount of Subsidized Housing Units Available 2011")
   
 #Map of 2012 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2012" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2012")
+title( main="Amount of Subsidized Housing Units Available 2012")
 
 #Map of 2013 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2013" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2013")
+title( main="Amount of Subsidized Housing Units Available 2013")
 
 #Map of 2014 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2014" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2014")
+title( main="Amount of Subsidized Housing Units Available 2014")
 
 #Map of 2015 units avaiable 
 pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2015" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidied Housing Units Available 2015")
+title( main="Amount of Subsidized Housing Units Available 2015")
 
   }
 
