@@ -75,7 +75,7 @@ This dataset contains all local government tax breaks given to corporations in t
 This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
 ### [Code Violations](Download_and_clean_code_violations.html)
-
+This dataset contains information on frequency of code violations by census tract from 2012-2015.   
 
 ## Using the Research Database
 
