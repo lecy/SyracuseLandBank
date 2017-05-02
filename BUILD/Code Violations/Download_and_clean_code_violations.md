@@ -1,16 +1,16 @@
-# Download and clean the code violations dataset
+# Code Violations
 
 
 
 ## Code Violations Data
 
-Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extention the aestetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. 
+Patterns of code violations across neighborhoods can be used to understand home values in those neighborhoods and how home values might change in specific areas. Many violations directly relate to the visual appeal of a home and by extension the aesthetics of its surrounding area. Others may be seen as a proxy for upkeep and homeowner investment. 
 
-To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 and after 2015 is incomplete so we will work with only data from 2012 to 2015. The main aim of this peice of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visulaize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
+To examine the effects of these violations will use data obtained from the city that covers 2007 to 2016. The data from before 2012 and after 2015 is incomplete so we will work with only data from 2012 to 2015. The main aim of this piece of code is to wrangle the code violations data and join it to a shapefile for the city of Syracuse in order to visualize where code violations are taking place and to examine links between violations and other characteristics of these geographic locations.  
 
 ## 1. Load Data
 
-Load syracuse shapefiles and data on code violations provided by the city of Syracuse.
+Load Syracuse shapefiles and data on code violations provided by the city of Syracuse.
 
 
 ```r
@@ -44,7 +44,7 @@ violations.coordinates.2 <- unique(violations.coordinates)
 
 ## 2. Wrangle Data
 
-Join the violation data and syracuse shapefile, aggregate data up by census tract and year to create a data frame that reports census tract, year, and total number of code violations.
+Join the violation data and Syracuse shapefile, aggregate data up by census tract and year to create a data frame that reports census tract, year, and total number of code violations.
 
 
 ```r
@@ -96,9 +96,9 @@ write.csv( violations, "codeviolations_aggregated.csv", row.names=F )
 
 ## 4. Analysis
 
-First, create a map of Syracuse with census tracts colored by the frequency of code violations occuring within them in 2015. Red tratcs have the highest occurances of violations within them, blue tracts have the least, grey tracts fall in between these extremes.
+First, create a map of Syracuse with census tracts colored by the frequency of code violations occurring within them in 2015. Red tracts have the highest occurrences of violations within them, blue tracts have the least, grey tracts fall in between these extremes.
 
-Then, Create a gif that shows frequncy of code violations from 2012-2015.
+Then, Create a gif that shows frequency of code violations from 2012-2015.
 
 
 ```r
