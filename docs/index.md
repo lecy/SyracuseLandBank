@@ -37,13 +37,15 @@ Some description here.
 
 ### [Fire and Police Stations](firepolice.html)
 
-Add description here.
+This dataset contains the locations of Syracuse fire and police stations in 2017.
 
-### Grocery Stores
+### [Grocery Stores](grocery.html)
 
-Some description here.
+This dataset contains the locations of grocery stores in 2015.
 
 ### [Libraries](library.html)
+
+This dataset contains the locations of Syracuse libraries in 2017.
 
 ### [New Market Tax Credits](NMTC_data.html)  
 
