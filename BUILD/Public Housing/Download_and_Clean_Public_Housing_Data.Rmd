@@ -317,7 +317,7 @@ pubhous.colors.year.gif <- filter(pubhous.colors, YEAR == "2015" )
 syr.pubhous.gif <- merge(syr, pubhous.colors.year.gif, by.x="GEOID10", by.y="TRACT")
 color.vector.2.gif <- as.character(syr.pubhous.gif$color.vector)
 plot(syr.pubhous.gif , col= color.vector.2.gif)
-title( main="Amount of Subsidized Housing Units Available 2015")
+title( main="Number of Subsidized Housing Units Available 2015")
 legend( "bottomright", bg="white",
         pch=19, pt.cex=1.5, cex=0.7,
         legend=leglabs(breaks.pubhous$brks), 
@@ -332,10 +332,10 @@ legend( "bottomright", bg="white",
 
 }, 
 
-movie.name = "public_housing.gif",   # name of your gif
+movie.name = "public_housing.2.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
 
 ```
-![]( gifs/public_housing.gif )
+![]( gifs/public_housing.2.gif )
