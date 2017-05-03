@@ -20,11 +20,11 @@ The NCCS, or National Center for Charity Statistics, is a branch of the Urban In
 
 A data dictionary on the various columns of the .CSV file and the data populating each can be found on the NCCS' website, located at __[the NCCS' website](http://nccsweb.urban.org/PubApps/showDD.php#Business%20Master%20Files)__.
 
-If you do not need to wrangle the raw data, please skip to step "2. Aggregate NPO Data".
+If you do not need to wrangle the raw data, please skip to step "2. Process NPO Data".
 
 ## 1. Load and filter raw NPO data
 
-This section will explain how to extract and wrangle the data if you want to expand the dataset to include Onondaga County.
+This section will explain how to extract and wrangle the data if you want to expand the data set to include Onondaga County.
 
 ```{r}
 # Load relevant libraries
@@ -62,7 +62,7 @@ dat <- read.csv( "N2s8d2m.csv" )
 
 ### b. Filtering the data
 
-**First**, we will subset the dataset such that it only contains nonprofits in the zip codes that compose Onondaga County. This list of zip codes has already been produced and is located on this same GitHub page. 
+**First**, we will subset the data set such that it only contains nonprofits in the zip codes that compose Onondaga County. This list of zip codes has already been produced and is located on this same GitHub page. 
 ```{r, eval=F}
 # Load Filter Values: Zip Codes
 zipc <- read.csv( "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/BUILD/NPO%20Data/Zip_Codes.csv",
@@ -82,7 +82,7 @@ dat <- dat[ dat$zip5 %in% zipc, ]
 rm( zipc )
 ```
 
-**Second**, now that we have a dataset that only contains NPOs with zip codes in Onondaga County, we will subset the dataset again to only return NPOs that are in the city of Syracuse. Because there is some flexibility in how the name has been reported, we will include any cities listed in the NPOs of Onondaga County dataset that end in "CUSE", and using this to further subset the data.
+**Second**, now that we have a data set that only contains NPOs with zip codes in Onondaga County, we will subset the data set again to only return NPOs that are in the city of Syracuse. Because there is some flexibility in how the name has been reported, we will include any cities listed in the NPOs of Onondaga County data set that end in "CUSE", and using this to further subset the data.
 ```{r, eval=F}
 # Create a vector containing a listing of the unique city names from the NPOs of Onondaga County dataset
 cityNames <- as.character( unique( dat$CITY ) )
@@ -107,7 +107,6 @@ The package "ggmap" has a function, geocode, that allows you to query Google via
 Before we geocode the addresses, we need to clean up the various components (address, city, state, and zip code). Once we have removed any commas or periods, we can combine the components into a single string that can be geocoded using the ggmap library. 
 
 **First**, we will create a vector that only contains the addresses of the homes to assist in this process. 
-
 ```{r, eval=F}
 # Create a vector that only contains address, city, state, and zip data for each NPO
 address <- dat[ , c("ADDRESS","CITY", "STATE", "ZIP") ]
@@ -126,8 +125,7 @@ addresses <- paste( address$a, address$c, address$s, address$z, sep=", " )
 ```
 
 **Second**, we will geocode the addresses. Please note that there is a limit to how many addresses Google will geocode for free. A data scientist who hit the 2,500 address-per-day cap developed an alternative to batch geocoding, which can be found **[here](http://www.shanelynn.ie/massive-geocoding-with-r-and-google-maps/)**. The geocoding process for the filtered data may take around 5 to 10 minutes.
-Once we have the addresses, we will bind the columns back into the original dataset, so that each NPO now has two additional columns of data: one a longitudinal coordinate, and the other a latitudinal coordinate.
-
+Once we have the addresses, we will bind the columns back into the original data set, so that each NPO now has two additional columns of data: one a longitudinal coordinate, and the other a latitudinal coordinate.
 ```{r, eval=F}
 # Translate the address strings to latitude and longitude coordinates
 lon.lat <- geocode( addresses )
@@ -141,8 +139,7 @@ rm( address )
 rm( lon.lat )
 ```
 
-**Finally**, let's take the NPO dataset that contains longitude-latitude coordinates and write it to a .CSV file, so that we can use it later as needed. This will assist us in processing the data.
-
+**Finally**, let's take the NPO data set that contains longitude-latitude coordinates and write it to a .CSV file, so that we can use it later as needed. This will assist us in processing the data.
 ```{r, eval=F}
 # Generate a .CSV file that contains geocoded coordinates.
 setwd("../../")
@@ -154,12 +151,12 @@ write.csv( dat, "NPO_Data_raw.csv", row.names=F )
 We will be processing the NPO data generated in step 1 to contain census tract-level information.
 
 ### a. Downloading the data
-Set your working directory as appropriate, then download the .CSV file containing the geocoded addresses. *This section assumes you have not performed step 1, but are using the data on GitHub.*
+Set your working directory as appropriate.
 ```{r, eval=FALSE}
 # Set your working directory
 setwd("DATA/PROCESSED_DATA")
 ```
-
+Download the .CSV file containing the geocoded addresses. *This section assumes you have not performed step 1, but are using the data on GitHub.*
 ```{r}
 # Load the geocoded data from GitHub
 npos <- read.csv( "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/DATA/RAW_DATA/NPO_Data_raw.csv", stringsAsFactors=FALSE )
@@ -179,10 +176,10 @@ syr_tracts <- spTransform( syr_tracts, CRS( "+proj=longlat +datum=WGS84" ) )
 
 ### b. Get NPO Census Tract Information from the Shapefile
 
-We will overlay the geographic coordinates of the NPOs (points) onto the map layer. By doing so, we will be able to match the points to census tracts. We will combine the census tract information into the dataset, and generate a new CSV containing the file. 
+We will overlay the geographic coordinates of the NPOs (points) onto the map layer. By doing so, we will be able to match the points to census tracts. We will combine the census tract information into the data set, and generate a new CSV containing the file. 
 
 **First**, create a data frame that contains only the coordinates of each NPO. Then overlay the points.
-*Note*: Because our city name filter used some variants of the city name "Syracuse", it is possible that some NPOs that identify their city as Syracuse may be part of the greater metro area. If this is the case, they will not fall within a census tract designated to be within the city and will need to be removed from the dataset. 
+*Note*: Because our city name filter used some variants of the city name "Syracuse", it is possible that some NPOs that identify their city as Syracuse may be part of the greater metro area. If this is the case, they will not fall within a census tract designated to be within the city and will need to be removed from the data set. 
 ```{r}
 # Create a vector that just contains coordinates
 npos_coordinates <- npos[ , c( "lon", "lat" ) ]
@@ -202,10 +199,10 @@ npos <- filter( npos, !is.na( INTPTLON10 ) )
 # Remove unnecessary vectors from the environment:
 rm( npos_coordinates )
 rm( npos_tracts )
+rm( syr_tracts )
 ```
 
 **Second**, we need to take a moment here to clean up the year data. There is a variable in the data frame called TAXPER, which reports the period in which the tax was filed. We can use that to represent if a nonprofit was active during that year. To get multiyear data, we need to create a new variable "YEAR" and add it to the data set. We should go ahead and filter out NPOs that do not have tax preparation year data.
-
 ```{r}
 # Remove NPOs without tax preparation values from the dataset
 npos <- npos[ !is.na( npos$TAXPER ), ]
@@ -215,6 +212,8 @@ npos_taxper <- npos[ , "TAXPER"]
 
 # Create a new vector that just contains the first 4 characters in the tax period, the year
 npos_yr <- as.numeric( substr( npos_taxper, 1, 4 ) )
+npos_yr <- as.data.frame( npos_yr )
+names( npos_yr ) <- "YEAR"
 
 # Column bind the two sets of data back into one
 npos <- cbind( npos, npos_yr )
@@ -225,8 +224,7 @@ rm( npos_yr)
 ```
 
 
-**Third**, let's take the NPO dataset that now contains census tract information and write it to a .CSV file, so that we can use it later as needed. This will assist us in finalizing an aggregation of the data.
-
+**Third**, let's take the NPO data set that now contains census tract information and write it to a .CSV file, so that we can use it later as needed. This will assist us in finalizing an aggregation of the data.
 ```{r, eval=F}
 # Generate a .CSV file that contains census tract information.
 write.csv( npos, "NPO_Data_processed.csv", row.names=F )
@@ -252,7 +250,7 @@ npos <- read.csv( "https://raw.githubusercontent.com/lecy/SyracuseLandBank/maste
 **First**, we will create a data frame of a table version of the FIPS ID, or geographical identifier, of the nonprofits. This will provide us with a summarized, unique listing of the various IDs. 
 ```{r}
 # Create a data frame of NPOs by census tract and year
-npos_years <- as.data.frame( table( npos$GEOID10 , npos$npos_yr ) )
+npos_years <- as.data.frame( table( npos$GEOID10 , npos$YEAR ) )
 names( npos_years ) <- c( "TRACT", "YEAR", "NPOS")
 npos_years$YEAR <- as.numeric( as.character( npos_years$YEAR ) )
 ```
@@ -292,21 +290,20 @@ rm( npos_years_sum)
 ```
 
 
-**Third**, let's take the finalized NPO dataset and write it to a .CSV file, so that we can use it later as needed.
-
+**Third**, let's take the finalized NPO data set and write it to a .CSV file, so that we can use it later as needed.
 ```{r, eval=F}
 # Generate a .CSV file that contains census tract information.
 write.csv( npos_years, "NPO_Data_aggregated.csv", row.names=F )
 ```
 
-**Please be aware that this dataset aggregates the number of nonprofits across years.** Investigation into the year variable shows us that there is a wide arrange of non-consecutive years. To be cautious, we should also generate a dataset that breaks out new NPOs across years.  Let's generate a third that breaks out cumulative NPOs across the key subsectors. We will do both of these things in part 3c. 
+**Please be aware that this dataset aggregates the number of nonprofits across years.** Investigation into the year variable shows us that there is a wide arrange of non-consecutive years. To be cautious, we should also generate a data set that breaks out new NPOs across years.  Let's generate a third that breaks out cumulative NPOs across the key subsectors. We will do both of these things in part 3c. 
 
 ### c. New NPOs per census tract by year and by type
 
 **First**, we will create a data frame that counts the number of new nonprofits per year, broken down by census tract. 
 ```{r}
 # Create a data frame of NPOs by census tract and year
-npos_new <- as.data.frame( table( npos$GEOID10 , npos$npos_yr ) )
+npos_new <- as.data.frame( table( npos$GEOID10 , npos$YEAR ) )
 
 # Rename the columns
 names( npos_new ) <- c( "TRACT", "YEAR", "NEW_NPOS" )
@@ -322,7 +319,7 @@ To generate a matrix with a totals row instead of a data frame, run the code bel
 *Please note that this will override, in the environment, the data frame value generated above.*
 ```{r}
 # Create a data frame of NPOs by census tract and year
-npos_new <- as.data.frame( table( npos$GEOID10 , npos$npos_yr ) )
+npos_new <- as.data.frame( table( npos$GEOID10 , npos$YEAR ) )
 
 # Rename the columns
 names( npos_new ) <- c( "TRACT", "YEAR", "NEW_NPOS")
@@ -424,23 +421,23 @@ write.csv( npos_sector, "NPO_Data_sector_aggr_matrix.csv", row.names=F )
 Data visualizations are performed using the summed NPOs per census tract
 
 ### a. Bar Plot of NPOs by census tract
-
 ```{r}
 # Clean the data
 npos_years$NPOS_SUM <- as.numeric( as.character( npos_years$NPOS_SUM ) )
 npos_years$YEAR <- as.numeric( as.character( npos_years$YEAR ) )
 
 # Sort by number of nonprofits and create a bar plot by year
-
+selection.years <- c( 2014, 2015, 2016 )
+npos_years.bp <- npos_years[ npos_years$YEAR == selection.years, ]
 npos_years.bp <- aggregate( npos_years$NPOS_SUM, by = list( Category = npos_years$YEAR ), FUN = sum )
+npos_years.bp <- npos_years.bp[5:7,]
 
 barplot <- barplot( npos_years.bp$x, names.arg = npos_years.bp$Category,
-           main="Number of Nonprofits in Syracuse, by Year",  
-           col= "#2454a0", axes=F, border="gray",
-           ylim = c(0, 650) 
+           main="Number of Nonprofits in Syracuse,\n for 2014 through 2016",  
+           col= "#2454a0", axes=F, border="gray"
+           #ylim = c(0, 650) 
            )
-#barplot
-text(x = barplot, y = 0, labels = npos_years.bp$x, pos = 3, cex = .9, font = 2, col = "black" )
+text(x = barplot, y = 100, labels = npos_years.bp$x, pos = 3, cex = 1.1, font = 2, col = "white" )
 ```
 
 ### b. Matrices of new NPOs per year and by subsector
@@ -459,54 +456,49 @@ datatable( cbind( npos_sector, totals_2016[3] ) )
 
 ### c. Map location of NPOs in Syracuse in 2016
 
+The map below presents the locations of nonprofits that filed tax returns for the first time in 2016.
 ```{r}
 # Read in parcel geojson file from Github
-
 syr.parcel <- geojson_read("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_parcels.geojson", method="local", what="sp" )
 syr.parcel <- spTransform( syr.parcel, CRS( "+proj=longlat +datum=WGS84" ) )
-```
 
-
-```{r}
-# Plot Syracuse parcels and highlight those that contain NPOs
+# Identify the tracts in Syracuse that had new nonprofits as of 2016
 select.tracts <- npos_years
 select.tracts$TRACT <- as.numeric(substring(select.tracts$TRACT, 8,11 ) ) / 100
 select.tracts <- select.tracts[ select.tracts$YEAR == 2016, ]
 
-# Plot Syracuse parcels and highlight those that contain new NPOs as of 2016
-npos_2016 <- npos[ npos$npos_yr == 2016, ]
+# Plot Syracuse parcels and new NPOs as of 2016
+npos_2016 <- npos[ npos$YEAR == 2016, ]
 spcoor <- npos_2016[ c( "lon", "lat") ]
 spcoor <- SpatialPointsDataFrame( spcoor, npos_2016, proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
 
-plot( syr.parcel, col = "grey", border = F )
-#plot( select.tracts$TRACT, col = "blue", border = F, add = T )
+plot( syr.parcel, col = "grey", border = NA )
 plot( spcoor, col = "aquamarine4", pch = 10, cex=1.2, add = T )
 title( main = "Location of New NPOs in Syracuse in 2016", col.main = "blue" )
+```
 
-
+In comparison, below is a choropleth map that shows census tracts shaded by the number of nonprofits that each contains, with more nonprofits represented by darker shades. The map also presents the locations of nonprofits that filed tax returns for the first time in 2016.
+```{r}
 # Plot Syracuse parcels and highlight those that contain NPOs
-npos_2016 <- npos[ npos$npos_yr == 2016, ]
-spcoor <- npos_2016[ c( "lon", "lat") ]
-spcoor <- SpatialPointsDataFrame( spcoor, npos_2016, proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
-
-# Create a color scheme for census tracts that reflect the number of nonprofits
+## Create a color scheme for census tracts that reflect the number of nonprofits
 color.function <- colorRampPalette( c( "aquamarine1", "aquamarine4" ) )
 unique.sums <- length( unique( select.tracts$NPOS_SUM ) )
 col.ramp <- color.function( unique.sums )
   
-# Generate a chloropleth map
-plot( syr.parcel, border = "gray80", col = col.ramp )
-#plot( syr.parcel, col = "grey", border = F )
+## Generate a chloropleth map
+plot( syr.parcel, border = NA, col = col.ramp )
+
+## Plot the coordinates of the new NPOs as of 2016
 plot( spcoor, col = "darkgoldenrod4", pch = 16, cex=1.2, add = T )
 title( main = "Location of all NPOs in Syracuse in 2016", col.main = "blue" )
 legend.text = c( "Least NPOs (1)", "Most NPOs (96)" )
-legend( "bottom",
+legend( x = -76.12, y = 43,
         pch = 19, pt.cex = 1.5, cex = 0.7,
         bty = "n",
         legend = legend.text,
         col = c( "aquamarine1", "aquamarine4" ),
         title = "Number of NPOs Per Tract",
         xjust = 0,
-        ncol = 2
+        ncol = 1
 )
 ``` 

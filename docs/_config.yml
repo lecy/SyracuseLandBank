@@ -1,5 +1,6 @@
-theme: jekyll-theme-cayman
 includes: 
    css: styles.css
+theme: jekyll-theme-cayman
+
    
 

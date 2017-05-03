@@ -263,13 +263,38 @@ div.tocify {
 </div>
 
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(censusapi)
-<span class="kw">library</span>(dplyr)
-censuskey &lt;-<span class="st"> &quot;b431c35dad89e2863681311677d12581e8f24c24&quot;</span>
+<div id="census-data-for-syracuse" class="section level1">
+<h1>Census Data For Syracuse</h1>
+<p>This report will walk through the steps to collect and wrangle census data from the Census API. ACS data from 2011-2015 and dicennial census data from 2000 and 2010 are collected.</p>
+<div id="the-censusapi-package" class="section level2">
+<h2>The censusapi package</h2>
+<p>The censusapi package is one of many packages that will allow you to retrieve data from any <a href="http://www.census.gov/data/developers/data-sets.html">Census API</a> as well as metadata about the <a href="http://api.census.gov/data.html">available datasets</a> and each API’s <a href="http://api.census.gov/data/2000/sf1/variables.html">variables</a> and <a href="http://api.census.gov/data/2000/sf1/geography.html">geographies</a></p>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>The installation of the censusapi package requires the devtools package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#install.packages(&quot;devtools&quot;)</span>
+devtools::<span class="kw">install_github</span>(<span class="st">&quot;hrecht/censusapi&quot;</span>)
+<span class="kw">library</span>(censusapi)
+<span class="kw">library</span>(dplyr)</code></pre></div>
+<p>For any call to the Census API you will need an API Key. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a></p>
+</div>
+<div id="obtaining-the-data" class="section level2">
+<h2>Obtaining the data</h2>
+<p>The next steps use the censusapi package to obtain data from the Census given specific variable names. Variables names were retrieved from places such as <a href="https://www.censusreporter.com" class="uri">https://www.censusreporter.com</a> and <a href="https://www.census.gov/data.html" class="uri">https://www.census.gov/data.html</a></p>
+<div id="the-american-community-survey" class="section level3">
+<h3>The American Community Survey</h3>
+<p>The American Community Survey (ACS) is an ongoing statistical survey by the U.S. Census Bureau, sent to approximately 250,000 addresses monthly (or 3 million per year). It regularly gathers information previously contained only in the long form of the decennial census. <br> <br> Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS).</p>
+</div>
+<div id="acs-data" class="section level3">
+<h3>ACS data</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#api key </span>
+censuskey &lt;-<span class="st"> &quot;b431c35dad89e2863681311677d12581e8f24c24&quot;</span> 
 
+<span class="co">#loop to obtain data for years between 2011 and 2015</span>
 temp&lt;-<span class="st"> </span><span class="ot">NULL</span>
 census&lt;-<span class="st"> </span><span class="ot">NULL</span>
-for(i in <span class="dv">2011</span>:<span class="dv">2015</span>)
+for(i in <span class="dv">2011</span>:<span class="dv">2015</span>)          
 {
 temp &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;acs5&quot;</span>, <span class="dt">vintage =</span> i, <span class="dt">key =</span> censuskey, 
                   <span class="dt">vars =</span> <span class="kw">c</span>(<span class="st">&quot;NAME&quot;</span>,<span class="st">&quot;B01001_001E&quot;</span>, 
@@ -288,16 +313,18 @@ temp &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class
                            <span class="st">&quot;B17010_017E&quot;</span>, <span class="st">&quot;B08136_001E&quot;</span>, 
                            <span class="st">&quot;B14001_002E&quot;</span>), <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>)
 
-temp &lt;-<span class="st"> </span><span class="kw">mutate</span>(temp, <span class="dt">year =</span> i)
+<span class="co">#add a year variable </span>
+temp &lt;-<span class="st"> </span><span class="kw">mutate</span>(temp, <span class="dt">year =</span> i) 
 
-census&lt;-<span class="st"> </span><span class="kw">rbind</span>(census, temp)
+<span class="co">#add the data from the year to the full dataset</span>
+census&lt;-<span class="st"> </span><span class="kw">rbind</span>(census, temp) 
 }
 
-GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census$state, census$county, census$tract)
-census &lt;-<span class="st"> </span><span class="kw">mutate</span>(census, GEOID)
+<span class="co">#create geoid and add to dataset</span>
+GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census$state, census$county, census$tract) 
+census &lt;-<span class="st"> </span><span class="kw">mutate</span>(census, GEOID) 
 
-
-
+<span class="co">#make nice labels</span>
 labels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;state&quot;</span>, <span class="st">&quot;county&quot;</span>, 
             <span class="st">&quot;tract&quot;</span>, <span class="st">&quot;total&quot;</span>, <span class="st">&quot;medianHouseIncome&quot;</span>, 
             <span class="st">&quot;medianFamIncome&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;asian&quot;</span>, 
@@ -307,17 +334,23 @@ labels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">
             <span class="st">&quot;households&quot;</span>,  <span class="st">&quot;ownerOccupied&quot;</span>, <span class="st">&quot;renterOccupied&quot;</span>,<span class="st">&quot;totalHousingUnits&quot;</span>,
             <span class="st">&quot;lackingKitchenFacilities&quot;</span>, <span class="st">&quot;lackingPlumbing&quot;</span>, <span class="st">&quot;medianMonthlyHousingCosts&quot;</span>,
             <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;singleMotherBelowPoverty&quot;</span>, <span class="st">&quot;travelTimeToWorkMin&quot;</span>, <span class="st">&quot;enrolledInSchool&quot;</span>, 
-            <span class="st">&quot;year&quot;</span>, <span class="st">&quot;GEOID&quot;</span>)
+            <span class="st">&quot;year&quot;</span>, <span class="st">&quot;GEOID&quot;</span>) 
 
-labels &lt;-<span class="st"> </span><span class="kw">toupper</span>(labels)
+<span class="co">#make labels uppercase</span>
+labels &lt;-<span class="st"> </span><span class="kw">toupper</span>(labels) 
 
-<span class="kw">names</span>(census) &lt;-<span class="st"> </span>labels
-census &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census)
+<span class="co">#set labels</span>
+<span class="kw">names</span>(census) &lt;-<span class="st"> </span>labels 
 
-syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>)
+<span class="co">#make data frame a tibble</span>
+census &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census) 
 
-
-census2010 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2010</span>, 
+<span class="co">#obtain just syracuse census tracts</span>
+syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) </code></pre></div>
+</div>
+<div id="dicennial-census-2010" class="section level3">
+<h3>Dicennial Census 2010</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">census2010 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2010</span>, 
                         <span class="dt">key =</span> censuskey,
                         <span class="dt">vars =</span> <span class="kw">c</span>(<span class="st">&quot;NAME&quot;</span>, <span class="st">&quot;P0010001&quot;</span>, <span class="st">&quot;P0030002&quot;</span>, 
                                  <span class="st">&quot;P0030003&quot;</span>, <span class="st">&quot;P0030005&quot;</span>, <span class="st">&quot;P0040003&quot;</span>, 
@@ -325,7 +358,7 @@ census2010 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span
                                  <span class="st">&quot;H0050006&quot;</span>, <span class="st">&quot;H0050004&quot;</span>, <span class="st">&quot;P0180001&quot;</span>, <span class="st">&quot;H0140002&quot;</span>, 
                                  <span class="st">&quot;H0040004&quot;</span>, <span class="st">&quot;H00010001&quot;</span>, <span class="st">&quot;P0160002&quot;</span>),
                         <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, 
-                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>)
+                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>) <span class="co">#dicennial 2010 data</span>
 census2010$YEAR &lt;-<span class="st"> </span><span class="dv">2010</span>
 census2010 &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census2010)
 GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census2010$state, census2010$county, census2010$tract)
@@ -336,11 +369,14 @@ census2010 &lt;-<span class="st"> </span><span class="kw">mutate</span>(census20
                        <span class="st">&quot;hispanic&quot;</span>, <span class="st">&quot;vacant&quot;</span>, <span class="st">&quot;otherVacant&quot;</span>, 
                        <span class="st">&quot;vacantForRent&quot;</span>, <span class="st">&quot;seasonalVacant&quot;</span>, <span class="st">&quot;forSaleVacant&quot;</span>,
                        <span class="st">&quot;households&quot;</span>, <span class="st">&quot;ownerOccupied&quot;</span>, <span class="st">&quot;renterOccupied&quot;</span>, 
-                       <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>))
+                       <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) <span class="co">#change names</span>
 
 
-census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>)
-
+census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) <span class="co">#obtain just syracuse tracts</span></code></pre></div>
+</div>
+<div id="dicennial-census-2000" class="section level3">
+<h3>Dicennial Census 2000</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#getting the dicennial 2000 data</span>
 census2000 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2000</span>, 
                         <span class="dt">key =</span> censuskey, 
                         <span class="dt">vars =</span> <span class="kw">c</span>(<span class="st">&quot;NAME&quot;</span>, <span class="st">&quot;P001001&quot;</span>, <span class="st">&quot;P003003&quot;</span>, 
@@ -349,83 +385,214 @@ census2000 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span
                                  <span class="st">&quot;H005005&quot;</span>, <span class="st">&quot;H005003&quot;</span>, <span class="st">&quot;P015001&quot;</span>, 
                                  <span class="st">&quot;H004002&quot;</span>, <span class="st">&quot;H004003&quot;</span>,<span class="st">&quot;H001001&quot;</span>), 
                         <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, 
-                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>)
+                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>) 
 census2000$YEAR &lt;-<span class="st"> </span><span class="dv">2000</span>
 
-GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census2000$state, census2000$county, census2000$tract)
+<span class="co">#create one id for geography</span>
+GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census2000$state, census2000$county, census2000$tract) <span class="co">#create geoid </span>
 census2000 &lt;-<span class="st"> </span><span class="kw">mutate</span>(census2000, GEOID)
 
+<span class="co">#change names</span>
 <span class="kw">names</span>(census2000) &lt;-<span class="st"> </span><span class="kw">toupper</span>(<span class="kw">c</span>(<span class="st">&quot;name&quot;</span>,<span class="st">&quot;state&quot;</span>, <span class="st">&quot;county&quot;</span>, <span class="st">&quot;tract&quot;</span>,
                        <span class="st">&quot;total&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;asian&quot;</span>, 
                        <span class="st">&quot;hispanic&quot;</span>, <span class="st">&quot;vacant&quot;</span>, <span class="st">&quot;otherVacant&quot;</span>, 
                        <span class="st">&quot;vacantForRent&quot;</span>, <span class="st">&quot;seasonalVacant&quot;</span>, 
                        <span class="st">&quot;forSaleVacant&quot;</span>, <span class="st">&quot;households&quot;</span>, 
-                       <span class="st">&quot;ownerOccupied&quot;</span>, <span class="st">&quot;renterOccupied&quot;</span>, <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>))
-
+                       <span class="st">&quot;ownerOccupied&quot;</span>, <span class="st">&quot;renterOccupied&quot;</span>, <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) 
+<span class="co">#get just syracuse census tracts</span>
 census2000 &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census2000)
-census2000&lt;-<span class="st"> </span><span class="kw">filter</span>(census2000, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>)
+census2000&lt;-<span class="st"> </span><span class="kw">filter</span>(census2000, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) 
 
+<span class="co">#get more 2000 census data (different api)</span>
 moreCensus2000&lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf3&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2000</span>, 
                            <span class="dt">key =</span> censuskey,
                            <span class="dt">vars =</span> <span class="kw">c</span>(<span class="st">&quot;NAME&quot;</span>, <span class="st">&quot;P053001&quot;</span>, <span class="st">&quot;P077001&quot;</span>,
                                     <span class="st">&quot;P043007&quot;</span>, <span class="st">&quot;P043014&quot;</span>, <span class="st">&quot;P043003&quot;</span>,
                                     <span class="st">&quot;P043010&quot;</span>, <span class="st">&quot;P087002&quot;</span>, <span class="st">&quot;P087001&quot;</span>, 
                                     <span class="st">&quot;H047003&quot;</span>, <span class="st">&quot;H050003&quot;</span>, <span class="st">&quot;P130003&quot;</span>, <span class="st">&quot;P038010&quot;</span>, <span class="st">&quot;H076001&quot;</span>), 
-                           <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>)
+                           <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>) 
 moreCensus2000$year &lt;-<span class="st"> </span><span class="dv">2000</span>
 moreCensus2000 &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(moreCensus2000)
 
 GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(moreCensus2000$state, moreCensus2000$county, moreCensus2000$tract)
 moreCensus2000 &lt;-<span class="st"> </span><span class="kw">mutate</span>(moreCensus2000, GEOID)
 
-
+<span class="co">#change names</span>
 <span class="kw">names</span>(moreCensus2000) &lt;-<span class="st"> </span><span class="kw">toupper</span>(<span class="kw">c</span>(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;state&quot;</span>, <span class="st">&quot;county&quot;</span>, <span class="st">&quot;tract&quot;</span>, 
                            <span class="st">&quot;medianHouseIncome&quot;</span>, <span class="st">&quot;medianFamIncome&quot;</span>, <span class="st">&quot;maleUnemployed&quot;</span>,
                            <span class="st">&quot;femaleUnemployed&quot;</span>, <span class="st">&quot;maleLaborForce&quot;</span>, <span class="st">&quot;femaleLaborForce&quot;</span>, 
                            <span class="st">&quot;poverty&quot;</span>, <span class="st">&quot;totalForPoverty&quot;</span>, <span class="st">&quot;lackingPlumbing&quot;</span>,
                            <span class="st">&quot;lackingKitchenFacilities&quot;</span>, <span class="st">&quot;aggregateTravelTimeToWork&quot;</span>,
-                           <span class="st">&quot;enrolledInSchool&quot;</span>, <span class="st">&quot;housingValues&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>))
+                           <span class="st">&quot;enrolledInSchool&quot;</span>, <span class="st">&quot;housingValues&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) 
 
+<span class="co">#obtain just syracuse census tracts</span>
+moreCensus2000&lt;-<span class="st"> </span><span class="kw">filter</span>(moreCensus2000, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) 
 
-moreCensus2000&lt;-<span class="st"> </span><span class="kw">filter</span>(moreCensus2000, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>)
-
-
-totalCensus2000 &lt;-<span class="st"> </span><span class="kw">merge</span>(census2000, moreCensus2000)
-<span class="co">#availablevars &lt;- listCensusMetadata(name=&quot;sf1&quot;, vintage=2010)</span>
-
-<span class="co">#poverty_possible_vars &lt;- subset(availablevars, </span>
-  <span class="co">#grepl(&quot;value&quot;, availablevars$label, </span>
-  <span class="co">#ignore.case = TRUE))</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all &lt;-<span class="st"> </span><span class="kw">names</span>(syrCensus)
+<span class="co">#merge two frames together</span>
+totalCensus2000 &lt;-<span class="st"> </span><span class="kw">merge</span>(census2000, moreCensus2000)</code></pre></div>
+</div>
+</div>
+<div id="merge-all-datasets-together" class="section level2">
+<h2>Merge all datasets together</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#find all unique names for all the datasets</span>
+all &lt;-<span class="st"> </span><span class="kw">names</span>(syrCensus)
 all &lt;-<span class="st"> </span><span class="kw">c</span>(all, <span class="kw">names</span>(totalCensus2000))
 all &lt;-<span class="st"> </span><span class="kw">c</span>(all, <span class="kw">names</span>(census2010))
-all &lt;-<span class="st"> </span><span class="kw">unique</span>(all)
+all &lt;-<span class="st"> </span><span class="kw">unique</span>(all) 
 
+<span class="co">#create an empty dataframe with 42 columns of unique names</span>
 df =<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="kw">vector</span>(), <span class="dv">0</span>, <span class="dv">42</span>,
                 <span class="dt">dimnames=</span><span class="kw">list</span>(<span class="kw">c</span>(), all)),
-                <span class="dt">stringsAsFactors=</span>F)
-
-a &lt;-<span class="st"> </span><span class="kw">merge</span>(df, syrCensus, <span class="dt">all =</span> T)
+                <span class="dt">stringsAsFactors=</span>F) 
+<span class="co">#merge datasets with empty frame</span>
+a &lt;-<span class="st"> </span><span class="kw">merge</span>(df, syrCensus, <span class="dt">all =</span> T) 
 b &lt;-<span class="st"> </span><span class="kw">merge</span>(df, totalCensus2000, <span class="dt">all =</span> T)
 c &lt;-<span class="st"> </span><span class="kw">merge</span>(df, census2010, <span class="dt">all =</span> T)
 
+<span class="co">#add datasets together</span>
 fullFrame &lt;-<span class="st"> </span><span class="kw">rbind</span>(a, b)
 fullFrame &lt;-<span class="st"> </span><span class="kw">rbind</span>(fullFrame, c)
 
-
+<span class="co">#change tract names for later aggregation</span>
 fullFrame$TRACT&lt;-<span class="st"> </span><span class="kw">as.numeric</span>(fullFrame$TRACT)/<span class="dv">100</span>
-
-
 <span class="kw">names</span>(fullFrame)[<span class="kw">names</span>(fullFrame)==<span class="st">&quot;TRACT&quot;</span>] &lt;-<span class="st"> &quot;TRACT1&quot;</span>
 <span class="kw">names</span>(fullFrame)[<span class="kw">names</span>(fullFrame)==<span class="st">&quot;GEOID&quot;</span>] &lt;-<span class="st"> &quot;TRACT&quot;</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1&quot;</span>)
-<span class="kw">setwd</span>(<span class="st">&quot;./BUILD/Chris's census stuff&quot;</span>)
+</div>
+<div id="write-dataset-to-.csv-file" class="section level2">
+<h2>Write dataset to .csv file</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">&quot;../..&quot;</span>)
 fullFrame &lt;-<span class="st"> </span><span class="kw">arrange</span>(fullFrame, YEAR, TRACT)
-<span class="kw">write.csv</span>(fullFrame, <span class="dt">file =</span> <span class="st">&quot;../../DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#setwd(&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA&quot;)</span>
-<span class="co">#myList&lt;- lapply(list.files(pattern = &quot;.csv&quot;)[1:4], read.csv)</span>
-<span class="co">#thisWork &lt;-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)</span>
-<span class="co">#thisWork&lt;- Reduce(function(...) merge(..., all = T, by.x= c(&quot;TRACT&quot;, &quot;YEAR&quot;), by.y = c(&quot;TRACT&quot;, &quot;YEAR&quot;), myList)</span></code></pre></div>
+<span class="kw">write.csv</span>(fullFrame, <span class="dt">file =</span> <span class="st">&quot;./DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;</span>)</code></pre></div>
+</div>
+<div id="load-shapefile-for-descriptive-use" class="section level2">
+<h2>Load Shapefile for Descriptive Use</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>( rgdal )
+<span class="kw">library</span>( maptools )
+<span class="kw">library</span>( geojsonio )
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(RColorBrewer)
+<span class="kw">library</span>(maps)
+<span class="kw">setwd</span>(<span class="st">&quot;../..&quot;</span>)
+syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;</span>)</code></pre></div>
+<pre><code>## OGR data source with driver: GeoJSON 
+## Source: &quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;, layer: &quot;OGRGeoJSON&quot;
+## with 55 features
+## It has 12 fields</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#syr &lt;- readOGR(dsn = &quot;SYRCensusTracts.geojson&quot;)</span></code></pre></div>
+</div>
+<div id="create-shiny-plot-for-descriptive-use" class="section level2">
+<h2>Create shiny plot for descriptive use</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+
+forDescriptives &lt;-<span class="st"> </span><span class="kw">select</span>(fullFrame, -<span class="kw">c</span>(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+
+<span class="kw">selectInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;nameInput&quot;</span>,
+    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
+    <span class="dt">choices =</span> <span class="kw">names</span>(forDescriptives), 
+    <span class="dt">selected =</span> <span class="st">&quot;TOTAL&quot;</span>,
+    <span class="dt">selectize =</span> F, 
+    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
+   
+)</code></pre></div>
+<div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="nameInput"></label>
+<div>
+<select id="nameInput" class="form-control"><option value="TOTAL" selected>TOTAL</option>
+<option value="MEDIANHOUSEINCOME">MEDIANHOUSEINCOME</option>
+<option value="MEDIANFAMINCOME">MEDIANFAMINCOME</option>
+<option value="BLACK">BLACK</option>
+<option value="ASIAN">ASIAN</option>
+<option value="HISPANIC">HISPANIC</option>
+<option value="WHITE">WHITE</option>
+<option value="EMPLOYED">EMPLOYED</option>
+<option value="UNEMPLOYED">UNEMPLOYED</option>
+<option value="INLABORFORCE">INLABORFORCE</option>
+<option value="POVERTY">POVERTY</option>
+<option value="VACANTTOTAL">VACANTTOTAL</option>
+<option value="OTHERVACANT">OTHERVACANT</option>
+<option value="VACANTFORRENT">VACANTFORRENT</option>
+<option value="SEASONALVACANT">SEASONALVACANT</option>
+<option value="FORSALEVACANT">FORSALEVACANT</option>
+<option value="HOUSEHOLDRECEIVEDSNAP">HOUSEHOLDRECEIVEDSNAP</option>
+<option value="HOUSEHOLDS">HOUSEHOLDS</option>
+<option value="OWNEROCCUPIED">OWNEROCCUPIED</option>
+<option value="RENTEROCCUPIED">RENTEROCCUPIED</option>
+<option value="TOTALHOUSINGUNITS">TOTALHOUSINGUNITS</option>
+<option value="LACKINGKITCHENFACILITIES">LACKINGKITCHENFACILITIES</option>
+<option value="LACKINGPLUMBING">LACKINGPLUMBING</option>
+<option value="MEDIANMONTHLYHOUSINGCOSTS">MEDIANMONTHLYHOUSINGCOSTS</option>
+<option value="LESS18">LESS18</option>
+<option value="SINGLEMOTHERBELOWPOVERTY">SINGLEMOTHERBELOWPOVERTY</option>
+<option value="TRAVELTIMETOWORKMIN">TRAVELTIMETOWORKMIN</option>
+<option value="ENROLLEDINSCHOOL">ENROLLEDINSCHOOL</option>
+<option value="VACANT">VACANT</option>
+<option value="MALEUNEMPLOYED">MALEUNEMPLOYED</option>
+<option value="FEMALEUNEMPLOYED">FEMALEUNEMPLOYED</option>
+<option value="MALELABORFORCE">MALELABORFORCE</option>
+<option value="FEMALELABORFORCE">FEMALELABORFORCE</option>
+<option value="TOTALFORPOVERTY">TOTALFORPOVERTY</option>
+<option value="AGGREGATETRAVELTIMETOWORK">AGGREGATETRAVELTIMETOWORK</option>
+<option value="HOUSINGVALUES">HOUSINGVALUES</option></select>
+</div>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">selectInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;yearInput&quot;</span>,
+    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
+    <span class="dt">choices =</span> <span class="kw">unique</span>(fullFrame$YEAR), 
+    <span class="dt">selected =</span> <span class="dv">2015</span>,
+    <span class="dt">selectize =</span> F, 
+    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
+)</code></pre></div>
+<div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="yearInput"></label>
+<div>
+<select id="yearInput" class="form-control"><option value="2000">2000</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015" selected>2015</option></select>
+</div>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">renderPlot</span>({
+myName &lt;-<span class="st"> </span>input$nameInput
+myYear &lt;-<span class="st"> </span>input$yearInput
+myData &lt;-<span class="st"> </span>forDescriptives[fullFrame$YEAR==myYear, ]
+myVar &lt;-<span class="st"> </span>myData[, myName]
+myVar[<span class="kw">is.na</span>(myVar)] &lt;-<span class="st"> </span><span class="dv">0</span>
+
+
+
+color.function &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>( <span class="kw">c</span>(<span class="st">&quot;firebrick4&quot;</span>,<span class="st">&quot;light gray&quot;</span>, <span class="st">&quot;steel blue&quot;</span>) ) 
+col.ramp &lt;-<span class="st"> </span><span class="kw">color.function</span>( <span class="dv">5</span> ) <span class="co"># number of groups you desire</span>
+color.vector &lt;-<span class="st"> </span><span class="kw">cut</span>( <span class="kw">rank</span>(myVar), <span class="dt">breaks=</span><span class="dv">5</span>, <span class="dt">labels=</span>col.ramp )
+color.vector &lt;-<span class="st"> </span><span class="kw">as.character</span>( color.vector )
+this.order &lt;-<span class="st"> </span><span class="kw">match</span>( syr$GEOID10, fullFrame$TRACT)
+color.vec.ordered &lt;-<span class="st"> </span>color.vector[ this.order ]
+<span class="kw">plot</span>(syr, <span class="dt">col=</span>color.vec.ordered, <span class="dt">main =</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>))
+
+<span class="kw">map.scale</span>( <span class="dt">metric=</span>F, <span class="dt">ratio=</span>F, <span class="dt">relwidth =</span> <span class="fl">0.15</span>, <span class="dt">cex=</span><span class="fl">0.5</span> )
+
+first &lt;-<span class="st"> </span><span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, .<span class="dv">8</span>, .<span class="dv">2</span>))
+last &lt;-<span class="st"> </span><span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(.<span class="dv">2</span>, <span class="dv">1</span>, .<span class="dv">2</span>))
+myLabels &lt;-<span class="st"> </span><span class="kw">paste</span>(first, last, <span class="dt">sep =</span> <span class="st">&quot;-&quot;</span>)
+
+
+legend.text &lt;-<span class="st"> </span>myLabels
+
+<span class="kw">legend</span>( <span class="st">&quot;bottomright&quot;</span>, <span class="dt">bg=</span><span class="st">&quot;white&quot;</span>,
+        <span class="dt">pch=</span><span class="dv">19</span>, <span class="dt">pt.cex=</span><span class="dv">1</span>, <span class="dt">cex=</span><span class="dv">1</span>,
+        <span class="dt">legend=</span>legend.text, 
+        <span class="dt">col=</span>col.ramp, 
+        <span class="dt">box.col=</span><span class="st">&quot;white&quot;</span>,
+        <span class="dt">title=</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) 
+       )
+}, <span class="dt">width =</span> <span class="dv">959</span>, <span class="dt">height=</span> <span class="dv">665</span>)</code></pre></div>
+<div id="out4806f44beaf399b4" class="shiny-plot-output" style="width: 100% ; height: "></div>
+</div>
+</div>
 
 
 
