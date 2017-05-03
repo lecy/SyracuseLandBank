@@ -1,14 +1,25 @@
 ---
-title: "Parks in Syracuse"
-output: github_document
+title: "Parks"
+output:
+  html_document:
+    keep_md: true
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_float: yes
+    code_fold: hide
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,  warning = F , message = F)
+knitr::opts_chunk$set( echo = TRUE ,  warning = F , message = F )
 ```
 
+### Data Acquisition and Preparation
 
-```{}
+Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
+
+```{r}
 #Load Packages
 library( dplyr )
 library( geojsonio )
@@ -19,12 +30,56 @@ library( raster )
 library( rgdal )
 library( rgeos )
 library( sp )
+library( geojsonio )
+
+
+
+
+#Get parks data from Community Geography
+setwd("..")
+setwd("..")
+setwd("./DATA/RAW_DATA")
+
+dir.create( "park_shape" )
+download.file( "http://communitygeography.org/wp-content/uploads/2015/09/SyracuseParks051414_UTM.zip" , "park_shape/park.zip" )
+unzip( "park_shape/park.zip" , exdir = "park_shape" )
+
+#Change original data into shapefile and convert to CSV
+park <- readShapePoly( fn = "park_shape/SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+park <- as.data.frame( park , stringsAsFactors = FALSE )
+
+#Delete Community Geography file because CSV has all information
+unlink( "park_shape" , recursive = TRUE )
+
+#Write data as a CSV for future access
+write.csv( park, file = "../../DATA/RAW_DATA/park_raw.csv" , row.names = FALSE )
+
+
+
+url <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_neighborhoods.geojson"
+syr <- geojson_read( url, method="local", what="sp" )
+
+plot( syr, border="light gray" )
+text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
+
 ```
 
 
 
 ```{r}
-setwd("C:/Users/mgao05/Desktop/PAI INdenpendent study/park")
+#Clean data
+park$TOWN <- ifelse( is.na( park$TOWN ), as.character( park$TOWN ) , as.character( park$TOWN ) )
+
+park <- mutate( park, Address = paste( StName ,Nhood , TOWN , "NY" , sep = ", " ) )
+park <- park[ , c( "NAME" , "Address", "Park_Type" ) ]
+
+#Geocode
+
+
+#Get census tract information
+syr_tracts <- geojson_read( "../../SHAPEFILES/SYRCensusTracts.geojson" , method="local" , what="sp" )
+syr_tracts <- spTransform( syr_tracts , CRS( "+proj=longlat +datum=WGS84" ) )
+
 
 
 #Load Onondaga Data in Environment
@@ -38,49 +93,51 @@ park <- readShapePoly( fn="SyracuseParks051414_UTM", verbose=TRUE,proj4string=CR
 
 syr <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
 
-library(rgdal)
-library(sp)
-library(maptools)
+plot(syr, border="gray10")
+plot(park, border="gray10")
+
+
+
+
+
+
+
+```
+
+
+
+
+
+```{r}
+
 
 # write geojson
-#geojson_file <- "C:/Users/mgao05/Desktop/PAI INdenpendent study/park/park.geojson"
-#writeOGR(park, geojson_file,layer = "geojson", driver = "GeoJSON")
+
 
 
 plot(syr, border="gray10")
 plot(park, border="gray10")
-dat <- read.csv("C:/Users/mgao05/Desktop/PAI INdenpendent study/park/public_park.csv", sep = ",", header=TRUE )
-
-dat.park <- dat[dat$LandUse == "Parks", ]
-tbl.nhood <- table(dat.park$Nhood)
-tbl.nhood
 
 
 
-plot(dat.park$ACRES)
+
+
 
 #seperate parks of different areas
-small.size.park <- dat.park[dat.park$ACRES <= 1, ]
+barplot(table(park_raw$Park_Type))
 
-medium.size.park <- dat.park[dat.park$ACRES <= 10 & dat.park$ACRES > 1, ]
-
-large.size.park <- dat.park[dat.park$ACRES <= 150 & dat.park$ACRES >10, ]
+barplot(table(park_raw$Nhood))
 
 #seperate by neighborhoods function since parks in different neighborhood might have different effect on house value
 
 sep.nhood <- function(Nhood){
-  dat <- dat.park[dat.park$Nhood == Nhood, ]
+  dat <- park_raw[park_raw$Nhood == Nhood, ]
   return(dat)
 }
 
 #test on south valley
-South.Valley <- sep.nhood("South Valley")
-Southside <- sep.nhood("Southside")
-
-
-
-
-
+#South.Valley <- sep.nhood("South Valley")
+#Southside <- sep.nhood("Southside")
 
 ```
 
