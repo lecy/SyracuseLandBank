@@ -101,7 +101,7 @@ We are hopeful that this project will provide the Land Bank with a strong founda
 
 ## Acknowledgements
 
-Please list the parts of the project that you contributed to.
+This project was made possible through the hard work of the following MPA students:
 
 Alejandro Alfaro Aco <aalfaroa@syr.edu>,  
 Christine Elise Brown <cbrown09@syr.edu>,  
