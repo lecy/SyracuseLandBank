@@ -1,6 +1,6 @@
 # Evaluating Determinants of Land Value
 
-Project description...
+
 
 ## Project Overview
 
@@ -14,22 +14,6 @@ Following the initial exploratory analysis, several regressions were run to dete
 
 It is our hope that the data and visualizations presented here can be used in the future for additional analysis and to gain a better understanding of the dynamic elements of property value and neighborhood health in Syracuse. In pursuit of this goal, an outline of how the provided data can be used has also been provided in the “Using the Research Database” section below. 
 
-
-## Acknowledgements
-
-Please list the parts of the project that you contributed to.
-
-Alejandro Alfaro Aco <aalfaroa@syr.edu>,  
-Christine Elise Brown <cbrown09@syr.edu>,  
-Christopher Davis <cdavis10@syr.edu>,  
-Cristian Ernesto Nuno <cenuno@syr.edu>,  
-Francisco Javier Santamarina <fjsantam@syr.edu>,  
-Ignacio Carlos Pezo Salazar <ipezosal@syr.edu>,  
-Jonathan Beeler <jfbeeler@syr.edu>,  
-Kyle Robert Crichton <krcricht@syr.edu>,  
-Linnea Powell <lipowell@syr.edu>,  
-Mengran Gao <mgao05@syr.edu>,  
-Stephanie Stevenson Wilcoxen <sswilcox@syr.edu>  
 
 
 ### [Literature Review](litreview.md)
@@ -115,5 +99,20 @@ As is noted above, our regression model evidences that variable x, y z have stat
 We are hopeful that this project will provide the Land Bank with a strong foundation to examine the many factors that affect housing values and can be expanded upon to better inform the Land Bank’s decision-making process in the future.
 
 
+## Acknowledgements
 
-![alt text](http://research.kraeutli.com/wp-content/uploads/2013/11/artist-bubbles-closeup-1024x573.png)
+Please list the parts of the project that you contributed to.
+
+Alejandro Alfaro Aco <aalfaroa@syr.edu>,  
+Christine Elise Brown <cbrown09@syr.edu>,  
+Christopher Davis <cdavis10@syr.edu>,  
+Cristian Ernesto Nuno <cenuno@syr.edu>,  
+Francisco Javier Santamarina <fjsantam@syr.edu>,  
+Ignacio Carlos Pezo Salazar <ipezosal@syr.edu>,  
+Jonathan Beeler <jfbeeler@syr.edu>,  
+Kyle Robert Crichton <krcricht@syr.edu>,  
+Linnea Powell <lipowell@syr.edu>,  
+Mengran Gao <mgao05@syr.edu>,  
+Stephanie Stevenson Wilcoxen <sswilcox@syr.edu>  
+
+
