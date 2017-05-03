@@ -1,0 +1,101 @@
+---
+title: "Using the Research Database"
+output:
+  html_document:
+    keep_md: true
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_float: yes
+    code_fold: hide
+---
+
+#Data Overview
+
+The research database is a compiled dataset of factors that play role in shaping land values in the city of Syracuse.  The data draws from numerous sources ranging from the United States Census Bureau, the City of Syracuse, various geographic information and open source data.  For the majority of the datasets, there are three versions: raw, processed and aggregated.
+
+Prior to being aggregated, the database contains multiple levels of granularity.  There is point data corresponding lattitude and longitude (restaurants, crimes, code violations), parcel-level data (schools, parks, police, fire, supermarkets), and census tract data (census information).
+
+Once the data is aggregated to the census tract level, 
+
+```{r, warning=F, message=F, echo =F}
+#Load raw datsets
+
+setwd("..")
+setwd("..")
+setwd("./DATA/RAW_DATA")
+
+r.violations <- read.csv( "codeviolations.csv", stringsAsFactors=FALSE )
+r.grocery <- read.csv( "grocery_raw.csv", stringsAsFactors=FALSE )
+r.LIHTC <- read.csv( "LIHTC_raw.csv", stringsAsFactors=FALSE )
+r.NMTC <- read.csv( "NMTC_raw.csv", stringsAsFactors=FALSE )
+r.nonprofit <- read.csv( "NPO_Data_raw.csv", stringsAsFactors=FALSE )
+r.permits <- read.csv( "Permits_raw.csv", stringsAsFactors=FALSE )
+r.parks <- read.csv( "public_park.csv", stringsAsFactors=FALSE )
+r.housing <- read.csv( "publichousing 2015.csv", stringsAsFactors=FALSE )
+r.schools <- read.csv( "schooldata2005_2010_2015.csv", stringsAsFactors=FALSE )
+r.subsidies <- read.csv( "TaxSubsidies_raw.csv", stringsAsFactors=FALSE )
+r.yelp <- read.csv( "yelp_raw.csv", stringsAsFactors=FALSE )
+
+#Load processed datsets
+
+setwd("..")
+setwd("./PROCESSED_DATA")
+
+p.firepolice <- read.csv( "firepolice_processed.csv", stringsAsFactors=FALSE )
+p.grocery <- read.csv( "grocery_processed.csv", stringsAsFactors=FALSE )
+p.libraries <- read.csv( "libraries_processed.csv", stringsAsFactors=FALSE )
+p.nonprofit <- read.csv( "NPO_Data_processed.csv", stringsAsFactors=FALSE )
+p.permits <- read.csv( "Permits_processed.csv", stringsAsFactors=FALSE )
+p.schools <- read.csv( "schools_processed.csv", stringsAsFactors=FALSE )
+p.yelp <- read.csv( "yelp_processed.csv", stringsAsFactors=FALSE )
+
+#Load aggregated datsets
+
+setwd("..")
+setwd("./AGGREGATED_DATA")
+
+a.violations <- read.csv( "codeviolations_aggregated.csv", stringsAsFactors=FALSE )
+a.firepolice <- read.csv( "firepolice_aggregated.csv", stringsAsFactors=FALSE )
+a.libraries <- read.csv( "libraries_aggregated.csv", stringsAsFactors=FALSE )
+a.nonprofit <- read.csv( "NPO_Data_aggregated.csv", stringsAsFactors=FALSE )
+a.housing <- read.csv( "publichousing_aggregated.csv", stringsAsFactors=FALSE )
+a.schools <- read.csv( "schools_aggregated.csv", stringsAsFactors=FALSE )
+a.subsidies <- read.csv( "TaxSubsidies_aggregated.csv", stringsAsFactors=FALSE )
+a.NMTC <- read.csv( "NMTC_aggregated.csv", stringsAsFactors=FALSE )
+a.yelp <- read.csv( "yelp_aggregated.csv", stringsAsFactors=FALSE )
+a.grocery <- read.csv( "grocery_aggregated.csv", stringsAsFactors=FALSE )
+a.permits <- read.csv( "Permits_aggregated.csv", stringsAsFactors=FALSE )
+a.libraries <- read.csv( "library_aggregated.csv", stringsAsFactors=FALSE )
+a.LIHTC <- read.csv( "LIHTC_aggregated.csv", stringsAsFactors=FALSE )
+a.census <- read.csv( "censusDataFromChris.csv", stringsAsFactors=FALSE )
+```
+
+##Existing Datasets
+
+Dataset|Years|Granularity|Description
+
+##Raw Data
+
+The raw data is the 
+
+
+
+##Processed Data
+
+###
+
+##Aggregated Data
+
+#Adding New Datasets
+
+#Using Shapefiles
+
+The research database includes multiple shapefiles for the City of Syracuse.  
+
+#Plotting Data
+
+#Modifying Granularity of Analysis
+
+The current analysis is done at the census tract level.
