@@ -1,20 +1,6 @@
----
-title: "Extracting Data from Census"
-output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cerulean
-    highlight: haddock
-    toc: yes
-    toc_float: yes
-    code_fold: hide
+# Extracting Data from Census
 
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message= F, warning = F, fig.width = 10, fig.height = 10)
-```
 #Census Data For Syracuse
 This report will walk through the steps to collect and wrangle census data from the Census API. ACS data from 2011-2015 and dicennial census data from 2000 and 2010 are collected. 
 
@@ -25,19 +11,15 @@ The censusapi package is one of many packages that will allow you to retrieve da
 
 ##Installation
 The installation of the censusapi package requires the devtools package.
-```{r eval=FALSE}
+
+```r
 #install.packages("devtools")
 devtools::install_github("hrecht/censusapi")
 library(censusapi)
 library(dplyr)
 ```
 
-```{r include=FALSE}
-#install.packages("devtools")
-#devtools::install_github("hrecht/censusapi")
-library(censusapi)
-library(dplyr)
-```
+
 
 For any call to the Census API you will need an API Key. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at http://api.census.gov/data/key_signup.html
 
@@ -51,7 +33,8 @@ The American Community Survey (ACS) is an ongoing statistical survey by the U.S.
 Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS). 
 
 ###ACS data
-```{r}
+
+```r
 #api key 
 censuskey <- "b431c35dad89e2863681311677d12581e8f24c24" 
 
@@ -111,15 +94,12 @@ census <- tbl_df(census)
 
 #obtain just syracuse census tracts
 syrCensus<- filter(census, as.numeric(TRACT)<10000) 
-
-
-
 ```
 
 
 ###Dicennial Census 2010
-```{r}
 
+```r
 census2010 <- getCensus(name = "sf1", vintage = 2010, 
                         key = censuskey,
                         vars = c("NAME", "P0010001", "P0030002", 
@@ -143,10 +123,10 @@ names(census2010) <- toupper(c("name","state", "county", "tract",
 
 
 census2010<- filter(census2010, as.numeric(TRACT)<10000) #obtain just syracuse tracts
-
 ```
 ###Dicennial Census 2000
-```{r}
+
+```r
 #getting the dicennial 2000 data
 census2000 <- getCensus(name = "sf1", vintage = 2000, 
                         key = censuskey, 
@@ -204,7 +184,8 @@ totalCensus2000 <- merge(census2000, moreCensus2000)
 ```
 
 ##Merge all datasets together
-```{r}
+
+```r
 #find all unique names for all the datasets
 all <- names(syrCensus)
 all <- c(all, names(totalCensus2000))
@@ -228,13 +209,12 @@ fullFrame <- rbind(fullFrame, c)
 fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
 names(fullFrame)[names(fullFrame)=="TRACT"] <- "TRACT1"
 names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
-
 ```
 
 ##Write dataset to .csv file
-```{r}
-setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
-#setwd("./BUILD/Chris's census stuff")
+
+```r
+setwd("../..")
 fullFrame <- arrange(fullFrame, YEAR, TRACT)
 write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
 ```
@@ -242,83 +222,152 @@ write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
 
 
 ##Load Shapefile for Descriptive Use
-```{r}
+
+```r
 library( rgdal )
 library( maptools )
 library( geojsonio )
 library(dplyr)
 library(RColorBrewer)
 library(maps)
-setwd("~/Desktop/DDMII/Projects/Census/CensusStuff1")
+setwd("../..")
 syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
 ```
 
+```
+## OGR data source with driver: GeoJSON 
+## Source: "./SHAPEFILES/SYRCensusTracts.geojson", layer: "OGRGeoJSON"
+## with 55 features
+## It has 12 fields
+```
+
+```r
+#syr <- readOGR(dsn = "SYRCensusTracts.geojson")
+```
+
 ##Create shiny plot for descriptive use
-```{r}
-#library(shiny)
+
+
+```r
+library(shiny)
 
 forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
 
-#selectInput(
-  #  inputId = "nameInput",
-  #  label = "",
-   # choices = names(forDescriptives), 
-    #selected = "TOTAL",
-    #selectize = T, 
-    #width = "160px"
+selectInput(
+    inputId = "nameInput",
+    label = "",
+    choices = names(forDescriptives), 
+    selected = "TOTAL",
+    selectize = F, 
+    width = "160px"
    
-#)
+)
+```
 
-#selectInput(
- #   inputId = "yearInput",
-  #  label = "",
-   # choices = unique(fullFrame$YEAR), 
-    #selected = 2015,
-  #  selectize = T, 
-#    width = "160px"
-#)
+<!--html_preserve--><div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="nameInput"></label>
+<div>
+<select id="nameInput" class="form-control"><option value="TOTAL" selected>TOTAL</option>
+<option value="MEDIANHOUSEINCOME">MEDIANHOUSEINCOME</option>
+<option value="MEDIANFAMINCOME">MEDIANFAMINCOME</option>
+<option value="BLACK">BLACK</option>
+<option value="ASIAN">ASIAN</option>
+<option value="HISPANIC">HISPANIC</option>
+<option value="WHITE">WHITE</option>
+<option value="EMPLOYED">EMPLOYED</option>
+<option value="UNEMPLOYED">UNEMPLOYED</option>
+<option value="INLABORFORCE">INLABORFORCE</option>
+<option value="POVERTY">POVERTY</option>
+<option value="VACANTTOTAL">VACANTTOTAL</option>
+<option value="OTHERVACANT">OTHERVACANT</option>
+<option value="VACANTFORRENT">VACANTFORRENT</option>
+<option value="SEASONALVACANT">SEASONALVACANT</option>
+<option value="FORSALEVACANT">FORSALEVACANT</option>
+<option value="HOUSEHOLDRECEIVEDSNAP">HOUSEHOLDRECEIVEDSNAP</option>
+<option value="HOUSEHOLDS">HOUSEHOLDS</option>
+<option value="OWNEROCCUPIED">OWNEROCCUPIED</option>
+<option value="RENTEROCCUPIED">RENTEROCCUPIED</option>
+<option value="TOTALHOUSINGUNITS">TOTALHOUSINGUNITS</option>
+<option value="LACKINGKITCHENFACILITIES">LACKINGKITCHENFACILITIES</option>
+<option value="LACKINGPLUMBING">LACKINGPLUMBING</option>
+<option value="MEDIANMONTHLYHOUSINGCOSTS">MEDIANMONTHLYHOUSINGCOSTS</option>
+<option value="LESS18">LESS18</option>
+<option value="SINGLEMOTHERBELOWPOVERTY">SINGLEMOTHERBELOWPOVERTY</option>
+<option value="TRAVELTIMETOWORKMIN">TRAVELTIMETOWORKMIN</option>
+<option value="ENROLLEDINSCHOOL">ENROLLEDINSCHOOL</option>
+<option value="VACANT">VACANT</option>
+<option value="MALEUNEMPLOYED">MALEUNEMPLOYED</option>
+<option value="FEMALEUNEMPLOYED">FEMALEUNEMPLOYED</option>
+<option value="MALELABORFORCE">MALELABORFORCE</option>
+<option value="FEMALELABORFORCE">FEMALELABORFORCE</option>
+<option value="TOTALFORPOVERTY">TOTALFORPOVERTY</option>
+<option value="AGGREGATETRAVELTIMETOWORK">AGGREGATETRAVELTIMETOWORK</option>
+<option value="HOUSINGVALUES">HOUSINGVALUES</option></select>
+</div>
+</div><!--/html_preserve-->
 
-#renderPlot({
+```r
+selectInput(
+    inputId = "yearInput",
+    label = "",
+    choices = unique(fullFrame$YEAR), 
+    selected = 2015,
+    selectize = F, 
+    width = "160px"
+)
+```
+
+<!--html_preserve--><div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="yearInput"></label>
+<div>
+<select id="yearInput" class="form-control"><option value="2000">2000</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015" selected>2015</option></select>
+</div>
+</div><!--/html_preserve-->
 
 
+```r
+renderPlot({
+myName <- input$nameInput
+myYear <- input$yearInput
+myData <- forDescriptives[fullFrame$YEAR==myYear, ]
+myVar <- myData[, myName]
+myVar[is.na(myVar)] <- 0
 
-#}, width = 959, height= 665)
 
-
-
-myData <- forDescriptives[fullFrame$YEAR==2011, ]
 
 color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
-
 col.ramp <- color.function( 5 ) # number of groups you desire
-
-color.vector <- cut( rank(fullFrame$TOTAL), breaks=5, labels=col.ramp )
-
+color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
 color.vector <- as.character( color.vector )
-
-
 this.order <- match( syr$GEOID10, fullFrame$TRACT)
-
 color.vec.ordered <- color.vector[ this.order ]
-
-plot(syr, col=color.vec.ordered, main = "Total Population in Syracuse")
+plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "))
 
 map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
 
-first <- quantile(fullFrame$TOTAL, probs = seq(0, .8, .2))
-last <- quantile(fullFrame$TOTAL, probs = seq(.2, 1, .2))
+first <- quantile(myVar, probs = seq(0, .8, .2))
+last <- quantile(myVar, probs = seq(.2, 1, .2))
 myLabels <- paste(first, last, sep = "-")
 
 
 legend.text <- myLabels
 
 legend( "bottomright", bg="white",
-        pch=19, pt.cex=1.5, cex=0.7,
+        pch=19, pt.cex=1, cex=1,
         legend=legend.text, 
         col=col.ramp, 
         box.col="white",
-        title="Total Population" 
+        title= paste(myName, "in", myYear, sep = " ") 
        )
+}, width = 959, height= 665)
 ```
+
+<!--html_preserve--><div id="out4806f44beaf399b4" class="shiny-plot-output" style="width: 100% ; height: "></div><!--/html_preserve-->
 
 
