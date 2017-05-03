@@ -16,17 +16,16 @@ It is our hope that the data and visualizations presented here can be used in th
 
 
 
-### [Literature Review](litreview.md)
+## Review of the Academic Literature
 
-Note the key findings
+We have conducted a literature review and outlined some of the key research in the field of land value. We have provided an outline of the key findings from this field of research, and links to the original articles included in this research repository.
+
+You will find the outline here: [Literature Review](litreview.md)
 
 ## Building a Research Database
 
-Description of the process
+Each of the following pages presents an outline of the steps necessary to compile a single data source to build the research database, and the documentation and basic descriptive analysis of the source.
 
-### [Analysis](Compile-Datasets.html)  
-
-Some description here.
 
 ### [Census Data](CensusData.html)
 
@@ -83,6 +82,12 @@ This dataset contains information on the number of subsidized housing units avai
 ## Using the Research Database
 
 ## Results
+
+### [Analysis](Compile-Datasets.html)  
+
+### Main Findings
+
+
 
 ## Conclusion
 
