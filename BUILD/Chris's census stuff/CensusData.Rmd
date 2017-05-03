@@ -9,21 +9,56 @@ output:
     toc: yes
     toc_float: yes
     code_fold: hide
+
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message= F, warning = F, fig.width = 10, fig.height = 10)
 ```
+#Census Data For Syracuse
+This report will walk through the steps to collect and wrangle census data from the Census API. ACS data from 2011-2015 and dicennial census data from 2000 and 2010 are collected. 
 
-```{r}
 
+## The censusapi package
+
+The censusapi package is one of many packages that will allow you to retrieve data from any <a href="http://www.census.gov/data/developers/data-sets.html">Census API</a> as well as metadata about the <a href="http://api.census.gov/data.html">available datasets</a> and each API's <a href= "http://api.census.gov/data/2000/sf1/variables.html">variables</a> and <a href="http://api.census.gov/data/2000/sf1/geography.html">geographies</a>
+
+##Installation
+The installation of the censusapi package requires the devtools package.
+```{r eval=FALSE}
+#install.packages("devtools")
+devtools::install_github("hrecht/censusapi")
 library(censusapi)
 library(dplyr)
-censuskey <- "b431c35dad89e2863681311677d12581e8f24c24"
+```
 
+```{r include=FALSE}
+#install.packages("devtools")
+#devtools::install_github("hrecht/censusapi")
+library(censusapi)
+library(dplyr)
+```
+
+For any call to the Census API you will need an API Key. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at http://api.census.gov/data/key_signup.html
+
+##Obtaining the data
+The next steps use the censusapi package to obtain data from the Census given specific variable names. Variables names were retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html
+
+### The American Community Survey 
+The American Community Survey (ACS) is an ongoing statistical survey by the U.S. Census Bureau, sent to approximately 250,000 addresses monthly (or 3 million per year). It regularly gathers information previously contained only in the long form of the decennial census. 
+<br>
+<br>
+Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS). 
+
+###ACS data
+```{r}
+#api key 
+censuskey <- "b431c35dad89e2863681311677d12581e8f24c24" 
+
+#loop to obtain data for years between 2011 and 2015
 temp<- NULL
 census<- NULL
-for(i in 2011:2015)
+for(i in 2011:2015)          
 {
 temp <- getCensus(name = "acs5", vintage = i, key = censuskey, 
                   vars = c("NAME","B01001_001E", 
@@ -42,16 +77,18 @@ temp <- getCensus(name = "acs5", vintage = i, key = censuskey,
                            "B17010_017E", "B08136_001E", 
                            "B14001_002E"), region = "tract:*", regionin = "state: 36 + county:067")
 
-temp <- mutate(temp, year = i)
+#add a year variable 
+temp <- mutate(temp, year = i) 
 
-census<- rbind(census, temp)
+#add the data from the year to the full dataset
+census<- rbind(census, temp) 
 }
 
-GEOID <- paste0(census$state, census$county, census$tract)
-census <- mutate(census, GEOID)
+#create geoid and add to dataset
+GEOID <- paste0(census$state, census$county, census$tract) 
+census <- mutate(census, GEOID) 
 
-
-
+#make nice labels
 labels <- c("name", "state", "county", 
             "tract", "total", "medianHouseIncome", 
             "medianFamIncome", "black", "asian", 
@@ -61,15 +98,27 @@ labels <- c("name", "state", "county",
             "households",  "ownerOccupied", "renterOccupied","totalHousingUnits",
             "lackingKitchenFacilities", "lackingPlumbing", "medianMonthlyHousingCosts",
             "less18", "singleMotherBelowPoverty", "travelTimeToWorkMin", "enrolledInSchool", 
-            "year", "GEOID")
+            "year", "GEOID") 
 
-labels <- toupper(labels)
+#make labels uppercase
+labels <- toupper(labels) 
 
-names(census) <- labels
-census <- tbl_df(census)
+#set labels
+names(census) <- labels 
 
-syrCensus<- filter(census, as.numeric(TRACT)<10000)
+#make data frame a tibble
+census <- tbl_df(census) 
 
+#obtain just syracuse census tracts
+syrCensus<- filter(census, as.numeric(TRACT)<10000) 
+
+
+
+```
+
+
+###Dicennial Census 2010
+```{r}
 
 census2010 <- getCensus(name = "sf1", vintage = 2010, 
                         key = censuskey,
@@ -79,7 +128,7 @@ census2010 <- getCensus(name = "sf1", vintage = 2010,
                                  "H0050006", "H0050004", "P0180001", "H0140002", 
                                  "H0040004", "H00010001", "P0160002"),
                         region = "tract:*", 
-                        regionin = "state: 36 + county:067")
+                        regionin = "state: 36 + county:067") #dicennial 2010 data
 census2010$YEAR <- 2010
 census2010 <- tbl_df(census2010)
 GEOID <- paste0(census2010$state, census2010$county, census2010$tract)
@@ -90,11 +139,15 @@ names(census2010) <- toupper(c("name","state", "county", "tract",
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
-                       "totalHousingUnits", "less18", "year", "geoid"))
+                       "totalHousingUnits", "less18", "year", "geoid")) #change names
 
 
-census2010<- filter(census2010, as.numeric(TRACT)<10000)
+census2010<- filter(census2010, as.numeric(TRACT)<10000) #obtain just syracuse tracts
 
+```
+###Dicennial Census 2000
+```{r}
+#getting the dicennial 2000 data
 census2000 <- getCensus(name = "sf1", vintage = 2000, 
                         key = censuskey, 
                         vars = c("NAME", "P001001", "P003003", 
@@ -103,97 +156,169 @@ census2000 <- getCensus(name = "sf1", vintage = 2000,
                                  "H005005", "H005003", "P015001", 
                                  "H004002", "H004003","H001001"), 
                         region = "tract:*", 
-                        regionin = "state: 36 + county:067")
+                        regionin = "state: 36 + county:067") 
 census2000$YEAR <- 2000
 
-GEOID <- paste0(census2000$state, census2000$county, census2000$tract)
+#create one id for geography
+GEOID <- paste0(census2000$state, census2000$county, census2000$tract) #create geoid 
 census2000 <- mutate(census2000, GEOID)
 
+#change names
 names(census2000) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", 
                        "forSaleVacant", "households", 
-                       "ownerOccupied", "renterOccupied", "totalHousingUnits", "year", "geoid"))
-
+                       "ownerOccupied", "renterOccupied", "totalHousingUnits", "year", "geoid")) 
+#get just syracuse census tracts
 census2000 <- tbl_df(census2000)
-census2000<- filter(census2000, as.numeric(TRACT)<10000)
+census2000<- filter(census2000, as.numeric(TRACT)<10000) 
 
+#get more 2000 census data (different api)
 moreCensus2000<- getCensus(name = "sf3", vintage = 2000, 
                            key = censuskey,
                            vars = c("NAME", "P053001", "P077001",
                                     "P043007", "P043014", "P043003",
                                     "P043010", "P087002", "P087001", 
                                     "H047003", "H050003", "P130003", "P038010", "H076001"), 
-                           region = "tract:*", regionin = "state: 36 + county:067")
+                           region = "tract:*", regionin = "state: 36 + county:067") 
 moreCensus2000$year <- 2000
 moreCensus2000 <- tbl_df(moreCensus2000)
 
 GEOID <- paste0(moreCensus2000$state, moreCensus2000$county, moreCensus2000$tract)
 moreCensus2000 <- mutate(moreCensus2000, GEOID)
 
-
+#change names
 names(moreCensus2000) <- toupper(c("name", "state", "county", "tract", 
                            "medianHouseIncome", "medianFamIncome", "maleUnemployed",
                            "femaleUnemployed", "maleLaborForce", "femaleLaborForce", 
                            "poverty", "totalForPoverty", "lackingPlumbing",
                            "lackingKitchenFacilities", "aggregateTravelTimeToWork",
-                           "enrolledInSchool", "housingValues", "year", "geoid"))
+                           "enrolledInSchool", "housingValues", "year", "geoid")) 
 
+#obtain just syracuse census tracts
+moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000) 
 
-moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
-
-
+#merge two frames together
 totalCensus2000 <- merge(census2000, moreCensus2000)
-#availablevars <- listCensusMetadata(name="sf1", vintage=2010)
-
-#poverty_possible_vars <- subset(availablevars, 
-  #grepl("value", availablevars$label, 
-  #ignore.case = TRUE))
-
 ```
 
+##Merge all datasets together
 ```{r}
-
+#find all unique names for all the datasets
 all <- names(syrCensus)
 all <- c(all, names(totalCensus2000))
 all <- c(all, names(census2010))
-all <- unique(all)
+all <- unique(all) 
 
+#create an empty dataframe with 42 columns of unique names
 df = data.frame(matrix(vector(), 0, 42,
                 dimnames=list(c(), all)),
-                stringsAsFactors=F)
-
-a <- merge(df, syrCensus, all = T)
+                stringsAsFactors=F) 
+#merge datasets with empty frame
+a <- merge(df, syrCensus, all = T) 
 b <- merge(df, totalCensus2000, all = T)
 c <- merge(df, census2010, all = T)
 
+#add datasets together
 fullFrame <- rbind(a, b)
 fullFrame <- rbind(fullFrame, c)
 
-
+#change tract names for later aggregation
 fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
-
-
 names(fullFrame)[names(fullFrame)=="TRACT"] <- "TRACT1"
 names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
 
 ```
 
+##Write dataset to .csv file
 ```{r}
-#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
-setwd("./BUILD/Chris's census stuff")
+setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
+#setwd("./BUILD/Chris's census stuff")
 fullFrame <- arrange(fullFrame, YEAR, TRACT)
-write.csv(fullFrame, file = "../../DATA/AGGREGATED_DATA/censusDataFromChris.csv")
+write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
 ```
 
+
+
+##Load Shapefile for Descriptive Use
 ```{r}
-#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff/DATA/PROCESSED_DATA")
-#myList<- lapply(list.files(pattern = ".csv")[1:4], read.csv)
-#thisWork <-  Reduce(function(x,y) {merge(x,y, all = T)}, myList)
-#thisWork<- Reduce(function(...) merge(..., all = T, by.x= c("TRACT", "YEAR"), by.y = c("TRACT", "YEAR"), myList)
+library( rgdal )
+library( maptools )
+library( geojsonio )
+library(dplyr)
+library(RColorBrewer)
+library(maps)
+setwd("~/Desktop/DDMII/Projects/Census/CensusStuff1")
+syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
+```
+
+##Create shiny plot for descriptive use
+```{r}
+#library(shiny)
+
+forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+
+#selectInput(
+  #  inputId = "nameInput",
+  #  label = "",
+   # choices = names(forDescriptives), 
+    #selected = "TOTAL",
+    #selectize = T, 
+    #width = "160px"
+   
+#)
+
+#selectInput(
+ #   inputId = "yearInput",
+  #  label = "",
+   # choices = unique(fullFrame$YEAR), 
+    #selected = 2015,
+  #  selectize = T, 
+#    width = "160px"
+#)
+
+#renderPlot({
 
 
+
+#}, width = 959, height= 665)
+
+
+
+myData <- forDescriptives[fullFrame$YEAR==2011, ]
+
+color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
+
+col.ramp <- color.function( 5 ) # number of groups you desire
+
+color.vector <- cut( rank(fullFrame$TOTAL), breaks=5, labels=col.ramp )
+
+color.vector <- as.character( color.vector )
+
+
+this.order <- match( syr$GEOID10, fullFrame$TRACT)
+
+color.vec.ordered <- color.vector[ this.order ]
+
+plot(syr, col=color.vec.ordered, main = "Total Population in Syracuse")
+
+map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
+
+first <- quantile(fullFrame$TOTAL, probs = seq(0, .8, .2))
+last <- quantile(fullFrame$TOTAL, probs = seq(.2, 1, .2))
+myLabels <- paste(first, last, sep = "-")
+
+
+legend.text <- myLabels
+
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=1.5, cex=0.7,
+        legend=legend.text, 
+        col=col.ramp, 
+        box.col="white",
+        title="Total Population" 
+       )
 ```
 
 

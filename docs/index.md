@@ -44,6 +44,10 @@ Description of the process
 
 Some description here.
 
+### [Census Data](CensusData.html)
+
+This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 dicennial census. 42 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
+
 ### [Fire and Police Stations](firepolice.html)
 
 This dataset contains the locations of Syracuse fire and police stations in 2017.
