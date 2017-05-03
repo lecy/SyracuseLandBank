@@ -4,7 +4,16 @@ Project description...
 
 ## Project Overview
 
-Abstract here
+The following analysis aims to explore potential drivers of property value change over time in the city of Syracuse. A range of factors that are likely correlated to this change were explored, including: demographic trends, the location of amenities, the existence of economic development programs, and indicators of neighborhood health. The choice of these variables was informed by a literature review which can be found under “Literature Review.” 
+
+The data for analysis was extracted from different online sources including: The Department of Housing and Urban Development, the City of Syracuse, the Good Jobs First Center, Syracuse University's Geography Department, and Yelp. To the best of our knowledge, the information contained here is accurate and reliable as of the date of publication. 
+
+Key visualizations of trends in each of the analyzed factors can be found in the links below under “Building the Research Database.” These visualizations are intended to provide an instructive framework through which to think about how the city of Syracuse has been changing, evolving, and adapting over time. Source code and descriptions of how the data for each variable was obtained and processed is provided in these links as well.
+
+Following the initial exploratory analysis, several regressions were run to determine the extent to which each factor explains variations in property values in the city of Syracuse. An in-depth review of these models can be found under “Results” below.
+
+It is our hope that the data and visualizations presented here can be used in the future for additional analysis and to gain a better understanding of the dynamic elements of property value and neighborhood health in Syracuse. In pursuit of this goal, an outline of how the provided data can be used has also been provided in the “Using the Research Database” section below. 
+
 
 ## Acknowledgements
 
