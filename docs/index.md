@@ -102,6 +102,18 @@ This dataset contains information on the number of subsidized housing units avai
 
 ## Conclusion
 
+As shown in our analysis, we are presenting the Syracuse Land Bank with a flexible tool to explore the impact of a variety of policies and other factors on the city. 
+
+First, it provides the basis to explore the relationships that exist between housing values and a variety of characteristics—ranging from code violations to the clustering of bars and restaurants to government tax breaks.  
+ 
+Second, the project allows for the visualization of these determinants in the form of tables, maps and graphs so as to identify Syracuse-specific trends and to help inform and reinforce decisions made by the Syracuse Land Bank.  
+ 
+Moreover, we present flexible code allowing for a reproducible data process. For each variable, we provide the original data source and step-by-step instructions of the data wrangling process with the objective that updated data can be incorporated and wrangled for future needs. Similarly, we aim to facilitate an easily reproducible process for producing visualizations and descriptive statistics.
+ 
+As is noted above, our regression model evidences that variable x, y z have statistically significant relationships with the change of housing values from 2000 to 2015. Note, this model does not imply a causal relationship, but rather demonstrates the strong existing correlations.
+ 
+We are hopeful that this project will provide the Land Bank with a strong foundation to examine the many factors that affect housing values and can be expanded upon to better inform the Land Bank’s decision-making process in the future.
+
 
 
 ![alt text](http://research.kraeutli.com/wp-content/uploads/2013/11/artist-bubbles-closeup-1024x573.png)
