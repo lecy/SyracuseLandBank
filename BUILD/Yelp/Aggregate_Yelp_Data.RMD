@@ -54,13 +54,9 @@ library(geojsonio)
 library(RCurl)
 ```
 
-Set Parameters
+Set parameters for plotting data.
 
 ```{r, warning=F, message=F }
-#URL for census tract shapefiles for the city of Syracuse
-url.shapefile <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson"
-
-#Parameters for plotting aggregated data across census tracts
 
 #Color range from low to high
 color.range <- colorRampPalette( c("steel blue","light gray","firebrick4" ) )
@@ -76,7 +72,10 @@ bars <- c("Bars", "Beer Bars", "Gay Bars", "Dive Bars", "Beer, Wine & Spirits
 Reads in geojson shapefiles for syracuse census tracts.
 
 ```{r, warning=F, message=F }
-syr <- geojson_read(url.shapefile, method="local", what="sp")
+setwd("..")
+setwd("..")
+setwd("./SHAPEFILES")
+syr <- geojson_read("SYRCensusTracts.geojson", method="local", what="sp")
 syr <- spTransform(syr, CRS("+proj=longlat +datum=WGS84"))
 ```
 

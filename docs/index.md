@@ -47,6 +47,9 @@ This dataset contains the locations of grocery stores in 2015.
 
 This dataset contains the locations of Syracuse libraries in 2017.
 
+### [Low-Income Housing Tax Credits](lihtc_data.html)
+
+This dataset contains the number and location of Low-Income Housing Tax Credits in Syracuse from 2005 to 2015.
 ### [New Market Tax Credits](NMTC_data.html)  
 
 This dataset contains the number and dollar amounts of New Markets Tax Credits in Syracuse from 2003 to 2014.
