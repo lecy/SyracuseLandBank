@@ -460,9 +460,9 @@ fullFrame$TRACT&lt;-<span class="st"> </span><span class="kw">as.numeric</span>(
 </div>
 <div id="write-dataset-to-.csv-file" class="section level2">
 <h2>Write dataset to .csv file</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">&quot;../..&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#setwd(&quot;../..&quot;)</span>
 fullFrame &lt;-<span class="st"> </span><span class="kw">arrange</span>(fullFrame, YEAR, TRACT)
-<span class="kw">write.csv</span>(fullFrame, <span class="dt">file =</span> <span class="st">&quot;./DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;</span>)</code></pre></div>
+<span class="co">#write.csv(fullFrame, file = &quot;./DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;)</span></code></pre></div>
 </div>
 <div id="load-shapefile-for-descriptive-use" class="section level2">
 <h2>Load Shapefile for Descriptive Use</h2>
@@ -472,125 +472,22 @@ fullFrame &lt;-<span class="st"> </span><span class="kw">arrange</span>(fullFram
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(RColorBrewer)
 <span class="kw">library</span>(maps)
-<span class="kw">setwd</span>(<span class="st">&quot;../..&quot;</span>)
-syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;</span>)</code></pre></div>
+<span class="co">#setwd(&quot;../..&quot;)</span>
+<span class="co">#setwd(&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1&quot;)</span>
+<span class="co">#syr &lt;- readOGR(dsn = &quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;)</span>
+syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson&quot;</span>)</code></pre></div>
 <pre><code>## OGR data source with driver: GeoJSON 
-## Source: &quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;, layer: &quot;OGRGeoJSON&quot;
+## Source: &quot;https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson&quot;, layer: &quot;OGRGeoJSON&quot;
 ## with 55 features
 ## It has 12 fields</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#syr &lt;- readOGR(dsn = &quot;SYRCensusTracts.geojson&quot;)</span></code></pre></div>
 </div>
 <div id="create-shiny-plot-for-descriptive-use" class="section level2">
 <h2>Create shiny plot for descriptive use</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-
-forDescriptives &lt;-<span class="st"> </span><span class="kw">select</span>(fullFrame, -<span class="kw">c</span>(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
-
-<span class="kw">selectInput</span>(
-    <span class="dt">inputId =</span> <span class="st">&quot;nameInput&quot;</span>,
-    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
-    <span class="dt">choices =</span> <span class="kw">names</span>(forDescriptives), 
-    <span class="dt">selected =</span> <span class="st">&quot;TOTAL&quot;</span>,
-    <span class="dt">selectize =</span> F, 
-    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
-   
-)</code></pre></div>
-<div class="form-group shiny-input-container" style="width: 160px;">
-<label class="control-label" for="nameInput"></label>
-<div>
-<select id="nameInput" class="form-control"><option value="TOTAL" selected>TOTAL</option>
-<option value="MEDIANHOUSEINCOME">MEDIANHOUSEINCOME</option>
-<option value="MEDIANFAMINCOME">MEDIANFAMINCOME</option>
-<option value="BLACK">BLACK</option>
-<option value="ASIAN">ASIAN</option>
-<option value="HISPANIC">HISPANIC</option>
-<option value="WHITE">WHITE</option>
-<option value="EMPLOYED">EMPLOYED</option>
-<option value="UNEMPLOYED">UNEMPLOYED</option>
-<option value="INLABORFORCE">INLABORFORCE</option>
-<option value="POVERTY">POVERTY</option>
-<option value="VACANTTOTAL">VACANTTOTAL</option>
-<option value="OTHERVACANT">OTHERVACANT</option>
-<option value="VACANTFORRENT">VACANTFORRENT</option>
-<option value="SEASONALVACANT">SEASONALVACANT</option>
-<option value="FORSALEVACANT">FORSALEVACANT</option>
-<option value="HOUSEHOLDRECEIVEDSNAP">HOUSEHOLDRECEIVEDSNAP</option>
-<option value="HOUSEHOLDS">HOUSEHOLDS</option>
-<option value="OWNEROCCUPIED">OWNEROCCUPIED</option>
-<option value="RENTEROCCUPIED">RENTEROCCUPIED</option>
-<option value="TOTALHOUSINGUNITS">TOTALHOUSINGUNITS</option>
-<option value="LACKINGKITCHENFACILITIES">LACKINGKITCHENFACILITIES</option>
-<option value="LACKINGPLUMBING">LACKINGPLUMBING</option>
-<option value="MEDIANMONTHLYHOUSINGCOSTS">MEDIANMONTHLYHOUSINGCOSTS</option>
-<option value="LESS18">LESS18</option>
-<option value="SINGLEMOTHERBELOWPOVERTY">SINGLEMOTHERBELOWPOVERTY</option>
-<option value="TRAVELTIMETOWORKMIN">TRAVELTIMETOWORKMIN</option>
-<option value="ENROLLEDINSCHOOL">ENROLLEDINSCHOOL</option>
-<option value="VACANT">VACANT</option>
-<option value="MALEUNEMPLOYED">MALEUNEMPLOYED</option>
-<option value="FEMALEUNEMPLOYED">FEMALEUNEMPLOYED</option>
-<option value="MALELABORFORCE">MALELABORFORCE</option>
-<option value="FEMALELABORFORCE">FEMALELABORFORCE</option>
-<option value="TOTALFORPOVERTY">TOTALFORPOVERTY</option>
-<option value="AGGREGATETRAVELTIMETOWORK">AGGREGATETRAVELTIMETOWORK</option>
-<option value="HOUSINGVALUES">HOUSINGVALUES</option></select>
-</div>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">selectInput</span>(
-    <span class="dt">inputId =</span> <span class="st">&quot;yearInput&quot;</span>,
-    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
-    <span class="dt">choices =</span> <span class="kw">unique</span>(fullFrame$YEAR), 
-    <span class="dt">selected =</span> <span class="dv">2015</span>,
-    <span class="dt">selectize =</span> F, 
-    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
-)</code></pre></div>
-<div class="form-group shiny-input-container" style="width: 160px;">
-<label class="control-label" for="yearInput"></label>
-<div>
-<select id="yearInput" class="form-control"><option value="2000">2000</option>
-<option value="2010">2010</option>
-<option value="2011">2011</option>
-<option value="2012">2012</option>
-<option value="2013">2013</option>
-<option value="2014">2014</option>
-<option value="2015" selected>2015</option></select>
-</div>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">renderPlot</span>({
-myName &lt;-<span class="st"> </span>input$nameInput
-myYear &lt;-<span class="st"> </span>input$yearInput
-myData &lt;-<span class="st"> </span>forDescriptives[fullFrame$YEAR==myYear, ]
-myVar &lt;-<span class="st"> </span>myData[, myName]
-myVar[<span class="kw">is.na</span>(myVar)] &lt;-<span class="st"> </span><span class="dv">0</span>
-
-
-
-color.function &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>( <span class="kw">c</span>(<span class="st">&quot;firebrick4&quot;</span>,<span class="st">&quot;light gray&quot;</span>, <span class="st">&quot;steel blue&quot;</span>) ) 
-col.ramp &lt;-<span class="st"> </span><span class="kw">color.function</span>( <span class="dv">5</span> ) <span class="co"># number of groups you desire</span>
-color.vector &lt;-<span class="st"> </span><span class="kw">cut</span>( <span class="kw">rank</span>(myVar), <span class="dt">breaks=</span><span class="dv">5</span>, <span class="dt">labels=</span>col.ramp )
-color.vector &lt;-<span class="st"> </span><span class="kw">as.character</span>( color.vector )
-this.order &lt;-<span class="st"> </span><span class="kw">match</span>( syr$GEOID10, fullFrame$TRACT)
-color.vec.ordered &lt;-<span class="st"> </span>color.vector[ this.order ]
-<span class="kw">plot</span>(syr, <span class="dt">col=</span>color.vec.ordered, <span class="dt">main =</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>))
-
-<span class="kw">map.scale</span>( <span class="dt">metric=</span>F, <span class="dt">ratio=</span>F, <span class="dt">relwidth =</span> <span class="fl">0.15</span>, <span class="dt">cex=</span><span class="fl">0.5</span> )
-
-first &lt;-<span class="st"> </span><span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, .<span class="dv">8</span>, .<span class="dv">2</span>))
-last &lt;-<span class="st"> </span><span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(.<span class="dv">2</span>, <span class="dv">1</span>, .<span class="dv">2</span>))
-myLabels &lt;-<span class="st"> </span><span class="kw">paste</span>(first, last, <span class="dt">sep =</span> <span class="st">&quot;-&quot;</span>)
-
-
-legend.text &lt;-<span class="st"> </span>myLabels
-
-<span class="kw">legend</span>( <span class="st">&quot;bottomright&quot;</span>, <span class="dt">bg=</span><span class="st">&quot;white&quot;</span>,
-        <span class="dt">pch=</span><span class="dv">19</span>, <span class="dt">pt.cex=</span><span class="dv">1</span>, <span class="dt">cex=</span><span class="dv">1</span>,
-        <span class="dt">legend=</span>legend.text, 
-        <span class="dt">col=</span>col.ramp, 
-        <span class="dt">box.col=</span><span class="st">&quot;white&quot;</span>,
-        <span class="dt">title=</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) 
-       )
-}, <span class="dt">width =</span> <span class="dv">959</span>, <span class="dt">height=</span> <span class="dv">665</span>)</code></pre></div>
-<div id="out4806f44beaf399b4" class="shiny-plot-output" style="width: 100% ; height: "></div>
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width="100%" height="600" scrolling="no" frameborder="0">
+<p>
+Your browser does not support iframes.
+</p>
+</iframe>
 </div>
 </div>
 
