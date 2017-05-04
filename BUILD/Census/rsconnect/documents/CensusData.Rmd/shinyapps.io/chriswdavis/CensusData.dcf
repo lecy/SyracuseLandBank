@@ -1,0 +1,11 @@
+name: CensusData
+title: CensusData
+account: chriswdavis
+server: shinyapps.io
+appId: 177458
+bundleId: 814370
+url: https://chriswdavis.shinyapps.io/CensusData/
+when: 1493871051.02505
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: SYRCensusTracts.geojson
