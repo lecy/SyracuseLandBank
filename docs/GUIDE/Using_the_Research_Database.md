@@ -1,15 +1,4 @@
----
-title: "Using the Research Database"
-output:
-  html_document:
-    keep_md: true
-    df_print: paged
-    theme: cerulean
-    highlight: haddock
-    toc: yes
-    toc_float: yes
-    code_fold: hide
----
+# Using the Research Database
 
 #Introduction
 This page is intended to give a working overview of the research database and the type of data that is currently has available.  Furthermore, this page includes descriptions and code samples of the general process of building the research database such that it can be modified or extended in the future.
@@ -22,58 +11,7 @@ Prior to being aggregated, the database contains multiple levels of granularity.
 
 Once the data is aggregated to the census tract level, 
 
-```{r, warning=F, message=F, echo =F}
-#Load raw datsets
 
-setwd("..")
-setwd("..")
-setwd("./DATA/RAW_DATA")
-
-r.violations <- read.csv( "codeviolations.csv", stringsAsFactors=FALSE )
-r.grocery <- read.csv( "grocery_raw.csv", stringsAsFactors=FALSE )
-r.LIHTC <- read.csv( "LIHTC_raw.csv", stringsAsFactors=FALSE )
-r.NMTC <- read.csv( "NMTC_raw.csv", stringsAsFactors=FALSE )
-r.nonprofit <- read.csv( "NPO_Data_raw.csv", stringsAsFactors=FALSE )
-r.permits <- read.csv( "Permits_raw.csv", stringsAsFactors=FALSE )
-r.parks <- read.csv( "park_raw.csv", stringsAsFactors=FALSE )
-r.housing <- read.csv( "publichousing 2015.csv", stringsAsFactors=FALSE )
-r.schools <- read.csv( "schooldata2005_2010_2015.csv", stringsAsFactors=FALSE )
-r.subsidies <- read.csv( "TaxSubsidies_raw.csv", stringsAsFactors=FALSE )
-r.yelp <- read.csv( "yelp_raw.csv", stringsAsFactors=FALSE )
-
-#Load processed datsets
-
-setwd("..")
-setwd("./PROCESSED_DATA")
-
-p.firepolice <- read.csv( "firepolice_processed.csv", stringsAsFactors=FALSE )
-p.grocery <- read.csv( "grocery_processed.csv", stringsAsFactors=FALSE )
-p.libraries <- read.csv( "libraries_processed.csv", stringsAsFactors=FALSE )
-p.nonprofit <- read.csv( "NPO_Data_processed.csv", stringsAsFactors=FALSE )
-p.permits <- read.csv( "Permits_processed.csv", stringsAsFactors=FALSE )
-p.schools <- read.csv( "schools_processed.csv", stringsAsFactors=FALSE )
-p.yelp <- read.csv( "yelp_processed.csv", stringsAsFactors=FALSE )
-
-#Load aggregated datsets
-
-setwd("..")
-setwd("./AGGREGATED_DATA")
-
-a.violations <- read.csv( "codeviolations_aggregated.csv", stringsAsFactors=FALSE )
-a.firepolice <- read.csv( "firepolice_aggregated.csv", stringsAsFactors=FALSE )
-a.libraries <- read.csv( "libraries_aggregated.csv", stringsAsFactors=FALSE )
-a.nonprofit <- read.csv( "NPO_Data_aggregated.csv", stringsAsFactors=FALSE )
-a.housing <- read.csv( "publichousing_aggregated.csv", stringsAsFactors=FALSE )
-a.schools <- read.csv( "schools_aggregated.csv", stringsAsFactors=FALSE )
-a.subsidies <- read.csv( "TaxSubsidies_aggregated.csv", stringsAsFactors=FALSE )
-a.NMTC <- read.csv( "NMTC_aggregated.csv", stringsAsFactors=FALSE )
-a.yelp <- read.csv( "yelp_aggregated.csv", stringsAsFactors=FALSE )
-a.grocery <- read.csv( "grocery_aggregated.csv", stringsAsFactors=FALSE )
-a.permits <- read.csv( "Permits_aggregated.csv", stringsAsFactors=FALSE )
-a.libraries <- read.csv( "library_aggregated.csv", stringsAsFactors=FALSE )
-a.LIHTC <- read.csv( "LIHTC_aggregated.csv", stringsAsFactors=FALSE )
-a.census <- read.csv( "censusDataFromChris.csv", stringsAsFactors=FALSE )
-```
 
 ##Existing Datasets
 
@@ -115,7 +53,8 @@ In order to extend or improve the current analysis, new sources of data can be i
 
 Assuming your data source is a file in the SyracuseLandBank/DATA/RAW_DATA directory, the file can be read using the following code.  Replace "yelp_processed.csv" with the name of the new source file.
 
-```{r, warning=F, message=F }
+
+```r
 setwd("..")
 setwd("..")
 setwd("./DATA/RAW_DATA")
@@ -139,7 +78,8 @@ tl_2010_36067_tract10.*   |shapefile  |Census tracts for Onondaga County
 
 To load any of the GeoJSON shapefiles you must reference one of the above files that are located in the SyracuseLandBank/SHAPEFILES/ directory.  This can be done by changing the working directory of an R script or markdown file using local references.  The code below loads the shapefiles from this markdown file's location in the SyracuseLandBank/docs/GUIDE/ directory.
 
-```{r, warning=F, message=F}
+
+```r
 #Loads library required to read in GeoJSON files
 library(geojsonio)
 library(sp)
@@ -162,9 +102,12 @@ par(mar=c(0,0,0,0))
 plot(syr_geojson, col="grey90", border="White")
 ```
 
+![](Using_the_Research_Database_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
 While it is preferable to use the GeoJSON shapefiles as they can be stored in a much more condensed format, it is also possible to use standard shapefiles as well.  This can be done using the following code.
 
-```{r, warning=F, message=F}
+
+```r
 #Load library for shapefiles
 library(maptools)
 
@@ -183,6 +126,8 @@ par(mar=c(0,0,0,0))
 plot(onondaga_shp, col="grey90", border="White")
 ```
 
+![](Using_the_Research_Database_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
 ##Processing Data
 
 Processing data may take many different steps depending on the source.  Two most common and relevant processses for creating the research database is geocoding addresses and using spatial joins.
@@ -191,7 +136,8 @@ Processing data may take many different steps depending on the source.  Two most
 
 The package "ggmap" has a function, geocode, that allows you to query Google via the Maps API to return longitude and latitude coordinates for a street address.  Note that this function requires a full address (street address, city, state and zip).
 
-```{r, warning=F, message=F, eval=F}
+
+```r
 # Translate the address strings to latitude and longitude coordinates
 lon.lat <- geocode(dat$FULL_ADDRESS)
 
@@ -203,7 +149,8 @@ dat <- cbind( dat, lon.lat )
 
 In order to match point data (latitude and longitude) to a larger spacial area, like blocks, neighborhoods or census tracts, a spatial join is required.  This allows us to match all of the points that fall within a geographic area.  In the example below a set of point data is matched to census tracts in Syracuse and the FIPS code for the census tract is then added to each point based on which census tract it fall in.  This can be done with any shapefile including census tracts, neighborhoods and blocks.  This is an important step in order to aggregate later on.
 
-```{r, warning=F, message=F, eval=F}
+
+```r
 #Loads library required for spatial join
 
 #Given a set of point data
@@ -214,14 +161,14 @@ tracts.points <- over(points, syr_geojson)
 
 #Store the FIPS code (identified census tract) to point data
 dat$FIPS <- tracts.points$GEOID10
-
 ```
 
 ##Aggregating Data
 
 In the research database we have aggregated all of the data to the census tract level in order to perform analysis.  However, it would also be possible to aggregate to other levels of granularity like neighborhoods or blocks so long as the raw data is at a smaller granularity.  The example below shows how to aggregate the average rating of restraunts and bars in a given census tract.
 
-```{r, warning=F, message=F, eval=F}
+
+```r
 #Aggregate function takes the vector to be aggregated (dat$Rating), the vector that identifies what to group by, in this case the FIPS code for the census tract (dat.FIPS) and finally the function to be applied (max, min, sum, mean, etc)
 temp <- aggregate(dat$RATING, list(dat.FIPS), FUN="mean")
 
@@ -236,7 +183,8 @@ aggregate$RATING <- temp$x[tract.order]
 
 Once processing or aggregation is done, the data is then written out to a csv file.  Again, the data files are all contained in the SyracuseLandBank/DATA/ subdirectory so local references will be used to change the working directory before writing out the file.  The example below shows how to change directories and create the output file.
 
-```{r, warning=F, message=F, eval=F}
+
+```r
 setwd("..")
 setwd("..")
 setwd("./DATA/AGGREGATED_DATA")
@@ -248,7 +196,8 @@ write.csv(yelp.data, file = "yelp_aggregated.csv")
 The last step before conducting analysis is to merge the datasets together.  This is done in a separate R markdown file named "Compile-Datasets.RMD" which is found in the SyracuseLandBank/ANALYSIS/ folder.  The following code shows and example of reading in two datasets and merging them using the census tract FIPS code that each file contains in the field entitled "TRACT".
 
 
-```{r, warning=F, message=F}
+
+```r
 #Read in datafiles
 setwd("..")
 setwd("..")
@@ -256,16 +205,38 @@ d1 <- read.csv( "./DATA/AGGREGATED_DATA/firepolice_aggregated.csv", stringsAsFac
 d2 <- read.csv( "./DATA/AGGREGATED_DATA/yelp_aggregated.csv", stringsAsFactors = F )
 
 head(d1)
+```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["TRACT"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["FIREPOLICE"],"name":[2],"type":["int"],"align":["right"]},{"label":["YEAR"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"3.6067e+10","2":"1","3":"2017"},{"1":"3.6067e+10","2":"1","3":"2017"},{"1":"3.6067e+10","2":"1","3":"2017"},{"1":"3.6067e+10","2":"2","3":"2017"},{"1":"3.6067e+10","2":"1","3":"2017"},{"1":"3.6067e+10","2":"2","3":"2017"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+```r
 head(d2)
 ```
 
-```{r, warning=F, message=F}
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["X"],"name":[1],"type":["int"],"align":["right"]},{"label":["TRACT"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["YEAR"],"name":[3],"type":["int"],"align":["right"]},{"label":["RATING"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["REVIEWS"],"name":[5],"type":["int"],"align":["right"]},{"label":["PRICE"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["ESTABLISHMENTS"],"name":[7],"type":["int"],"align":["right"]},{"label":["BARS"],"name":[8],"type":["int"],"align":["right"]},{"label":["RESTAURANTS"],"name":[9],"type":["int"],"align":["right"]},{"label":["STARS_4_5"],"name":[10],"type":["int"],"align":["right"]},{"label":["STARS_3_4"],"name":[11],"type":["int"],"align":["right"]},{"label":["STARS_2_3"],"name":[12],"type":["int"],"align":["right"]},{"label":["STARS_1_2"],"name":[13],"type":["int"],"align":["right"]},{"label":["STARS_0_1"],"name":[14],"type":["int"],"align":["right"]}],"data":[{"1":"1","2":"3.6067e+10","3":"2017","4":"3.191821","5":"622","6":"7.750000","7":"33","8":"4","9":"29","10":"3","11":"13","12":"6","13":"2","14":"9"},{"1":"2","2":"3.6067e+10","3":"2017","4":"3.331217","5":"160","6":"6.500000","7":"7","8":"2","9":"5","10":"1","11":"3","12":"2","13":"0","14":"1"},{"1":"3","2":"3.6067e+10","3":"2017","4":"2.992424","5":"47","6":"9.500000","7":"15","8":"2","9":"13","10":"1","11":"1","12":"0","13":"1","14":"12"},{"1":"4","2":"3.6067e+10","3":"2017","4":"4.034431","5":"439","6":"9.111111","7":"18","8":"3","9":"15","10":"6","11":"4","12":"1","13":"0","14":"7"},{"1":"5","2":"3.6067e+10","3":"2017","4":"3.363095","5":"78","6":"6.125000","7":"8","8":"3","9":"5","10":"2","11":"3","12":"1","13":"1","14":"1"},{"1":"6","2":"3.6067e+10","3":"2017","4":"3.857143","5":"25","6":"6.500000","7":"8","8":"2","9":"6","10":"3","11":"1","12":"1","13":"0","14":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
+
+```r
 #Merge Datasets
 dat <- merge( d1, d2, all.x=T )
 
 #Display Merged Data
 head(dat)
 ```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["TRACT"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["YEAR"],"name":[2],"type":["int"],"align":["right"]},{"label":["FIREPOLICE"],"name":[3],"type":["int"],"align":["right"]},{"label":["X"],"name":[4],"type":["int"],"align":["right"]},{"label":["RATING"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["REVIEWS"],"name":[6],"type":["int"],"align":["right"]},{"label":["PRICE"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["ESTABLISHMENTS"],"name":[8],"type":["int"],"align":["right"]},{"label":["BARS"],"name":[9],"type":["int"],"align":["right"]},{"label":["RESTAURANTS"],"name":[10],"type":["int"],"align":["right"]},{"label":["STARS_4_5"],"name":[11],"type":["int"],"align":["right"]},{"label":["STARS_3_4"],"name":[12],"type":["int"],"align":["right"]},{"label":["STARS_2_3"],"name":[13],"type":["int"],"align":["right"]},{"label":["STARS_1_2"],"name":[14],"type":["int"],"align":["right"]},{"label":["STARS_0_1"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"3.6067e+10","2":"2017","3":"1","4":"4","5":"4.034431","6":"439","7":"9.111111","8":"18","9":"3","10":"15","11":"6","12":"4","13":"1","14":"0","15":"7"},{"1":"3.6067e+10","2":"2017","3":"1","4":"17","5":"3.600000","6":"5","7":"5.000000","8":"3","9":"1","10":"2","11":"0","12":"1","13":"0","14":"0","15":"2"},{"1":"3.6067e+10","2":"2017","3":"1","4":"20","5":"3.646429","6":"47","7":"7.250000","8":"8","9":"0","10":"8","11":"3","12":"2","13":"1","14":"0","15":"2"},{"1":"3.6067e+10","2":"2017","3":"2","4":"3","5":"2.992424","6":"47","7":"9.500000","8":"15","9":"2","10":"13","11":"1","12":"1","13":"0","14":"1","15":"12"},{"1":"3.6067e+10","2":"2017","3":"1","4":"25","5":"4.013889","6":"16","7":"5.000000","8":"3","9":"0","10":"3","11":"2","12":"1","13":"0","14":"0","15":"0"},{"1":"3.6067e+10","2":"2017","3":"2","4":"26","5":"3.595524","6":"4937","7":"8.309091","8":"121","9":"21","10":"100","11":"26","12":"36","13":"8","14":"5","15":"46"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 
 
 
