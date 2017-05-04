@@ -116,7 +116,7 @@ This dataset contains an overview of how to prepare data from the National Cente
 ### [Restaurants & Bars](Aggregate_Yelp_Data.html)
 This dataset contains restaurant and bar information from establishments in the city of Syracuse.  The data was mined from Yelp and includes ratings, reviews, prices and numerous other attributes as of April 2017.  The distribution of establishments across the city, especially those of with higher ratings and prices, shows dramatic differences between neighborhoods north and south of Interstate 690 including pockets of high and low activity in both. 
 
-![alt](ASSETS/bars.png)
+![alt](ASSETS/restaurants.png)
 
 <br>
 
@@ -167,6 +167,10 @@ This file contains census data from the ACS from years 2011-2015 and from the 20
 
 
 ## Using the Research Database
+
+### [Overview and Modification Guide](./GUIDE/Using the Research Database.html)
+
+This page is intended to give a working overview of the research database and the type of data that is currently has available.  In addition, this page includes descriptions and code samples of the general process of building the research database such that it can be modified or extended in the future.
 
 ## Results
 
