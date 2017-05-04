@@ -199,7 +199,6 @@ npos <- filter( npos, !is.na( INTPTLON10 ) )
 # Remove unnecessary vectors from the environment:
 rm( npos_coordinates )
 rm( npos_tracts )
-rm( syr_tracts )
 ```
 
 **Second**, we need to take a moment here to clean up the year data. There is a variable in the data frame called TAXPER, which reports the period in which the tax was filed. We can use that to represent if a nonprofit was active during that year. To get multiyear data, we need to create a new variable "YEAR" and add it to the data set. We should go ahead and filter out NPOs that do not have tax preparation year data.
@@ -472,7 +471,7 @@ npos_2016 <- npos[ npos$YEAR == 2016, ]
 spcoor <- npos_2016[ c( "lon", "lat") ]
 spcoor <- SpatialPointsDataFrame( spcoor, npos_2016, proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
 
-plot( syr.parcel, col = "grey", border = NA )
+plot( syr_tracts )
 plot( spcoor, col = "aquamarine4", pch = 10, cex=1.2, add = T )
 title( main = "Location of New NPOs in Syracuse in 2016", col.main = "blue" )
 ```
@@ -486,7 +485,7 @@ unique.sums <- length( unique( select.tracts$NPOS_SUM ) )
 col.ramp <- color.function( unique.sums )
   
 ## Generate a chloropleth map
-plot( syr.parcel, border = NA, col = col.ramp )
+plot( syr_tracts, border = NA, col = col.ramp )
 
 ## Plot the coordinates of the new NPOs as of 2016
 plot( spcoor, col = "darkgoldenrod4", pch = 16, cex=1.2, add = T )
