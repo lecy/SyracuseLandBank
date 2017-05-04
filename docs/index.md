@@ -174,6 +174,8 @@ This page is intended to give a working overview of the research database and th
 
 ## Results
 
+![alt](ASSETS/changeinmhv.png)
+
 ### [Analysis](Compile-Datasets.html)  
 
 
