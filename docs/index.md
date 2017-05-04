@@ -35,16 +35,22 @@ Each of the following pages presents an outline of the steps necessary to compil
 
 This dataset contains the locations of grocery stores in 2015.
 
+![alt](ASSETS/grocery.png)
+
 
 ### [Schools](Schools.html)
 This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
-
+![alt](ASSETS/school.gif)
 
 
 ### [Libraries](library.html)
 
 This dataset contains the locations of Syracuse libraries in 2017.
+
+![alt](ASSETS/libraries.png)
+
+<br>
 
 
 
@@ -58,11 +64,19 @@ This is a description of the geocoding process and the formatting of the datafra
 #### [Descriptives](Permits_Descriptive_Statistics.html)
 This files shows some descriptive statistics of permits in the City of Syracuse.
 
+![alt](ASSETS/permits.png)
+
+<br>
+
 
 
 ### [Low-Income Housing Tax Credits](lihtc_data.html)
 
 This dataset contains the number and location of Low-Income Housing Tax Credits in Syracuse from 2005 to 2015.
+
+![alt](ASSETS/lihtc.png)
+
+<br>
 
 
 
@@ -70,11 +84,11 @@ This dataset contains the number and location of Low-Income Housing Tax Credits 
 
 This dataset contains the number and dollar amounts of New Markets Tax Credits in Syracuse from 2003 to 2014.
 
+![alt](ASSETS/nmtc.png)
+
+<br>
 
 
-### [Census Data](CensusData.html)
-
-This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 42 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
 
 
 
@@ -82,10 +96,19 @@ This file contains census data from the ACS from years 2011-2015 and from the 20
 
 This dataset contains the locations of Syracuse fire and police stations in 2017.
 
+![alt](ASSETS/fireandpolice.png)
+
+<br>
+
+
 
 ### [Nonprofits](NPO_data.html)  
 
 This dataset contains an overview of how to prepare data from the National Center for Charitable Statistics and filter it down to the Syracuse level. There are various iterations of the finalized output: the cumulative number of nonprofits across years, new nonprofits per year, and a breakdown of nonprofits by subsector.
+
+![alt](ASSETS/nonprofits.png)
+
+<br>
 
 
 
@@ -93,10 +116,18 @@ This dataset contains an overview of how to prepare data from the National Cente
 ### [Restaurants & Bars](Aggregate_Yelp_Data.html)
 This dataset contains restaurant and bar information from establishments in the city of Syracuse.  The data was mined from Yelp and includes ratings, reviews, prices and numerous other attributes as of April 2017.  The distribution of establishments across the city, especially those of with higher ratings and prices, shows dramatic differences between neighborhoods north and south of Interstate 690 including pockets of high and low activity in both. 
 
+![alt](ASSETS/bars.png)
+
+<br>
+
 
 
 ### [Tax Subsidies](TaxSubsidies_SYR.html)
 This dataset contains all local government tax breaks given to corporations in the City of Syracuse from 2003 to 2014. Our analysis uses information compiled by the Good Jobs First Center and includes tax breaks given by national, state and local government agencies.
+
+![alt](ASSETS/subsidies.png)
+
+<br>
 
 
 
@@ -106,16 +137,45 @@ This dataset contains all local government tax breaks given to corporations in t
 ### [Code Violations](Download_and_clean_code_violations.html)
 This dataset contains information on frequency of code violations by census tract from 2012-2015.   
 
+![alt](ASSETS/violations.gif)
+
+<br>
+
+
 
 
 ### [Public Housing](Download_and_Clean_Public_Housing_Data.html)
 This dataset contains information on the number of subsidized housing units available by census tract from 2010-2015.   
+
+![alt](ASSETS/housing.gif)
+
+<br>
+
+
+
+### [Census Data](CensusData.html)
+
+This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 42 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
+
+
+<br>
+<br>
+
+
+
+
+
 
 ## Using the Research Database
 
 ## Results
 
 ### [Analysis](Compile-Datasets.html)  
+
+
+![alt](ASSETS/changemhv.png)
+
+<br>
 
 ### Main Findings
 
