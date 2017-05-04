@@ -286,12 +286,15 @@ devtools::<span class="kw">install_github</span>(<span class="st">&quot;hrecht/c
 <h3>The American Community Survey</h3>
 <p>The American Community Survey (ACS) is an ongoing statistical survey by the U.S. Census Bureau, sent to approximately 250,000 addresses monthly (or 3 million per year). It regularly gathers information previously contained only in the long form of the decennial census. <br> <br> Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS).</p>
 </div>
-<div id="acs-data" class="section level3">
-<h3>ACS data</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#api key </span>
-censuskey &lt;-<span class="st"> &quot;b431c35dad89e2863681311677d12581e8f24c24&quot;</span> 
-
-<span class="co">#loop to obtain data for years between 2011 and 2015</span>
+<div id="obtain-acs-data" class="section level3">
+<h3>Obtain ACS DATA</h3>
+<p>This section will iterate how to download ACS Data from the years of 2011-2015. ####API Key Before we start, we need to obtain an API key from the US Census API. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a></p>
+<p>After you get your key, save it as a variable in R.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">censuskey &lt;-<span class="st"> </span><span class="er">**</span>yourAPIKEY**</code></pre></div>
+<div id="loop-the-getcensus-function" class="section level4">
+<h4>Loop the getCensus function</h4>
+<p>The next step is to use the getCensus function from the censusapi package in a loop to obtain data for the years of 2011-2015. Variables names were retrieved from places such as <a href="https://www.censusreporter.com" class="uri">https://www.censusreporter.com</a> and <a href="https://www.census.gov/data.html" class="uri">https://www.census.gov/data.html</a>. We gather data for all census tracts (“tract:*“) in Onondaga county and subset from there. See code and commented notes for more.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#loop to obtain data for years between 2011 and 2015</span>
 temp&lt;-<span class="st"> </span><span class="ot">NULL</span>
 census&lt;-<span class="st"> </span><span class="ot">NULL</span>
 for(i in <span class="dv">2011</span>:<span class="dv">2015</span>)          
@@ -348,9 +351,12 @@ census &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census)
 <span class="co">#obtain just syracuse census tracts</span>
 syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) </code></pre></div>
 </div>
+</div>
 <div id="dicennial-census-2010" class="section level3">
 <h3>Dicennial Census 2010</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">census2010 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2010</span>, 
+<p>Next we obtain data for the Dicennial Census from 2010. Again, variable names are retrieved from places such as <a href="https://www.censusreporter.com" class="uri">https://www.censusreporter.com</a> and <a href="https://www.census.gov/data.html.Click" class="uri">https://www.census.gov/data.html.Click</a> code to the right for more info.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#get sf1 2010 census data</span>
+census2010 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2010</span>, 
                         <span class="dt">key =</span> censuskey,
                         <span class="dt">vars =</span> <span class="kw">c</span>(<span class="st">&quot;NAME&quot;</span>, <span class="st">&quot;P0010001&quot;</span>, <span class="st">&quot;P0030002&quot;</span>, 
                                  <span class="st">&quot;P0030003&quot;</span>, <span class="st">&quot;P0030005&quot;</span>, <span class="st">&quot;P0040003&quot;</span>, 
@@ -358,24 +364,28 @@ syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <s
                                  <span class="st">&quot;H0050006&quot;</span>, <span class="st">&quot;H0050004&quot;</span>, <span class="st">&quot;P0180001&quot;</span>, <span class="st">&quot;H0140002&quot;</span>, 
                                  <span class="st">&quot;H0040004&quot;</span>, <span class="st">&quot;H00010001&quot;</span>, <span class="st">&quot;P0160002&quot;</span>),
                         <span class="dt">region =</span> <span class="st">&quot;tract:*&quot;</span>, 
-                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>) <span class="co">#dicennial 2010 data</span>
+                        <span class="dt">regionin =</span> <span class="st">&quot;state: 36 + county:067&quot;</span>) 
+<span class="co">#set year variable</span>
 census2010$YEAR &lt;-<span class="st"> </span><span class="dv">2010</span>
+<span class="co">#create geoid variable</span>
 census2010 &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census2010)
 GEOID &lt;-<span class="st"> </span><span class="kw">paste0</span>(census2010$state, census2010$county, census2010$tract)
 census2010 &lt;-<span class="st"> </span><span class="kw">mutate</span>(census2010, GEOID)
 
+<span class="co">#set names</span>
 <span class="kw">names</span>(census2010) &lt;-<span class="st"> </span><span class="kw">toupper</span>(<span class="kw">c</span>(<span class="st">&quot;name&quot;</span>,<span class="st">&quot;state&quot;</span>, <span class="st">&quot;county&quot;</span>, <span class="st">&quot;tract&quot;</span>,
                        <span class="st">&quot;total&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;asian&quot;</span>, 
                        <span class="st">&quot;hispanic&quot;</span>, <span class="st">&quot;vacant&quot;</span>, <span class="st">&quot;otherVacant&quot;</span>, 
                        <span class="st">&quot;vacantForRent&quot;</span>, <span class="st">&quot;seasonalVacant&quot;</span>, <span class="st">&quot;forSaleVacant&quot;</span>,
                        <span class="st">&quot;households&quot;</span>, <span class="st">&quot;ownerOccupied&quot;</span>, <span class="st">&quot;renterOccupied&quot;</span>, 
-                       <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) <span class="co">#change names</span>
+                       <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) 
 
-
-census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) <span class="co">#obtain just syracuse tracts</span></code></pre></div>
+<span class="co">#obtain just syracuse tracts</span>
+census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) </code></pre></div>
 </div>
 <div id="dicennial-census-2000" class="section level3">
 <h3>Dicennial Census 2000</h3>
+<p>Next we obtain data for the Dicennial Census from 2000. Again, variable names are retrieved from places such as <a href="https://www.censusreporter.com" class="uri">https://www.censusreporter.com</a> and <a href="https://www.census.gov/data.html" class="uri">https://www.census.gov/data.html</a>. Click code to the right for more info.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#getting the dicennial 2000 data</span>
 census2000 &lt;-<span class="st"> </span><span class="kw">getCensus</span>(<span class="dt">name =</span> <span class="st">&quot;sf1&quot;</span>, <span class="dt">vintage =</span> <span class="dv">2000</span>, 
                         <span class="dt">key =</span> censuskey, 
@@ -434,6 +444,7 @@ totalCensus2000 &lt;-<span class="st"> </span><span class="kw">merge</span>(cens
 </div>
 <div id="merge-all-datasets-together" class="section level2">
 <h2>Merge all datasets together</h2>
+<p>Next we need to merge the 2011-2015, 2010, and 2000 data together into one dataframe. Year variables were created in earlier code to notate which data is which.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#find all unique names for all the datasets</span>
 all &lt;-<span class="st"> </span><span class="kw">names</span>(syrCensus)
 all &lt;-<span class="st"> </span><span class="kw">c</span>(all, <span class="kw">names</span>(totalCensus2000))
@@ -460,21 +471,21 @@ fullFrame$TRACT&lt;-<span class="st"> </span><span class="kw">as.numeric</span>(
 </div>
 <div id="write-dataset-to-.csv-file" class="section level2">
 <h2>Write dataset to .csv file</h2>
+<p>For data analysis, the full frame is written to a csv file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#setwd(&quot;../..&quot;)</span>
 fullFrame &lt;-<span class="st"> </span><span class="kw">arrange</span>(fullFrame, YEAR, TRACT)
 <span class="co">#write.csv(fullFrame, file = &quot;./DATA/AGGREGATED_DATA/censusDataFromChris.csv&quot;)</span></code></pre></div>
 </div>
 <div id="load-shapefile-for-descriptive-use" class="section level2">
 <h2>Load Shapefile for Descriptive Use</h2>
+<p>Next we obtain a shapefile of Syracuse Census tracts to be used for visual analysis.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>( rgdal )
 <span class="kw">library</span>( maptools )
 <span class="kw">library</span>( geojsonio )
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(RColorBrewer)
 <span class="kw">library</span>(maps)
-<span class="co">#setwd(&quot;../..&quot;)</span>
-<span class="co">#setwd(&quot;/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1&quot;)</span>
-<span class="co">#syr &lt;- readOGR(dsn = &quot;./SHAPEFILES/SYRCensusTracts.geojson&quot;)</span>
+
 syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="dt">dsn =</span> <span class="st">&quot;https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson&quot;</span>)</code></pre></div>
 <pre><code>## OGR data source with driver: GeoJSON 
 ## Source: &quot;https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson&quot;, layer: &quot;OGRGeoJSON&quot;
@@ -483,6 +494,84 @@ syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="d
 </div>
 <div id="create-shiny-plot-for-descriptive-use" class="section level2">
 <h2>Create shiny plot for descriptive use</h2>
+<p>Shiny is a web application framework for R created by RStudio.</p>
+<p>First, we must load the library</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load shiny</span>
+<span class="kw">library</span>(shiny)</code></pre></div>
+<p>Then, we make certain descriptive statistics in percent form for certain variables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#make descriptive statistics in percent form for certain variables</span>
+forDescriptives &lt;-<span class="st"> </span><span class="kw">select</span>(fullFrame, -<span class="kw">c</span>(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+forDescriptives$BLACK &lt;-<span class="st"> </span>forDescriptives$BLACK/forDescriptives$TOTAL
+forDescriptives$WHITE &lt;-<span class="st"> </span>forDescriptives$WHITE/forDescriptives$TOTAL
+forDescriptives$HISPANIC &lt;-<span class="st"> </span>forDescriptives$HISPANIC/forDescriptives$TOTAL
+forDescriptives$ASIAN &lt;-<span class="st"> </span>forDescriptives$ASIAN/forDescriptives$TOTAL
+forDescriptives$EMPLOYED &lt;-<span class="st"> </span>forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$UNEMPLOYED &lt;-<span class="st"> </span>forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$POVERTY &lt;-<span class="st"> </span>forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY</code></pre></div>
+<p>Next, we create the code for the dropdown boxes. More info can be gotten at <a href="https://shiny.rstudio.com/" class="uri">https://shiny.rstudio.com/</a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create dropdown box for name</span>
+<span class="kw">selectInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;nameInput&quot;</span>,
+    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
+    <span class="dt">choices =</span> <span class="kw">names</span>(forDescriptives), 
+    <span class="dt">selected =</span> <span class="st">&quot;TOTAL&quot;</span>,
+    <span class="dt">selectize =</span> F, 
+    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
+   
+)
+
+<span class="co">#create dropdown box for year</span>
+<span class="kw">selectInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;yearInput&quot;</span>,
+    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
+    <span class="dt">choices =</span> <span class="kw">unique</span>(fullFrame$YEAR), 
+    <span class="dt">selected =</span> <span class="dv">2015</span>,
+    <span class="dt">selectize =</span> F, 
+    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
+)</code></pre></div>
+<p>Next, we use the renderPlot() function to render the plot. Plotting takes the form like it would without shiny, except instead of using one variable name we use the inputs from the user to choose which variables to use.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create shiny plot</span>
+<span class="kw">renderPlot</span>({
+<span class="co">#reference the inputs from the user</span>
+myName &lt;-<span class="st"> </span>input$nameInput
+myYear &lt;-<span class="st"> </span>input$yearInput
+<span class="co">#subset by year</span>
+myData &lt;-<span class="st"> </span>forDescriptives[fullFrame$YEAR==myYear, ]
+<span class="co">#get variable for plot</span>
+myVar &lt;-<span class="st"> </span>myData[, myName]
+<span class="co">#remove NAs</span>
+myVar[<span class="kw">is.na</span>(myVar)] &lt;-<span class="st"> </span><span class="dv">0</span>
+
+
+<span class="co">#create color scheme for plot</span>
+color.function &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>( <span class="kw">c</span>(<span class="st">&quot;firebrick4&quot;</span>,<span class="st">&quot;light gray&quot;</span>, <span class="st">&quot;steel blue&quot;</span>) ) 
+col.ramp &lt;-<span class="st"> </span><span class="kw">color.function</span>( <span class="dv">5</span> ) <span class="co"># number of groups you desire</span>
+color.vector &lt;-<span class="st"> </span><span class="kw">cut</span>( <span class="kw">rank</span>(myVar), <span class="dt">breaks=</span><span class="dv">5</span>, <span class="dt">labels=</span>col.ramp )
+color.vector &lt;-<span class="st"> </span><span class="kw">as.character</span>( color.vector )
+this.order &lt;-<span class="st"> </span><span class="kw">match</span>( syr$GEOID10, fullFrame$TRACT)
+color.vec.ordered &lt;-<span class="st"> </span>color.vector[ this.order ]
+
+<span class="co">#plot</span>
+<span class="kw">plot</span>(syr, <span class="dt">col=</span>color.vec.ordered, <span class="dt">main =</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>), <span class="dt">cex.main =</span> <span class="dv">2</span>)
+<span class="co">#create scale</span>
+<span class="kw">map.scale</span>( <span class="dt">metric=</span>F, <span class="dt">ratio=</span>F, <span class="dt">relwidth =</span> <span class="fl">0.15</span>, <span class="dt">cex=</span><span class="dv">2</span> )
+
+
+<span class="co">#create labels for legend</span>
+first &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, .<span class="dv">8</span>, .<span class="dv">2</span>)), <span class="dt">digits =</span> <span class="dv">2</span>)
+last &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(.<span class="dv">2</span>, <span class="dv">1</span>, .<span class="dv">2</span>)), <span class="dt">digits =</span> <span class="dv">2</span>)
+legend.text &lt;-<span class="st"> </span><span class="kw">paste</span>(first, last, <span class="dt">sep =</span> <span class="st">&quot;-&quot;</span>)
+
+
+<span class="co">#create legend</span>
+<span class="kw">legend</span>( <span class="st">&quot;bottomright&quot;</span>, <span class="dt">bg=</span><span class="st">&quot;white&quot;</span>,
+        <span class="dt">pch=</span><span class="dv">19</span>, <span class="dt">pt.cex=</span><span class="dv">2</span>, <span class="dt">cex=</span><span class="dv">2</span>,
+        <span class="dt">legend=</span>legend.text, 
+        <span class="dt">col=</span>col.ramp, 
+        <span class="dt">box.col=</span><span class="st">&quot;white&quot;</span>,
+        <span class="dt">title=</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) 
+       )
+}, <span class="dt">width =</span> <span class="dv">959</span>, <span class="dt">height=</span> <span class="dv">665</span>)</code></pre></div>
 <iframe src="https://chriswdavis.shinyapps.io/descriptives/" width="100%" height="600" scrolling="no" frameborder="0">
 <p>
 Your browser does not support iframes.

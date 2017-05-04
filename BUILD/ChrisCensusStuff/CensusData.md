@@ -32,12 +32,23 @@ The American Community Survey (ACS) is an ongoing statistical survey by the U.S.
 <br>
 Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS). 
 
-###ACS data
+###Obtain ACS DATA
+This section will iterate how to download ACS Data from the years of 2011-2015. 
+####API Key
+Before we start, we need to obtain an API key from the US Census API. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at http://api.census.gov/data/key_signup.html
+ 
+After you get your key, save it as a variable in R. 
 
 ```r
-#api key 
-censuskey <- "b431c35dad89e2863681311677d12581e8f24c24" 
+censuskey <- **yourAPIKEY**
+```
 
+
+
+####Loop the getCensus function
+The next step is to use the getCensus function from the censusapi package in a loop to obtain data for the years of 2011-2015. Variables names were retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html. We gather data for all census tracts ("tract:*") in Onondaga county and subset from there. See code and commented notes for more. 
+
+```r
 #loop to obtain data for years between 2011 and 2015
 temp<- NULL
 census<- NULL
@@ -98,8 +109,10 @@ syrCensus<- filter(census, as.numeric(TRACT)<10000)
 
 
 ###Dicennial Census 2010
+Next we obtain data for the Dicennial Census from 2010. Again, variable names are retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html.Click code to the right for more info. 
 
 ```r
+#get sf1 2010 census data
 census2010 <- getCensus(name = "sf1", vintage = 2010, 
                         key = censuskey,
                         vars = c("NAME", "P0010001", "P0030002", 
@@ -108,23 +121,27 @@ census2010 <- getCensus(name = "sf1", vintage = 2010,
                                  "H0050006", "H0050004", "P0180001", "H0140002", 
                                  "H0040004", "H00010001", "P0160002"),
                         region = "tract:*", 
-                        regionin = "state: 36 + county:067") #dicennial 2010 data
+                        regionin = "state: 36 + county:067") 
+#set year variable
 census2010$YEAR <- 2010
+#create geoid variable
 census2010 <- tbl_df(census2010)
 GEOID <- paste0(census2010$state, census2010$county, census2010$tract)
 census2010 <- mutate(census2010, GEOID)
 
+#set names
 names(census2010) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
                        "hispanic", "vacant", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
-                       "totalHousingUnits", "less18", "year", "geoid")) #change names
+                       "totalHousingUnits", "less18", "year", "geoid")) 
 
-
-census2010<- filter(census2010, as.numeric(TRACT)<10000) #obtain just syracuse tracts
+#obtain just syracuse tracts
+census2010<- filter(census2010, as.numeric(TRACT)<10000) 
 ```
 ###Dicennial Census 2000
+Next we obtain data for the Dicennial Census from 2000. Again, variable names are retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html. Click code to the right for more info.
 
 ```r
 #getting the dicennial 2000 data
@@ -184,6 +201,7 @@ totalCensus2000 <- merge(census2000, moreCensus2000)
 ```
 
 ##Merge all datasets together
+Next we need to merge the 2011-2015, 2010, and 2000 data together into one dataframe. Year variables were created in earlier code to notate which data is which. 
 
 ```r
 #find all unique names for all the datasets
@@ -212,6 +230,7 @@ names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
 ```
 
 ##Write dataset to .csv file
+For data analysis, the full frame is written to a csv file. 
 
 ```r
 #setwd("../..")
@@ -222,6 +241,7 @@ fullFrame <- arrange(fullFrame, YEAR, TRACT)
 
 
 ##Load Shapefile for Descriptive Use
+Next we obtain a shapefile of Syracuse Census tracts to be used for visual analysis.
 
 ```r
 library( rgdal )
@@ -230,9 +250,7 @@ library( geojsonio )
 library(dplyr)
 library(RColorBrewer)
 library(maps)
-#setwd("../..")
-#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
-#syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
+
 syr <- readOGR(dsn = "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson")
 ```
 
@@ -244,6 +262,101 @@ syr <- readOGR(dsn = "https://raw.githubusercontent.com/lecy/SyracuseLandBank/ma
 ```
 
 ##Create shiny plot for descriptive use
+Shiny is a web application framework for R created by RStudio. 
+
+First, we must load the library
+
+```r
+#load shiny
+library(shiny)
+```
+
+Then, we make certain descriptive statistics in percent form for certain variables.
+
+```r
+#make descriptive statistics in percent form for certain variables
+forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+forDescriptives$BLACK <- forDescriptives$BLACK/forDescriptives$TOTAL
+forDescriptives$WHITE <- forDescriptives$WHITE/forDescriptives$TOTAL
+forDescriptives$HISPANIC <- forDescriptives$HISPANIC/forDescriptives$TOTAL
+forDescriptives$ASIAN <- forDescriptives$ASIAN/forDescriptives$TOTAL
+forDescriptives$EMPLOYED <- forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$UNEMPLOYED <- forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$POVERTY <- forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY
+```
+Next, we create the code for the dropdown boxes. More info can be gotten at https://shiny.rstudio.com/
+
+```r
+#create dropdown box for name
+selectInput(
+    inputId = "nameInput",
+    label = "",
+    choices = names(forDescriptives), 
+    selected = "TOTAL",
+    selectize = F, 
+    width = "160px"
+   
+)
+
+#create dropdown box for year
+selectInput(
+    inputId = "yearInput",
+    label = "",
+    choices = unique(fullFrame$YEAR), 
+    selected = 2015,
+    selectize = F, 
+    width = "160px"
+)
+```
+Next, we use the renderPlot() function to render the plot. Plotting takes the form like it would without shiny, except instead of using one variable name we use the inputs from the user to choose which variables to use. 
+
+```r
+#create shiny plot
+renderPlot({
+#reference the inputs from the user
+myName <- input$nameInput
+myYear <- input$yearInput
+#subset by year
+myData <- forDescriptives[fullFrame$YEAR==myYear, ]
+#get variable for plot
+myVar <- myData[, myName]
+#remove NAs
+myVar[is.na(myVar)] <- 0
+
+
+#create color scheme for plot
+color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
+col.ramp <- color.function( 5 ) # number of groups you desire
+color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
+color.vector <- as.character( color.vector )
+this.order <- match( syr$GEOID10, fullFrame$TRACT)
+color.vec.ordered <- color.vector[ this.order ]
+
+#plot
+plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "), cex.main = 2)
+#create scale
+map.scale( metric=F, ratio=F, relwidth = 0.15, cex=2 )
+
+
+#create labels for legend
+first <- round(quantile(myVar, probs = seq(0, .8, .2)), digits = 2)
+last <- round(quantile(myVar, probs = seq(.2, 1, .2)), digits = 2)
+legend.text <- paste(first, last, sep = "-")
+
+
+#create legend
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=2, cex=2,
+        legend=legend.text, 
+        col=col.ramp, 
+        box.col="white",
+        title= paste(myName, "in", myYear, sep = " ") 
+       )
+}, width = 959, height= 665)
+```
+
+
+
 <iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "600" scrolling = "no" frameborder = "0">
   <p>Your browser does not support iframes.</p>
 </iframe>
