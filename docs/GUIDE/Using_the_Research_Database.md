@@ -1,6 +1,7 @@
 # Using the Research Database
 
 #Introduction
+
 This page is intended to give a working overview of the research database and the type of data that is currently has available.  Furthermore, this page includes descriptions and code samples of the general process of building the research database such that it can be modified or extended in the future.
 
 #Data Overview
