@@ -1,40 +1,27 @@
-# Extracting Data from Census
+---
+runtime: shiny
+output:
+  html_document:
+    df_print: paged
+    highlight: haddock
+    keep_md: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message= F, warning = F, fig.width = 10, fig.height = 10)
+```
 
-#Census Data For Syracuse
-This report will walk through the steps to collect and wrangle census data from the Census API. ACS data from 2011-2015 and dicennial census data from 2000 and 2010 are collected. 
-
-
-## The censusapi package
-
-The censusapi package is one of many packages that will allow you to retrieve data from any <a href="http://www.census.gov/data/developers/data-sets.html">Census API</a> as well as metadata about the <a href="http://api.census.gov/data.html">available datasets</a> and each API's <a href= "http://api.census.gov/data/2000/sf1/variables.html">variables</a> and <a href="http://api.census.gov/data/2000/sf1/geography.html">geographies</a>
-
-##Installation
-The installation of the censusapi package requires the devtools package.
-
-```r
+```{r include=FALSE}
 #install.packages("devtools")
-devtools::install_github("hrecht/censusapi")
+#devtools::install_github("hrecht/censusapi")
 library(censusapi)
 library(dplyr)
 ```
 
-
-
-For any call to the Census API you will need an API Key. You can find it <a href="http://api.census.gov/data/key_signup.html">here</a> or at http://api.census.gov/data/key_signup.html
-
-##Obtaining the data
-The next steps use the censusapi package to obtain data from the Census given specific variable names. Variables names were retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html
-
-### The American Community Survey 
-The American Community Survey (ACS) is an ongoing statistical survey by the U.S. Census Bureau, sent to approximately 250,000 addresses monthly (or 3 million per year). It regularly gathers information previously contained only in the long form of the decennial census. 
-<br>
-<br>
-Click <a href="https://www.census.gov/programs-surveys/acs/about.html">here</a> for more information on the American Community Survey (ACS). 
-
-###ACS data
-
-```r
+```{r include = FALSE}
 #api key 
 censuskey <- "b431c35dad89e2863681311677d12581e8f24c24" 
 
@@ -94,12 +81,13 @@ census <- tbl_df(census)
 
 #obtain just syracuse census tracts
 syrCensus<- filter(census, as.numeric(TRACT)<10000) 
+
+
+
 ```
 
+```{r include = FALSE}
 
-###Dicennial Census 2010
-
-```r
 census2010 <- getCensus(name = "sf1", vintage = 2010, 
                         key = censuskey,
                         vars = c("NAME", "P0010001", "P0030002", 
@@ -123,10 +111,11 @@ names(census2010) <- toupper(c("name","state", "county", "tract",
 
 
 census2010<- filter(census2010, as.numeric(TRACT)<10000) #obtain just syracuse tracts
-```
-###Dicennial Census 2000
 
-```r
+```
+
+
+```{r include = FALSE}
 #getting the dicennial 2000 data
 census2000 <- getCensus(name = "sf1", vintage = 2000, 
                         key = censuskey, 
@@ -183,9 +172,8 @@ moreCensus2000<- filter(moreCensus2000, as.numeric(TRACT)<10000)
 totalCensus2000 <- merge(census2000, moreCensus2000)
 ```
 
-##Merge all datasets together
 
-```r
+```{r include = FALSE}
 #find all unique names for all the datasets
 all <- names(syrCensus)
 all <- c(all, names(totalCensus2000))
@@ -209,21 +197,18 @@ fullFrame <- rbind(fullFrame, c)
 fullFrame$TRACT<- as.numeric(fullFrame$TRACT)/100
 names(fullFrame)[names(fullFrame)=="TRACT"] <- "TRACT1"
 names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
+
 ```
 
-##Write dataset to .csv file
 
-```r
+```{r include = FALSE}
 #setwd("../..")
 fullFrame <- arrange(fullFrame, YEAR, TRACT)
 #write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
+
 ```
 
-
-
-##Load Shapefile for Descriptive Use
-
-```r
+```{r include = FALSE}
 library( rgdal )
 library( maptools )
 library( geojsonio )
@@ -234,16 +219,80 @@ library(maps)
 #setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
 #syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
 syr <- readOGR(dsn = "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson")
-```
+
 
 ```
-## OGR data source with driver: GeoJSON 
-## Source: "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson", layer: "OGRGeoJSON"
-## with 55 features
-## It has 12 fields
+
+
+```{r echo = FALSE}
+library(shiny)
+
+forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+forDescriptives$BLACK <- forDescriptives$BLACK/forDescriptives$TOTAL
+forDescriptives$WHITE <- forDescriptives$WHITE/forDescriptives$TOTAL
+forDescriptives$HISPANIC <- forDescriptives$HISPANIC/forDescriptives$TOTAL
+forDescriptives$ASIAN <- forDescriptives$ASIAN/forDescriptives$TOTAL
+forDescriptives$EMPLOYED <- forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$UNEMPLOYED <- forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
+forDescriptives$POVERTY <- forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY
+
+selectInput(
+    inputId = "nameInput",
+    label = "",
+    choices = names(forDescriptives), 
+    selected = "TOTAL",
+    selectize = F, 
+    width = "160px"
+   
+)
+
+selectInput(
+    inputId = "yearInput",
+    label = "",
+    choices = unique(fullFrame$YEAR), 
+    selected = 2015,
+    selectize = F, 
+    width = "160px"
+)
 ```
 
-##Create shiny plot for descriptive use
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "600" scrolling = "no" frameborder = "0">
-  <p>Your browser does not support iframes.</p>
-</iframe>
+```{r echo = FALSE}
+renderPlot({
+myName <- input$nameInput
+myYear <- input$yearInput
+myData <- forDescriptives[fullFrame$YEAR==myYear, ]
+myVar <- myData[, myName]
+myVar[is.na(myVar)] <- 0
+
+
+
+color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
+col.ramp <- color.function( 5 ) # number of groups you desire
+color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
+color.vector <- as.character( color.vector )
+this.order <- match( syr$GEOID10, fullFrame$TRACT)
+color.vec.ordered <- color.vector[ this.order ]
+plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "), cex.main = 2)
+
+map.scale( metric=F, ratio=F, relwidth = 0.15, cex=2 )
+
+first <- round(quantile(myVar, probs = seq(0, .8, .2)), digits = 2)
+last <- round(quantile(myVar, probs = seq(.2, 1, .2)), digits = 2)
+myLabels <- paste(first, last, sep = "-")
+
+
+legend.text <- myLabels
+
+legend( "bottomright", bg="white",
+        pch=19, pt.cex=2, cex=2,
+        legend=legend.text, 
+        col=col.ramp, 
+        box.col="white",
+        title= paste(myName, "in", myYear, sep = " ") 
+       )
+}, width = 959, height= 665)
+
+
+```
+
+

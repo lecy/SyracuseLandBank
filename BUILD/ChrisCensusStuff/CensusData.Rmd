@@ -1,15 +1,16 @@
 ---
 title: "Extracting Data from Census"
+resource_files:
+- SYRCensusTracts.geojson
 output:
   html_document:
-    keep_md: true
+    code_fold: hide
     df_print: paged
-    theme: cerulean
     highlight: haddock
+    keep_md: yes
+    theme: cerulean
     toc: yes
     toc_float: yes
-    code_fold: hide
-runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -233,9 +234,10 @@ names(fullFrame)[names(fullFrame)=="GEOID"] <- "TRACT"
 
 ##Write dataset to .csv file
 ```{r}
-setwd("../..")
+#setwd("../..")
 fullFrame <- arrange(fullFrame, YEAR, TRACT)
-write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
+#write.csv(fullFrame, file = "./DATA/AGGREGATED_DATA/censusDataFromChris.csv")
+
 ```
 
 
@@ -248,77 +250,15 @@ library( geojsonio )
 library(dplyr)
 library(RColorBrewer)
 library(maps)
-setwd("../..")
-syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
-#syr <- readOGR(dsn = "SYRCensusTracts.geojson")
+#setwd("../..")
+#setwd("/Users/Tenma/Desktop/DDMII/Projects/Census/CensusStuff1")
+#syr <- readOGR(dsn = "./SHAPEFILES/SYRCensusTracts.geojson")
+syr <- readOGR(dsn = "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/SYRCensusTracts.geojson")
+
+
 ```
 
 ##Create shiny plot for descriptive use
-
-```{r}
-library(shiny)
-
-forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
-
-selectInput(
-    inputId = "nameInput",
-    label = "",
-    choices = names(forDescriptives), 
-    selected = "TOTAL",
-    selectize = F, 
-    width = "160px"
-   
-)
-
-selectInput(
-    inputId = "yearInput",
-    label = "",
-    choices = unique(fullFrame$YEAR), 
-    selected = 2015,
-    selectize = F, 
-    width = "160px"
-)
-```
-
-```{r }
-renderPlot({
-myName <- input$nameInput
-myYear <- input$yearInput
-myData <- forDescriptives[fullFrame$YEAR==myYear, ]
-myVar <- myData[, myName]
-myVar[is.na(myVar)] <- 0
-
-
-
-color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
-col.ramp <- color.function( 5 ) # number of groups you desire
-color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
-color.vector <- as.character( color.vector )
-this.order <- match( syr$GEOID10, fullFrame$TRACT)
-color.vec.ordered <- color.vector[ this.order ]
-plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "))
-
-map.scale( metric=F, ratio=F, relwidth = 0.15, cex=0.5 )
-
-first <- quantile(myVar, probs = seq(0, .8, .2))
-last <- quantile(myVar, probs = seq(.2, 1, .2))
-myLabels <- paste(first, last, sep = "-")
-
-
-legend.text <- myLabels
-
-legend( "bottomright", bg="white",
-        pch=19, pt.cex=1, cex=1,
-        legend=legend.text, 
-        col=col.ramp, 
-        box.col="white",
-        title= paste(myName, "in", myYear, sep = " ") 
-       )
-}, width = 959, height= 665)
-
-
-
-
-```
-
-
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "600" scrolling = "no" frameborder = "0">
+  <p>Your browser does not support iframes.</p>
+</iframe>
