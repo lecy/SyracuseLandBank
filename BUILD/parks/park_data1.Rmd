@@ -40,21 +40,21 @@ setwd("..")
 setwd("..")
 setwd("./DATA/RAW_DATA")
 
-dir.create( "park_shape" )
-download.file( "http://communitygeography.org/wp-content/uploads/2015/09/SyracuseParks051414_UTM.zip" , "park_shape/park.zip" )
-unzip( "park_shape/park.zip" , exdir = "park_shape" )
+# dir.create( "park_shape" )
+# download.file( "http://communitygeography.org/wp-content/uploads/2015/09/SyracuseParks051414_UTM.zip" , "park_shape/park.zip" )
+# unzip( "park_shape/park.zip" , exdir = "park_shape" )
+# 
+# #Change original data into shapefile and convert to CSV
+# park <- readShapePoly( fn = "park_shape/SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+# park <- as.data.frame( park , stringsAsFactors = FALSE )
+# 
+# #Delete Community Geography file because CSV has all information
+# unlink( "park_shape" , recursive = TRUE )
+# 
+# #Write data as a CSV for future access
+# write.csv( park, file = "../../DATA/RAW_DATA/park_raw.csv" , row.names = FALSE )
 
-#Change original data into shapefile and convert to CSV
-park <- readShapePoly( fn = "park_shape/SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
-park <- as.data.frame( park , stringsAsFactors = FALSE )
-
-#Delete Community Geography file because CSV has all information
-unlink( "park_shape" , recursive = TRUE )
-
-#Write data as a CSV for future access
-write.csv( park, file = "../../DATA/RAW_DATA/park_raw.csv" , row.names = FALSE )
-
-
+park <- read.csv("../../DATA/RAW_DATA/park_raw.csv")
 
 url <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_neighborhoods.geojson"
 syr <- geojson_read( url, method="local", what="sp" )
@@ -64,39 +64,31 @@ text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
 
 ```
 
-
+Different parks have different affects for the community and the condition of the community also decide whether the park will increase property value or decrease by itself. 
+So the following descriptive data will show park type and Nhood. This should test with community trends in crime(which is not ), poverty and
 
 ```{r}
 #Clean data
-park$TOWN <- ifelse( is.na( park$TOWN ), as.character( park$TOWN ) , as.character( park$TOWN ) )
 
-park <- mutate( park, Address = paste( StName ,Nhood , TOWN , "NY" , sep = ", " ) )
-park <- park[ , c( "NAME" , "Address", "Park_Type" ) ]
+#check colnames and select useful ones
+park.select <- park[, c(1:20,29,55:57) ]
 
-#Geocode
+#descriptive analysis
 
-
-#Get census tract information
-syr_tracts <- geojson_read( "../../SHAPEFILES/SYRCensusTracts.geojson" , method="local" , what="sp" )
-syr_tracts <- spTransform( syr_tracts , CRS( "+proj=longlat +datum=WGS84" ) )
+#types of park
+type.table <- table(park.select$Park_Type)
+type.table
 
 
-
-#Load Onondaga Data in Environment
-ono_tracts <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
-syr <- ono_tracts[as.numeric(as.character(ono_tracts$NAME10)) < 62, ]
-
-
-###load park shapefiles
-
-park <- readShapePoly( fn="SyracuseParks051414_UTM", verbose=TRUE,proj4string=CRS("+proj=longlat +datum=WGS84") )
-
-syr <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
-
-plot(syr, border="gray10")
-plot(park, border="gray10")
+#total park acres
+area <- sum(park.select$ACRES)
+#area is 966.0392 acres
 
 
+#park area by communities
+acre.by.neighborhood <- aggregate(ACRES~Nhood,park.select,sum)
+ggplot(data=acre.by.neighborhood,aes(x=acre.by.neighborhood$Nhood, y=acre.by.neighborhood$ACRES))+geom_bar(colour = "blue",stat = "identity")+
+  theme(axis.text.x=element_text(angle=90,hjust=1))
 
 
 
@@ -108,37 +100,7 @@ plot(park, border="gray10")
 
 
 
-```{r}
 
 
-# write geojson
-
-
-
-plot(syr, border="gray10")
-plot(park, border="gray10")
-
-
-
-
-
-
-#seperate parks of different areas
-barplot(table(park_raw$Park_Type))
-
-barplot(table(park_raw$Nhood))
-
-#seperate by neighborhoods function since parks in different neighborhood might have different effect on house value
-
-sep.nhood <- function(Nhood){
-  dat <- park_raw[park_raw$Nhood == Nhood, ]
-  return(dat)
-}
-
-#test on south valley
-#South.Valley <- sep.nhood("South Valley")
-#Southside <- sep.nhood("Southside")
-
-```
 
 
