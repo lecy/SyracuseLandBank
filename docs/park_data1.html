@@ -276,7 +276,11 @@ div.tocify {
 <span class="kw">library</span>( rgdal )
 <span class="kw">library</span>( rgeos )
 <span class="kw">library</span>( sp )
-<span class="kw">library</span>( geojsonio )
+<span class="kw">library</span>(devtools)
+<span class="kw">library</span>(censusapi)
+<span class="kw">library</span>(pander)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(jsonlite)
 
 
 
@@ -291,7 +295,13 @@ div.tocify {
 <span class="co"># unzip( &quot;park_shape/park.zip&quot; , exdir = &quot;park_shape&quot; )</span>
 <span class="co"># </span>
 <span class="co"># #Change original data into shapefile and convert to CSV</span>
-<span class="co"># park &lt;- readShapePoly( fn = &quot;park_shape/SyracuseParks051414_UTM&quot; , proj4string = CRS( &quot;+proj=longlat +datum=WGS84&quot; ) )</span>
+<span class="co">#plot shp file of the parks(optional)</span>
+<span class="co"># setwd(&quot;..&quot;)</span>
+<span class="co"># setwd(&quot;..&quot;)</span>
+<span class="co"># setwd(&quot;../BUILD/parks&quot;)</span>
+<span class="co"># park.project &lt;- readShapePoly( fn = &quot;SyracuseParks051414_UTM&quot; , proj4string = CRS( &quot;+proj=longlat +datum=WGS84&quot; ) )</span>
+<span class="co"># plot(park.project, col=&quot;green&quot;)</span>
+
 <span class="co"># park &lt;- as.data.frame( park , stringsAsFactors = FALSE )</span>
 <span class="co"># </span>
 <span class="co"># #Delete Community Geography file because CSV has all information</span>
