@@ -49,12 +49,12 @@ setwd("./DATA/RAW_DATA")
 # unzip( "park_shape/park.zip" , exdir = "park_shape" )
 # 
 # #Change original data into shapefile and convert to CSV
-#plot shp file of the parks
-setwd("..")
-setwd("..")
-setwd("../BUILD/parks")
-park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
-plot(park.project, col="green")
+#plot shp file of the parks(optional)
+# setwd("..")
+# setwd("..")
+# setwd("../BUILD/parks")
+# park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+# plot(park.project, col="green")
 
 # park <- as.data.frame( park , stringsAsFactors = FALSE )
 # 

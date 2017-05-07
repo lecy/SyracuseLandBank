@@ -18,7 +18,11 @@ library( raster )
 library( rgdal )
 library( rgeos )
 library( sp )
-library( geojsonio )
+library(devtools)
+library(censusapi)
+library(pander)
+library(ggplot2)
+library(jsonlite)
 
 
 
@@ -33,7 +37,13 @@ setwd("./DATA/RAW_DATA")
 # unzip( "park_shape/park.zip" , exdir = "park_shape" )
 # 
 # #Change original data into shapefile and convert to CSV
-# park <- readShapePoly( fn = "park_shape/SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+#plot shp file of the parks(optional)
+# setwd("..")
+# setwd("..")
+# setwd("../BUILD/parks")
+# park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+# plot(park.project, col="green")
+
 # park <- as.data.frame( park , stringsAsFactors = FALSE )
 # 
 # #Delete Community Geography file because CSV has all information
