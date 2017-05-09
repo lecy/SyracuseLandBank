@@ -38,10 +38,10 @@ This dataset contains the locations of grocery stores in 2015.
 ![alt](ASSETS/grocery.png)
 
 
-### [Schools](Schools.html)
+### [Schools](Syr_Schools.html)
 This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
-![alt](ASSETS/schools.gif)
+![alt](ASSETS/schools2.gif)
 
 
 ### [Libraries](library.html)
