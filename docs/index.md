@@ -38,10 +38,10 @@ This dataset contains the locations of grocery stores in 2015.
 ![alt](ASSETS/grocery.png)
 
 
-### [Schools](Syr_Schools.html)
+### [Schools](Schools.html)
 This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
-![alt](ASSETS/schools2.gif)
+![alt](ASSETS/schools.gif)
 
 
 ### [Libraries](library.html)
@@ -149,15 +149,26 @@ This dataset contains information on the number of subsidized housing units avai
 
 ![alt](ASSETS/housing.gif)
 
+
+
+<br>
+
+
+### [Parks](park_data1.html)
+This dataset contains parks information in the city of Syracuse.  The data was mineSyracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. Different parks have different affects for the community and the condition of the community also decide whether the park will increase property value or decrease by itself. So the following descriptive data will show park type and Nhood. This should test with community trends in crime(which is not availbale now) and poverty. (Further possible models could be NB, KSVM, SVM, lm. Using 2/3 data as train data and 1/3 for test data.)
+
+![alt](ASSETS/parks_by_community.png)
+
+
 <br>
 
 
 
 ### [Census Data](CensusData.html)
 
-This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 41 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
+This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 42 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
 
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "800" scrolling = "no" frameborder = "0">
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "900" scrolling = "no" frameborder = "0">
   <p>Your browser does not support iframes.</p>
 </iframe>
 
