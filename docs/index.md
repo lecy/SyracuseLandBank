@@ -153,7 +153,6 @@ This dataset contains information on the number of subsidized housing units avai
 
 <br>
 
-
 ### [Parks](park_data1.html)
 This dataset contains parks information in the city of Syracuse. Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
 
