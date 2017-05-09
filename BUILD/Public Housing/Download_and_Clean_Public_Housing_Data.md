@@ -160,7 +160,7 @@ write.csv( public.housing, "publichousing_aggregated.csv", row.names=F )
 ###Create a map of number of public housing units available by census tract in 2015
 
 #Create a color palette to display units available on a map: red will represent high values, blue will represnt low
-color.function <- colorRampPalette( c("steel blue","light gray", "firebrick4" ) )
+color.function <- colorRampPalette( c("light gray", "firebrick4" ) )
 
 #There will be 5 colors between blue and red to demonstrate increasing intensity
 col.ramp <- color.function( 5 )
