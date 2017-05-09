@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE )
+knitr::opts_chunk$set( echo = TRUE, warning=FALSE, message=FALSE, warning = F, fig.width = 7, fig.height = 7 )
 ```
 
 ## Raw data source
@@ -456,11 +456,7 @@ datatable( cbind( npos_sector, totals_2016[3] ) )
 ### c. Map location of NPOs in Syracuse in 2016
 
 The map below presents the locations of nonprofits that filed tax returns for the first time in 2016.
-```{r}
-# Read in parcel geojson file from Github
-syr.parcel <- geojson_read("https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_parcels.geojson", method="local", what="sp" )
-syr.parcel <- spTransform( syr.parcel, CRS( "+proj=longlat +datum=WGS84" ) )
-
+```{r, fig.width = 7, fig.height = 7 }
 # Identify the tracts in Syracuse that had new nonprofits as of 2016
 select.tracts <- npos_years
 select.tracts$TRACT <- as.numeric(substring(select.tracts$TRACT, 8,11 ) ) / 100
@@ -471,31 +467,33 @@ npos_2016 <- npos[ npos$YEAR == 2016, ]
 spcoor <- npos_2016[ c( "lon", "lat") ]
 spcoor <- SpatialPointsDataFrame( spcoor, npos_2016, proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
 
+par(mar=c(1,3.5,1,3.5)+0.1)
 plot( syr_tracts )
-plot( spcoor, col = "aquamarine4", pch = 10, cex=1.2, add = T )
-title( main = "Location of New NPOs in Syracuse in 2016", col.main = "blue" )
+plot( spcoor, col = "steel blue", pch = 10, cex=1.2, add = T )
+title( main = "Location of New NPOs in Syracuse in 2016" )
 ```
 
 In comparison, below is a choropleth map that shows census tracts shaded by the number of nonprofits that each contains, with more nonprofits represented by darker shades. The map also presents the locations of nonprofits that filed tax returns for the first time in 2016.
-```{r}
+```{r, fig.width = 7, fig.height = 7 }
 # Plot Syracuse parcels and highlight those that contain NPOs
 ## Create a color scheme for census tracts that reflect the number of nonprofits
-color.function <- colorRampPalette( c( "aquamarine1", "aquamarine4" ) )
+color.function <- colorRampPalette( c( "light gray","firebrick4" ) )
 unique.sums <- length( unique( select.tracts$NPOS_SUM ) )
 col.ramp <- color.function( unique.sums )
   
 ## Generate a chloropleth map
-plot( syr_tracts, border = NA, col = col.ramp )
+par(mar=c(1,3.5,1,3.5)+0.1)
+plot( syr_tracts, col = col.ramp )
 
 ## Plot the coordinates of the new NPOs as of 2016
-plot( spcoor, col = "darkgoldenrod4", pch = 16, cex=1.2, add = T )
-title( main = "Location of all NPOs in Syracuse in 2016", col.main = "blue" )
+plot( spcoor, col = "steel blue", pch = 16, cex=1.2, add = T )
+title( main = "Location of all NPOs in Syracuse in 2016" )
 legend.text = c( "Least NPOs (1)", "Most NPOs (96)" )
 legend( x = -76.12, y = 43,
         pch = 19, pt.cex = 1.5, cex = 0.7,
         bty = "n",
         legend = legend.text,
-        col = c( "aquamarine1", "aquamarine4" ),
+        col = c( "light gray","firebrick4" ) ,
         title = "Number of NPOs Per Tract",
         xjust = 0,
         ncol = 1

@@ -357,6 +357,6 @@ legend( "bottomright", bg="white",
 
 
 
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "600" scrolling = "no" frameborder = "0">
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "800" scrolling = "no" frameborder = "0">
   <p>Your browser does not support iframes.</p>
 </iframe>

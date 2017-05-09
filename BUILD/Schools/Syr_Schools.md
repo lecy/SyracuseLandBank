@@ -3,7 +3,7 @@
 
 
 #Introduction
-School quality and nearby housing values are inherently linked. While the direction of the causual relationship is unclear (whether changes school quality causes changes in housing or vice versa), there is certainly a strong correlation between school quality and nearby housing values. This dataset of test averages from Syracuse City School District for years 2005, 2010, and 2015 allows us to begin exploring this relationship in the Syracuse area.
+School quality and nearby housing values are inherently linked. While the direction of the causal relationship is unclear (whether changes in school quality cause changes in housing or vice versa), there is certainly a strong correlation between school quality and nearby housing values. This dataset of test averages from Syracuse City School District for years 2005, 2010, and 2015 allows us to begin exploring this relationship in the Syracuse area.
 
 #Dataset Wranging
 
@@ -210,7 +210,7 @@ text(1.4781278,71.95029, "69.72 %")
 text(2.4907291,56.97356, "53.99 %")
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 
 ##Map by Census 2015 
@@ -254,7 +254,7 @@ legend( "bottomright", bg="white",
            )
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ##Map by Schools 2015 
 
@@ -294,7 +294,7 @@ legend( "bottomright", bg="white",
            )
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ##Histrogram 1
 
@@ -312,12 +312,12 @@ school.diffs.2010$Score_Diff <- school.diffs.2010$Score_Diff*100
 par(family="Georgia") 
 hist(school.diffs.2010$Score_Diff, 
      main="Distribution for Change in Scores by Schools from 2005-2010 ", 
-     xlab="Percent Change of Averaged Test Scores", ylab="Number of Schools", 
+     xlab="Percentage Point Change of Averaged Test Scores", ylab="Number of Schools", 
      col="dodgerblue4", 
      las=1)
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ##Histogram 2
 
@@ -331,16 +331,16 @@ school.diffs.2015$Score_Diff <- school.diffs.2015$Score_Diff*100
 par(family="Georgia") 
 hist(school.diffs.2015$Score_Diff, 
      main="Distribution for Change in Scores by Schools from 2010-2015 ", 
-     xlab="Percent Change of Averaged Test Scores", ylab="Number of Schools", 
+     xlab="Percentage Point Change of Averaged Test Scores", ylab="Number of Schools", 
      col="dodgerblue4",
      las=1)
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 ##Bar Graph 2
 
-  Average Negative Percent Change in Test Score for All Schools
+  Average Negative Percentage Point Change in Test Score for All Schools
 
 
 ```r
@@ -354,16 +354,16 @@ Avg.score.diff.schools$Avg.Score_Diff <- Avg.score.diff.schools$Avg.Score_Diff*1
 
 par(family="Georgia")
 barplot(Avg.score.diff.schools$Avg.Score_Diff, 
-        main="Average Negative Percent Change in Test Score for All Schools", 
+        main="Average Negative Percentage Point Change in Test Scores", 
   	xlab="Year", ylab = "Negative Percent Change ", 
   	names.arg=Avg.score.diff.schools$Test.Year, space=0, ylim=c(0, 25),
   	col= c("dodgerblue4", "dodgerblue4")
 )
-text(0.4723672,7.681059, "-6.81 %")
-text(1.476868, 23.120831, "-22.22 %")
+text(0.4723672,7.681059, "-6.81 ")
+text(1.476868, 23.120831, "-22.22 ")
 ```
 
-![](Schools_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](Syr_Schools_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ##Map of School Change
 Prepare Map of Schools by Change in Test Scores from 2010-2015
@@ -374,13 +374,9 @@ color.function <- colorRampPalette( c("firebrick4","light gray","steelblue" ) )
 
 col.ramp.school.diff15 <- color.function( 5 ) # number of groups you desire
 
-color.vector.school.diff15 <- cut( rank(school.diffs.2015$Score_Diff), breaks=5, labels=col.ramp.school.diff15 )
+color.vector.school.diff15 <- cut(school.diffs.2015$Score_Diff, breaks= c(-37.30074, -11.24, -6.95, -4.25, -2.19, 5.052418), labels=col.ramp.school.diff15 )
 
 color.vector.school.diff15 <- as.character( color.vector.school.diff15 )
-
-breaks.Score.diff2015 <-classIntervals(school.diffs.2015$Score_Diff, n=5, style="quantile")
-breaks.Score.diff2015$brks <- round(breaks.Score.diff2015$brks, 2)
-breaks.Score.diff2015$brks <- paste(breaks.Score.diff2015$brks,"%")
 ```
 
 Prepare Map of Schools by Change in Test Scores from 2005-2010
@@ -393,11 +389,11 @@ col.ramp.school.diff10 <- color.function( 5 ) # number of groups you desire
 
 color.vector.school.diff10 <- cut( rank(school.diffs.2010$Score_Diff), breaks=5, labels=col.ramp.school.diff10 )
 
+
 color.vector.school.diff10 <- as.character( color.vector.school.diff10 )
 
 breaks.Score.diff2010 <-classIntervals(school.diffs.2010$Score_Diff, n=5, style="quantile")
 breaks.Score.diff2010$brks <- round(breaks.Score.diff2010$brks, 2)
-breaks.Score.diff2010$brks <- paste(breaks.Score.diff2010$brks,"%")
 ```
 
 GIF for Change in Averaged Test Scores by School from 2005-2010 & 2010-2015
@@ -417,7 +413,7 @@ legend( "bottomright", bg="white",
         legend=capitalize(leglabs(breaks.Score.diff2010$brks)), 
         col=col.ramp.school.diff10, 
         box.col="white",
-        title="Change in Test Scores", title.adj = .1, xjust=1
+        title="Change in Percentage Points 2010 ", title.adj = .1, xjust=1
            )
 
 par(family="Georgia")
@@ -426,10 +422,10 @@ points(school.diffs.2015$lon, school.diffs.2015$lat, col=color.vector.school.dif
 
 legend( "bottomright", bg="white",
         pch=19, pt.cex=2, cex=1.3,
-        legend=capitalize(leglabs(breaks.Score.diff2015$brks)), 
+        legend=capitalize(leglabs(breaks.Score.diff2010$brks)), 
         col=col.ramp.school.diff15, 
-        box.col="white",
-        title="Change in Test Scores", title.adj = .1, xjust=1
+        box.col="white" ,
+        title="Change in Percentage Points 2015", title.adj = .1, xjust=1
            )
 
   
@@ -439,7 +435,7 @@ legend( "bottomright", bg="white",
 
 }, 
 
-movie.name = "movie_name4.gif",   # name of your gif
+movie.name = "movie_name5.gif",   # name of your gif
 interval = 1.5,                  # controls the animation speed
 ani.width = 800,                 # size of the gif in pixels
 ani.height = 800 )               # size of the git in pixels
@@ -448,7 +444,7 @@ ani.height = 800 )               # size of the git in pixels
 ```
 ## [1] TRUE
 ```
-![movie_name.gif](gifs/movie_name4.gif)
+![](gifs/movie_name5.gif)
 
 
 

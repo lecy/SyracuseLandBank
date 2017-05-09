@@ -38,10 +38,10 @@ This dataset contains the locations of grocery stores in 2015.
 ![alt](ASSETS/grocery.png)
 
 
-### [Schools](Schools.html)
+### [Schools](Syr_Schools.html)
 This dataset contains test averages for all schools of the Syracuse City School District for years 2005, 2010, and 2015. The data is wrangled to provide a standardized score for each school and for each census tract for years 2005, 2010, and 2015.
 
-![alt](ASSETS/schools.gif)
+![alt](ASSETS/schools2.gif)
 
 
 ### [Libraries](library.html)
@@ -155,9 +155,9 @@ This dataset contains information on the number of subsidized housing units avai
 
 ### [Census Data](CensusData.html)
 
-This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 42 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
+This file contains census data from the ACS from years 2011-2015 and from the 2000 and 2010 Dicennial Census. 41 variables are included related to housing, race, poverty, employment, vacancy, travel time to work, and more. 
 
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "900" scrolling = "no" frameborder = "0">
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "800" scrolling = "no" frameborder = "0">
   <p>Your browser does not support iframes.</p>
 </iframe>
 

@@ -104,7 +104,7 @@ census2010 <- mutate(census2010, GEOID)
 
 names(census2010) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
-                       "hispanic", "vacant", "otherVacant", 
+                       "hispanic", "vacantTotal", "otherVacant", 
                        "vacantForRent", "seasonalVacant", "forSaleVacant",
                        "households", "ownerOccupied", "renterOccupied", 
                        "totalHousingUnits", "less18", "year", "geoid")) #change names
@@ -135,7 +135,7 @@ census2000 <- mutate(census2000, GEOID)
 #change names
 names(census2000) <- toupper(c("name","state", "county", "tract",
                        "total", "white", "black", "asian", 
-                       "hispanic", "vacant", "otherVacant", 
+                       "hispanic", "vacantTotal", "otherVacant", 
                        "vacantForRent", "seasonalVacant", 
                        "forSaleVacant", "households", 
                        "ownerOccupied", "renterOccupied", "totalHousingUnits", "year", "geoid")) 
@@ -181,7 +181,7 @@ all <- c(all, names(census2010))
 all <- unique(all) 
 
 #create an empty dataframe with 42 columns of unique names
-df = data.frame(matrix(vector(), 0, 42,
+df = data.frame(matrix(vector(), 0, 41,
                 dimnames=list(c(), all)),
                 stringsAsFactors=F) 
 #merge datasets with empty frame
@@ -227,7 +227,13 @@ syr <- readOGR(dsn = "https://raw.githubusercontent.com/lecy/SyracuseLandBank/ma
 ```{r echo = FALSE}
 library(shiny)
 
-forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
+forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR, TRAVELTIMETOWORKMIN, AGGREGATETRAVELTIMETOWORK, HOUSINGVALUES))
+
+firstYear <- forDescriptives[fullFrame$YEAR==2000, ]
+forDescriptives[fullFrame$YEAR==2000, ]$UNEMPLOYED <-firstYear$FEMALEUNEMPLOYED + firstYear$MALEUNEMPLOYED
+forDescriptives[fullFrame$YEAR==2000, ]$INLABORFORCE <- firstYear$MALELABORFORCE + firstYear$FEMALELABORFORCE
+
+
 forDescriptives$BLACK <- forDescriptives$BLACK/forDescriptives$TOTAL
 forDescriptives$WHITE <- forDescriptives$WHITE/forDescriptives$TOTAL
 forDescriptives$HISPANIC <- forDescriptives$HISPANIC/forDescriptives$TOTAL
@@ -235,7 +241,10 @@ forDescriptives$ASIAN <- forDescriptives$ASIAN/forDescriptives$TOTAL
 forDescriptives$EMPLOYED <- forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
 forDescriptives$UNEMPLOYED <- forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
 forDescriptives$POVERTY <- forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY
+forDescriptives$HOUSEHOLDRECEIVEDSNAP <- forDescriptives$HOUSEHOLDRECEIVEDSNAP/forDescriptives$HOUSEHOLDS
 
+
+forDescriptives<-select(forDescriptives, -c(FEMALEUNEMPLOYED, MALEUNEMPLOYED, MALELABORFORCE, FEMALELABORFORCE, TOTALFORPOVERTY))
 selectInput(
     inputId = "nameInput",
     label = "",
@@ -246,51 +255,93 @@ selectInput(
    
 )
 
-selectInput(
-    inputId = "yearInput",
-    label = "",
-    choices = unique(fullFrame$YEAR), 
-    selected = 2015,
-    selectize = F, 
-    width = "160px"
-)
+#selectInput(
+ #   inputId = "yearInput",
+  #  label = "",
+  #  choices = unique(fullFrame$YEAR), 
+  #  selected = 2015,
+  #  selectize = F, 
+  #  width = "160px"
+#)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, fig.width = 10, fig.height = 10}
 renderPlot({
+
+layout(matrix(c(1, 2, 3, 4, 5, 6, 0, 7, 8), ncol=3, byrow=TRUE))
+par(mar = c(0,0,3,0))
 myName <- input$nameInput
-myYear <- input$yearInput
-myData <- forDescriptives[fullFrame$YEAR==myYear, ]
-myVar <- myData[, myName]
-myVar[is.na(myVar)] <- 0
+myVar <- forDescriptives[, myName]
+#myVar[is.na(myVar)] <- 0
+
+myVar1 <- myVar[!is.na(myVar)]
+ 
+
+
+first <- quantile(myVar1, probs = seq(0, .8, .2))
+last <- quantile(myVar1, probs = seq(.2, 1, .2))
+roundFirst <- round(first, digits = 2)
+roundLast <- round(last, digits = 2)
+myLabels <- paste(roundFirst, roundLast, sep = "-")
+myBreaks <- c(first[1], last)
 
 
 
-color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
+
+
+
+
+years <- unique(fullFrame$YEAR)
+
+
+  if(myBreaks[1]==myBreaks[2])
+  {
+    for(i in 2:4)
+    {
+      myBreaks[i] <- myBreaks[i]+(i-1/10000000)
+    }
+  }
+  
+
+
+for(i in years)
+{
+
+yearData <- myVar[fullFrame$YEAR==i]
+if(length(yearData[is.na(yearData)])>5)
+{
+  plot(1, type = "n", axes=FALSE, xlab="", ylab="", xlim = c(-1, 1), ylim = c(-1, 1))
+  text(0, 0, labels = paste("Missing Data for Year", i, sep = " "), cex = 2, col = "darkred")
+}else {
+color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue"))
 col.ramp <- color.function( 5 ) # number of groups you desire
-color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
+color.vector <- cut( yearData, breaks=myBreaks, labels=col.ramp,  include.lowest = TRUE)
 color.vector <- as.character( color.vector )
-this.order <- match( syr$GEOID10, fullFrame$TRACT)
+
+this.order <- match(syr$GEOID10, fullFrame$TRACT[fullFrame$YEAR==i])
 color.vec.ordered <- color.vector[ this.order ]
-plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "), cex.main = 2)
-
-map.scale( metric=F, ratio=F, relwidth = 0.15, cex=2 )
-
-first <- round(quantile(myVar, probs = seq(0, .8, .2)), digits = 2)
-last <- round(quantile(myVar, probs = seq(.2, 1, .2)), digits = 2)
-myLabels <- paste(first, last, sep = "-")
+plot(syr, col=color.vec.ordered, main = paste(myName, "in", i, sep = " "), cex.main = 5)
 
 
+}
+#first <- round(quantile(yearData, probs = seq(0, .8, .2)), digits = 2)
+#last <- round(quantile(yearData, probs = seq(.2, 1, .2)), digits = 2)
+#myLabels <- paste(first, last, sep = "-")
+
+
+
+}
+
+plot(1, type = "n", axes=FALSE, xlab="", ylab="")
 legend.text <- myLabels
-
-legend( "bottomright", bg="white",
-        pch=19, pt.cex=2, cex=2,
+legend( "top", bg="white",
+        pch=19, pt.cex=5, cex=5,
         legend=legend.text, 
         col=col.ramp, 
         box.col="white",
-        title= paste(myName, "in", myYear, sep = " ") 
+        title= myName
        )
-}, width = 959, height= 665)
+}, width = 1500, height= 1500)
 
 
 ```

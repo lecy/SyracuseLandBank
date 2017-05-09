@@ -133,7 +133,7 @@ First, create a map of Syracuse with census tracts colored by the frequency of c
 ###Create a map of code violation frequency by census tract in 2015
 
 #Create a color palette to display frequency of code violations on a map: red will represent high values, blue will represnt low
-color.function <- colorRampPalette( c("steel blue","light gray", "firebrick4" ) )
+color.function <- colorRampPalette( c("light gray", "firebrick4" ) )
 
 #There will be 5 colors between blue and red to demonstrate increasing intensity
 col.ramp <- color.function( 5 )
