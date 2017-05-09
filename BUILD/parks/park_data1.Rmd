@@ -20,21 +20,22 @@ knitr::opts_chunk$set( echo = TRUE ,  warning = F , message = F )
 Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
 
 ```{r parks}
-library( dplyr )
-library( ggmap )
-library( maps )
-library( maptools )
-library( raster )
-library( rgdal )
-library( rgeos )
-library( sp )
-library(devtools)
-library(censusapi)
-library(pander)
-library(ggplot2)
-library(jsonlite)
-library(geojson)
-library(geojsonio)
+
+# library(dplyr)
+# library(ggmap)
+# library(maps)
+# library(maptools)
+# library(raster)
+# library(rgdal)
+# library(rgeos)
+# library(sp)
+# library(devtools)
+# library(censusapi)
+# library(pander)
+# library(ggplot2)
+# library(jsonlite)
+# library(geojson)
+# library(geojsonio)
 
 
 #Get parks data from Community Geography
@@ -124,7 +125,8 @@ area <- sum(park.select$ACRES)
 
 #park area by communities
 acre.by.neighborhood <- aggregate(ACRES~Nhood,park.select,sum)
-ggplot(data=acre.by.neighborhood,aes(x=acre.by.neighborhood$Nhood, y=acre.by.neighborhood$ACRES))+geom_bar(colour = "blue",stat = "identity")+
+ggplot(data=acre.by.neighborhood,aes(x=acre.by.neighborhood$Nhood, y=acre.by.neighborhood$ACRES))+
+       labs(x = "Neighborhoods" ,y="Acres of Park", title="Acres of parks by Neighborhood")+geom_bar(colour = "blue",stat = "identity")+
   theme(axis.text.x=element_text(angle=90,hjust=1))
 
 
