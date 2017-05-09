@@ -155,7 +155,8 @@ This dataset contains information on the number of subsidized housing units avai
 
 
 ### [Parks](park_data1.html)
-This dataset contains parks information in the city of Syracuse.  The data was mineSyracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. Different parks have different affects for the community and the condition of the community also decide whether the park will increase property value or decrease by itself. So the following descriptive data will show park type and Nhood. This should test with community trends in crime(which is not availbale now) and poverty. (Further possible models could be NB, KSVM, SVM, lm. Using 2/3 data as train data and 1/3 for test data.)
+This dataset contains parks information in the city of Syracuse. Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
+
 
 ![alt](ASSETS/parks_by_community.png)
 
