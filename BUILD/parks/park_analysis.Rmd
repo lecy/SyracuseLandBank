@@ -20,7 +20,9 @@ knitr::opts_chunk$set( echo = TRUE ,  warning = F , message = F )
 Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
 
 ```{r}
+
 #Load Packages
+
 library( dplyr )
 library( geojsonio )
 library( ggmap )
@@ -50,11 +52,9 @@ setwd("./DATA/RAW_DATA")
 # 
 # #Change original data into shapefile and convert to CSV
 #plot shp file of the parks(optional)
-# setwd("..")
-# setwd("..")
-# setwd("../BUILD/parks")
-# park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
-# plot(park.project, col="green")
+
+park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+plot(park.project, col="green")
 
 # park <- as.data.frame( park , stringsAsFactors = FALSE )
 # 

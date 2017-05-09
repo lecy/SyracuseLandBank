@@ -19,10 +19,8 @@ knitr::opts_chunk$set( echo = TRUE ,  warning = F , message = F )
 
 Syracuse University's Geography Department has the data of public space and parks. After having the data, it should be cleaned, geocoded, and aggregated in order to be included in the analysis of all variables collected for this project. 
 
-```{r}
-#Load Packages
+```{r parks}
 library( dplyr )
-library( geojsonio )
 library( ggmap )
 library( maps )
 library( maptools )
@@ -35,8 +33,8 @@ library(censusapi)
 library(pander)
 library(ggplot2)
 library(jsonlite)
-
-
+library(geojson)
+library(geojsonio)
 
 
 #Get parks data from Community Geography
@@ -53,8 +51,7 @@ setwd("./DATA/RAW_DATA")
 # setwd("..")
 # setwd("..")
 # setwd("../BUILD/parks")
-# park.project <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
-# plot(park.project, col="green")
+
 
 # park <- as.data.frame( park , stringsAsFactors = FALSE )
 # 
@@ -68,14 +65,37 @@ park <- read.csv("../../DATA/RAW_DATA/park_raw.csv")
 
 url <- "https://raw.githubusercontent.com/lecy/SyracuseLandBank/master/SHAPEFILES/syr_neighborhoods.geojson"
 syr <- geojson_read( url, method="local", what="sp" )
+#plot( syr, border="light gray")
+#plot(park.project, col="green", add=TRUE)
+#ext( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
 
-plot( syr, border="light gray" )
+
+
+
+
+
+#load onondaga census data
+onondaga_shapefile <- readShapePoly( fn="tl_2010_36067_tract10", proj4string=CRS("+proj=longlat +datum=WGS84") )
+#subset syracuse data
+syr.shape <- onondaga_shapefile[as.numeric(as.character(onondaga_shapefile$NAME10)) < 62, ]
+
+#load parks data
+parks_census <- readShapePoly( fn = "SyracuseParks051414_UTM" , proj4string = CRS( "+proj=longlat +datum=WGS84" ) )
+
+#subset roads within syracuse area
+inter_clipped <- gIntersection(syr.shape, parks_census, byid = TRUE, drop_lower_td = TRUE)
+
+
+
+par( mar=c(0,0,0,0) )
+plot(syr.shape, border="gray", col="white")
 text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
+plot(parks_census,add=T)
 
-
-
-
-
+par( mar=c(1,1,1,1) )
+plot(parks_census, border="green", col="white")
+plot(syr.shape, border="gray", add=T)
+text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
 
 ```
 
