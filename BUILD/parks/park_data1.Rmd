@@ -93,9 +93,10 @@ text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
 plot(parks_census,add=T)
 
 par( mar=c(1,1,1,1) )
-plot(parks_census, border="green", col="white")
+plot(parks_census, border="green", col="darkgreen")
 plot(syr.shape, border="gray", add=T)
 text( getSpPPolygonsLabptSlots(syr), labels=syr$NAME, cex=0.4 )
+
 
 ```
 
