@@ -64,7 +64,7 @@ This is a description of the geocoding process and the formatting of the datafra
 #### [Descriptives](Permits_Descriptive_Statistics.html)
 This files shows some descriptive statistics of permits in the City of Syracuse.
 
-![alt](ASSETS/permits.png)
+![alt](ASSETS/permits2.png)
 
 <br>
 
