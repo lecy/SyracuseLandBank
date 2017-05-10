@@ -10,6 +10,12 @@ library( pander )
 library( geojsonio )
 library( maptools )
 library( sp )
+
+
+# These tracts are in 2000 that but not in 2010-2015:
+# 
+# "36067001300" "36067002100" "36067002200" "36067002800" "36067002900" "36067004300" “36067000500"
+
 ```
 
 
