@@ -104,7 +104,7 @@ names(census) <- labels
 census <- tbl_df(census) 
 
 #obtain just syracuse census tracts
-syrCensus<- filter(census, as.numeric(TRACT)<10000) 
+syrCensus<- filter(census, as.numeric(COUNTY)<10000) 
 ```
 
 
@@ -138,7 +138,7 @@ names(census2010) <- toupper(c("name","state", "county", "tract",
                        "totalHousingUnits", "less18", "year", "geoid")) 
 
 #obtain just syracuse tracts
-census2010<- filter(census2010, as.numeric(TRACT)<10000) 
+census2010<- filter(census2010, as.numeric(COUNTY)<10000) 
 ```
 ###Dicennial Census 2000
 Next we obtain data for the Dicennial Census from 2000. Again, variable names are retrieved from places such as https://www.censusreporter.com and https://www.census.gov/data.html. Click code to the right for more info.
@@ -272,18 +272,41 @@ library(shiny)
 ```
 
 Then, we make certain descriptive statistics in percent form for certain variables.
+<!--html_preserve--><div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="nameInput"></label>
+<div>
+<select id="nameInput" class="form-control"><option value="TOTAL" selected>TOTAL</option>
+<option value="MEDIANHOUSEINCOME">MEDIANHOUSEINCOME</option>
+<option value="MEDIANFAMINCOME">MEDIANFAMINCOME</option>
+<option value="BLACK">BLACK</option>
+<option value="ASIAN">ASIAN</option>
+<option value="HISPANIC">HISPANIC</option>
+<option value="WHITE">WHITE</option>
+<option value="EMPLOYED">EMPLOYED</option>
+<option value="UNEMPLOYED">UNEMPLOYED</option>
+<option value="INLABORFORCE">INLABORFORCE</option>
+<option value="POVERTY">POVERTY</option>
+<option value="VACANTTOTAL">VACANTTOTAL</option>
+<option value="OTHERVACANT">OTHERVACANT</option>
+<option value="VACANTFORRENT">VACANTFORRENT</option>
+<option value="SEASONALVACANT">SEASONALVACANT</option>
+<option value="FORSALEVACANT">FORSALEVACANT</option>
+<option value="HOUSEHOLDRECEIVEDSNAP">HOUSEHOLDRECEIVEDSNAP</option>
+<option value="HOUSEHOLDS">HOUSEHOLDS</option>
+<option value="OWNEROCCUPIED">OWNEROCCUPIED</option>
+<option value="RENTEROCCUPIED">RENTEROCCUPIED</option>
+<option value="TOTALHOUSINGUNITS">TOTALHOUSINGUNITS</option>
+<option value="LACKINGKITCHENFACILITIES">LACKINGKITCHENFACILITIES</option>
+<option value="LACKINGPLUMBING">LACKINGPLUMBING</option>
+<option value="MEDIANMONTHLYHOUSINGCOSTS">MEDIANMONTHLYHOUSINGCOSTS</option>
+<option value="LESS18">LESS18</option>
+<option value="SINGLEMOTHERBELOWPOVERTY">SINGLEMOTHERBELOWPOVERTY</option>
+<option value="ENROLLEDINSCHOOL">ENROLLEDINSCHOOL</option>
+<option value="VACANT">VACANT</option></select>
+</div>
+</div><!--/html_preserve-->
 
-```r
-#make descriptive statistics in percent form for certain variables
-forDescriptives <- select(fullFrame, -c(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
-forDescriptives$BLACK <- forDescriptives$BLACK/forDescriptives$TOTAL
-forDescriptives$WHITE <- forDescriptives$WHITE/forDescriptives$TOTAL
-forDescriptives$HISPANIC <- forDescriptives$HISPANIC/forDescriptives$TOTAL
-forDescriptives$ASIAN <- forDescriptives$ASIAN/forDescriptives$TOTAL
-forDescriptives$EMPLOYED <- forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
-forDescriptives$UNEMPLOYED <- forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
-forDescriptives$POVERTY <- forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY
-```
+<!--html_preserve--><div id="out597fe5736a898071" class="shiny-plot-output" style="width: 100% ; height: "></div><!--/html_preserve-->
 Next, we create the code for the dropdown boxes. More info can be gotten at https://shiny.rstudio.com/
 
 ```r
@@ -297,66 +320,12 @@ selectInput(
     width = "160px"
    
 )
-
-#create dropdown box for year
-selectInput(
-    inputId = "yearInput",
-    label = "",
-    choices = unique(fullFrame$YEAR), 
-    selected = 2015,
-    selectize = F, 
-    width = "160px"
-)
 ```
 Next, we use the renderPlot() function to render the plot. Plotting takes the form like it would without shiny, except instead of using one variable name we use the inputs from the user to choose which variables to use. 
 
-```r
-#create shiny plot
-renderPlot({
-#reference the inputs from the user
-myName <- input$nameInput
-myYear <- input$yearInput
-#subset by year
-myData <- forDescriptives[fullFrame$YEAR==myYear, ]
-#get variable for plot
-myVar <- myData[, myName]
-#remove NAs
-myVar[is.na(myVar)] <- 0
-
-
-#create color scheme for plot
-color.function <- colorRampPalette( c("firebrick4","light gray", "steel blue") ) 
-col.ramp <- color.function( 5 ) # number of groups you desire
-color.vector <- cut( rank(myVar), breaks=5, labels=col.ramp )
-color.vector <- as.character( color.vector )
-this.order <- match( syr$GEOID10, fullFrame$TRACT)
-color.vec.ordered <- color.vector[ this.order ]
-
-#plot
-plot(syr, col=color.vec.ordered, main = paste(myName, "in", myYear, sep = " "), cex.main = 2)
-#create scale
-map.scale( metric=F, ratio=F, relwidth = 0.15, cex=2 )
-
-
-#create labels for legend
-first <- round(quantile(myVar, probs = seq(0, .8, .2)), digits = 2)
-last <- round(quantile(myVar, probs = seq(.2, 1, .2)), digits = 2)
-legend.text <- paste(first, last, sep = "-")
-
-
-#create legend
-legend( "bottomright", bg="white",
-        pch=19, pt.cex=2, cex=2,
-        legend=legend.text, 
-        col=col.ramp, 
-        box.col="white",
-        title= paste(myName, "in", myYear, sep = " ") 
-       )
-}, width = 959, height= 665)
-```
 
 
 
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "800" scrolling = "no" frameborder = "0">
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width = "100%" height = "1500" scrolling = "no" frameborder = "0">
   <p>Your browser does not support iframes.</p>
 </iframe>

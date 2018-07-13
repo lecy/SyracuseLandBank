@@ -80,7 +80,7 @@ names(census) <- labels
 census <- tbl_df(census) 
 
 #obtain just syracuse census tracts
-syrCensus<- filter(census, as.numeric(TRACT)<10000) 
+syrCensus<- filter(census, as.numeric(COUNTY)<10000) 
 
 
 

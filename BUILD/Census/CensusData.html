@@ -349,7 +349,7 @@ labels &lt;-<span class="st"> </span><span class="kw">toupper</span>(labels)
 census &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(census) 
 
 <span class="co">#obtain just syracuse census tracts</span>
-syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) </code></pre></div>
+syrCensus&lt;-<span class="st"> </span><span class="kw">filter</span>(census, <span class="kw">as.numeric</span>(COUNTY)&lt;<span class="dv">10000</span>) </code></pre></div>
 </div>
 </div>
 <div id="dicennial-census-2010" class="section level3">
@@ -381,7 +381,7 @@ census2010 &lt;-<span class="st"> </span><span class="kw">mutate</span>(census20
                        <span class="st">&quot;totalHousingUnits&quot;</span>, <span class="st">&quot;less18&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;geoid&quot;</span>)) 
 
 <span class="co">#obtain just syracuse tracts</span>
-census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(TRACT)&lt;<span class="dv">10000</span>) </code></pre></div>
+census2010&lt;-<span class="st"> </span><span class="kw">filter</span>(census2010, <span class="kw">as.numeric</span>(COUNTY)&lt;<span class="dv">10000</span>) </code></pre></div>
 </div>
 <div id="dicennial-census-2000" class="section level3">
 <h3>Dicennial Census 2000</h3>
@@ -498,17 +498,40 @@ syr &lt;-<span class="st"> </span><span class="kw">readOGR</span>(<span class="d
 <p>First, we must load the library</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#load shiny</span>
 <span class="kw">library</span>(shiny)</code></pre></div>
-<p>Then, we make certain descriptive statistics in percent form for certain variables.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#make descriptive statistics in percent form for certain variables</span>
-forDescriptives &lt;-<span class="st"> </span><span class="kw">select</span>(fullFrame, -<span class="kw">c</span>(NAME, STATE, COUNTY, TRACT, TRACT1, YEAR))
-forDescriptives$BLACK &lt;-<span class="st"> </span>forDescriptives$BLACK/forDescriptives$TOTAL
-forDescriptives$WHITE &lt;-<span class="st"> </span>forDescriptives$WHITE/forDescriptives$TOTAL
-forDescriptives$HISPANIC &lt;-<span class="st"> </span>forDescriptives$HISPANIC/forDescriptives$TOTAL
-forDescriptives$ASIAN &lt;-<span class="st"> </span>forDescriptives$ASIAN/forDescriptives$TOTAL
-forDescriptives$EMPLOYED &lt;-<span class="st"> </span>forDescriptives$EMPLOYED/forDescriptives$INLABORFORCE
-forDescriptives$UNEMPLOYED &lt;-<span class="st"> </span>forDescriptives$UNEMPLOYED/forDescriptives$INLABORFORCE
-forDescriptives$POVERTY &lt;-<span class="st"> </span>forDescriptives$POVERTY/forDescriptives$TOTALFORPOVERTY</code></pre></div>
-<p>Next, we create the code for the dropdown boxes. More info can be gotten at <a href="https://shiny.rstudio.com/" class="uri">https://shiny.rstudio.com/</a></p>
+<p>Then, we make certain descriptive statistics in percent form for certain variables. <div class="form-group shiny-input-container" style="width: 160px;">
+<label class="control-label" for="nameInput"></label>
+<div>
+<select id="nameInput" class="form-control"><option value="TOTAL" selected>TOTAL</option>
+<option value="MEDIANHOUSEINCOME">MEDIANHOUSEINCOME</option>
+<option value="MEDIANFAMINCOME">MEDIANFAMINCOME</option>
+<option value="BLACK">BLACK</option>
+<option value="ASIAN">ASIAN</option>
+<option value="HISPANIC">HISPANIC</option>
+<option value="WHITE">WHITE</option>
+<option value="EMPLOYED">EMPLOYED</option>
+<option value="UNEMPLOYED">UNEMPLOYED</option>
+<option value="INLABORFORCE">INLABORFORCE</option>
+<option value="POVERTY">POVERTY</option>
+<option value="VACANTTOTAL">VACANTTOTAL</option>
+<option value="OTHERVACANT">OTHERVACANT</option>
+<option value="VACANTFORRENT">VACANTFORRENT</option>
+<option value="SEASONALVACANT">SEASONALVACANT</option>
+<option value="FORSALEVACANT">FORSALEVACANT</option>
+<option value="HOUSEHOLDRECEIVEDSNAP">HOUSEHOLDRECEIVEDSNAP</option>
+<option value="HOUSEHOLDS">HOUSEHOLDS</option>
+<option value="OWNEROCCUPIED">OWNEROCCUPIED</option>
+<option value="RENTEROCCUPIED">RENTEROCCUPIED</option>
+<option value="TOTALHOUSINGUNITS">TOTALHOUSINGUNITS</option>
+<option value="LACKINGKITCHENFACILITIES">LACKINGKITCHENFACILITIES</option>
+<option value="LACKINGPLUMBING">LACKINGPLUMBING</option>
+<option value="MEDIANMONTHLYHOUSINGCOSTS">MEDIANMONTHLYHOUSINGCOSTS</option>
+<option value="LESS18">LESS18</option>
+<option value="SINGLEMOTHERBELOWPOVERTY">SINGLEMOTHERBELOWPOVERTY</option>
+<option value="ENROLLEDINSCHOOL">ENROLLEDINSCHOOL</option>
+<option value="VACANT">VACANT</option></select>
+</div>
+</div></p>
+<p><div id="out597fe5736a898071" class="shiny-plot-output" style="width: 100% ; height: "></div> Next, we create the code for the dropdown boxes. More info can be gotten at <a href="https://shiny.rstudio.com/" class="uri">https://shiny.rstudio.com/</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create dropdown box for name</span>
 <span class="kw">selectInput</span>(
     <span class="dt">inputId =</span> <span class="st">&quot;nameInput&quot;</span>,
@@ -518,61 +541,9 @@ forDescriptives$POVERTY &lt;-<span class="st"> </span>forDescriptives$POVERTY/fo
     <span class="dt">selectize =</span> F, 
     <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
    
-)
-
-<span class="co">#create dropdown box for year</span>
-<span class="kw">selectInput</span>(
-    <span class="dt">inputId =</span> <span class="st">&quot;yearInput&quot;</span>,
-    <span class="dt">label =</span> <span class="st">&quot;&quot;</span>,
-    <span class="dt">choices =</span> <span class="kw">unique</span>(fullFrame$YEAR), 
-    <span class="dt">selected =</span> <span class="dv">2015</span>,
-    <span class="dt">selectize =</span> F, 
-    <span class="dt">width =</span> <span class="st">&quot;160px&quot;</span>
 )</code></pre></div>
 <p>Next, we use the renderPlot() function to render the plot. Plotting takes the form like it would without shiny, except instead of using one variable name we use the inputs from the user to choose which variables to use.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#create shiny plot</span>
-<span class="kw">renderPlot</span>({
-<span class="co">#reference the inputs from the user</span>
-myName &lt;-<span class="st"> </span>input$nameInput
-myYear &lt;-<span class="st"> </span>input$yearInput
-<span class="co">#subset by year</span>
-myData &lt;-<span class="st"> </span>forDescriptives[fullFrame$YEAR==myYear, ]
-<span class="co">#get variable for plot</span>
-myVar &lt;-<span class="st"> </span>myData[, myName]
-<span class="co">#remove NAs</span>
-myVar[<span class="kw">is.na</span>(myVar)] &lt;-<span class="st"> </span><span class="dv">0</span>
-
-
-<span class="co">#create color scheme for plot</span>
-color.function &lt;-<span class="st"> </span><span class="kw">colorRampPalette</span>( <span class="kw">c</span>(<span class="st">&quot;firebrick4&quot;</span>,<span class="st">&quot;light gray&quot;</span>, <span class="st">&quot;steel blue&quot;</span>) ) 
-col.ramp &lt;-<span class="st"> </span><span class="kw">color.function</span>( <span class="dv">5</span> ) <span class="co"># number of groups you desire</span>
-color.vector &lt;-<span class="st"> </span><span class="kw">cut</span>( <span class="kw">rank</span>(myVar), <span class="dt">breaks=</span><span class="dv">5</span>, <span class="dt">labels=</span>col.ramp )
-color.vector &lt;-<span class="st"> </span><span class="kw">as.character</span>( color.vector )
-this.order &lt;-<span class="st"> </span><span class="kw">match</span>( syr$GEOID10, fullFrame$TRACT)
-color.vec.ordered &lt;-<span class="st"> </span>color.vector[ this.order ]
-
-<span class="co">#plot</span>
-<span class="kw">plot</span>(syr, <span class="dt">col=</span>color.vec.ordered, <span class="dt">main =</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>), <span class="dt">cex.main =</span> <span class="dv">2</span>)
-<span class="co">#create scale</span>
-<span class="kw">map.scale</span>( <span class="dt">metric=</span>F, <span class="dt">ratio=</span>F, <span class="dt">relwidth =</span> <span class="fl">0.15</span>, <span class="dt">cex=</span><span class="dv">2</span> )
-
-
-<span class="co">#create labels for legend</span>
-first &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(<span class="dv">0</span>, .<span class="dv">8</span>, .<span class="dv">2</span>)), <span class="dt">digits =</span> <span class="dv">2</span>)
-last &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">quantile</span>(myVar, <span class="dt">probs =</span> <span class="kw">seq</span>(.<span class="dv">2</span>, <span class="dv">1</span>, .<span class="dv">2</span>)), <span class="dt">digits =</span> <span class="dv">2</span>)
-legend.text &lt;-<span class="st"> </span><span class="kw">paste</span>(first, last, <span class="dt">sep =</span> <span class="st">&quot;-&quot;</span>)
-
-
-<span class="co">#create legend</span>
-<span class="kw">legend</span>( <span class="st">&quot;bottomright&quot;</span>, <span class="dt">bg=</span><span class="st">&quot;white&quot;</span>,
-        <span class="dt">pch=</span><span class="dv">19</span>, <span class="dt">pt.cex=</span><span class="dv">2</span>, <span class="dt">cex=</span><span class="dv">2</span>,
-        <span class="dt">legend=</span>legend.text, 
-        <span class="dt">col=</span>col.ramp, 
-        <span class="dt">box.col=</span><span class="st">&quot;white&quot;</span>,
-        <span class="dt">title=</span> <span class="kw">paste</span>(myName, <span class="st">&quot;in&quot;</span>, myYear, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>) 
-       )
-}, <span class="dt">width =</span> <span class="dv">959</span>, <span class="dt">height=</span> <span class="dv">665</span>)</code></pre></div>
-<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width="100%" height="800" scrolling="no" frameborder="0">
+<iframe src="https://chriswdavis.shinyapps.io/descriptives/" width="100%" height="1500" scrolling="no" frameborder="0">
 <p>
 Your browser does not support iframes.
 </p>
